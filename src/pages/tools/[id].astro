@@ -1,0 +1,74 @@
+---
+import Base from "../../layouts/Base.astro";
+import { entityById, eventsForEntity, loadTools } from "../../lib/data.ts";
+import type { Tool } from "../../../schemas/index.ts";
+
+export function getStaticPaths() {
+  return loadTools().map((t) => ({ params: { id: t.id }, props: { tool: t } }));
+}
+
+interface Props { tool: Tool; }
+const { tool } = Astro.props;
+const events = eventsForEntity(tool.id);
+const builtOn = tool.built_on_models
+  .map((id) => entityById(id))
+  .filter((m): m is NonNullable<ReturnType<typeof entityById>> => m != null);
+---
+<Base title={`${tool.name} — ai-tracker`} description={`${tool.name} by ${tool.vendor}.`}>
+  <p><a href="/tools">← Tools</a></p>
+  <h1>{tool.name}</h1>
+  <p>
+    <strong>{tool.vendor}</strong> · {tool.category} · released {tool.released}
+    {tool.oss ? " · open source" : ""}
+  </p>
+
+  {builtOn.length > 0 ? (
+    <p>
+      <strong>Built on:</strong>{" "}
+      {builtOn.map((m, i) => (
+        <>
+          {i > 0 ? ", " : ""}
+          <a href={`/${m.kind === "model" ? "models" : "tools"}/${m.id}`}>{m.name}</a>
+        </>
+      ))}
+    </p>
+  ) : null}
+
+  {tool.pricing_tiers.length > 0 ? (
+    <>
+      <h2>Pricing</h2>
+      <ul>
+        {tool.pricing_tiers.map((p) => (
+          <li>
+            <strong>{p.name}:</strong>{" "}
+            {p.monthly_usd === 0 ? "free" : p.monthly_usd != null ? `$${p.monthly_usd}/mo` : "contact sales"}
+            {p.per_seat ? " per seat" : ""}{p.notes ? ` — ${p.notes}` : ""}
+          </li>
+        ))}
+      </ul>
+    </>
+  ) : null}
+
+  <h2>Timeline</h2>
+  {events.length === 0 ? (
+    <p><em>No events recorded yet.</em></p>
+  ) : (
+    <ul>
+      {events.map((e) => (
+        <li>
+          <code>{e.date}</code> · <strong>{e.type}</strong> — {e.summary}
+          {" "}<a href={e.source} rel="nofollow noopener">[source]</a>
+        </li>
+      ))}
+    </ul>
+  )}
+
+  <h2>Sources</h2>
+  <ul>{tool.sources.map((s) => <li><a href={s} rel="nofollow noopener">{s}</a></li>)}</ul>
+
+  <p>
+    <a href={tool.homepage} rel="nofollow noopener">Homepage</a> ·
+    <a href={`/tools/${tool.id}.json`}>JSON</a> ·
+    <a href={`/tools/${tool.id}.md`}>Markdown</a>
+  </p>
+</Base>

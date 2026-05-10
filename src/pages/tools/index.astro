@@ -1,0 +1,18 @@
+---
+import Base from "../../layouts/Base.astro";
+import { loadTools } from "../../lib/data.ts";
+
+const tools = loadTools().sort((a, b) => b.released.localeCompare(a.released));
+---
+<Base title="Tools — ai-tracker" description="All tracked AI tools.">
+  <h1>Tools</h1>
+  <p>{tools.length} tracked.</p>
+  <ul>
+    {tools.map((t) => (
+      <li>
+        <a href={`/tools/${t.id}`}>{t.name}</a> · {t.vendor} · {t.category}
+        {t.oss ? " · OSS" : ""}{t.free_tier ? " · free tier" : ""}
+      </li>
+    ))}
+  </ul>
+</Base>

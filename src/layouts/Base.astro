@@ -1,0 +1,51 @@
+---
+interface Props {
+  title: string;
+  description?: string;
+}
+const { title, description } = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>{title}</title>
+    {description ? <meta name="description" content={description} /> : null}
+    <link rel="icon" href="/favicon.svg" />
+  </head>
+  <body>
+    <header>
+      <nav>
+        <a href="/"><strong>ai-tracker</strong></a>
+        <a href="/models">Models</a>
+        <a href="/tools">Tools</a>
+        <a href="/timeline">Timeline</a>
+        <a href="/submit">Submit</a>
+      </nav>
+    </header>
+    <main>
+      <slot />
+    </main>
+    <footer>
+      <p>Public data. <a href="/llms.txt">/llms.txt</a> · <a href="/dump/all.json">/dump/all.json</a></p>
+    </footer>
+    <style is:global>
+      :root {
+        font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+        line-height: 1.5;
+        color: #111;
+        background: #fff;
+      }
+      body { margin: 0; }
+      main { max-width: 880px; margin: 0 auto; padding: 1.5rem; }
+      header { padding: 1rem 1.5rem; border-bottom: 1px solid #eee; }
+      header nav { display: flex; gap: 1rem; max-width: 880px; margin: 0 auto; }
+      header a { text-decoration: none; color: inherit; }
+      footer { max-width: 880px; margin: 2rem auto; padding: 1rem 1.5rem; border-top: 1px solid #eee; color: #666; font-size: 0.9rem; }
+      a { color: #1a4cff; }
+      h1, h2, h3 { line-height: 1.2; }
+      ul { padding-left: 1.25rem; }
+    </style>
+  </body>
+</html>

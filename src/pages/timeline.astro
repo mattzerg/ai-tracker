@@ -1,0 +1,28 @@
+---
+import Base from "../layouts/Base.astro";
+import { entityById, loadEvents } from "../lib/data.ts";
+
+const events = loadEvents();
+---
+<Base title="Timeline — ai-tracker" description="Every tracked AI event in chronological order.">
+  <h1>Timeline</h1>
+  <p>{events.length} events. Newest first.</p>
+  {events.length === 0 ? (
+    <p><em>No events yet.</em></p>
+  ) : (
+    <ul>
+      {events.map((e) => {
+        const entity = entityById(e.entity);
+        const path = entity?.kind === "model" ? `/models/${e.entity}` : `/tools/${e.entity}`;
+        return (
+          <li>
+            <code>{e.date}</code> · <strong>{e.type}</strong> ·
+            <a href={path}>{entity?.name ?? e.entity}</a>
+            — {e.summary}
+            {" "}<a href={e.source} rel="nofollow noopener">[source]</a>
+          </li>
+        );
+      })}
+    </ul>
+  )}
+</Base>

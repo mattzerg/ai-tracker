@@ -1,0 +1,61 @@
+---
+import Base from "../../layouts/Base.astro";
+import { eventsForEntity, loadModels } from "../../lib/data.ts";
+import type { Model } from "../../../schemas/index.ts";
+
+export function getStaticPaths() {
+  return loadModels().map((m) => ({ params: { id: m.id }, props: { model: m } }));
+}
+
+interface Props { model: Model; }
+const { model } = Astro.props;
+const events = eventsForEntity(model.id);
+---
+<Base title={`${model.name} — ai-tracker`} description={`${model.name} by ${model.provider}.`}>
+  <p><a href="/models">← Models</a></p>
+  <h1>{model.name}</h1>
+  <p><strong>{model.provider}</strong> · released {model.released} · {model.license}</p>
+
+  {model.pricing ? (
+    <p>
+      <strong>Price:</strong>
+      {model.pricing.input_per_mtok != null ? ` $${model.pricing.input_per_mtok}/M in` : ""}
+      {model.pricing.output_per_mtok != null ? ` · $${model.pricing.output_per_mtok}/M out` : ""}
+      <em> (as of {model.pricing.as_of})</em>
+    </p>
+  ) : null}
+
+  {model.context_window ? <p><strong>Context:</strong> {model.context_window.toLocaleString()} tokens</p> : null}
+  <p><strong>Modalities:</strong> {model.modalities.join(", ")}</p>
+
+  {model.benchmarks && Object.keys(model.benchmarks).length > 0 ? (
+    <>
+      <h2>Benchmarks</h2>
+      <ul>
+        {Object.entries(model.benchmarks).map(([k, v]) => <li>{k}: {v}</li>)}
+      </ul>
+    </>
+  ) : null}
+
+  <h2>Timeline</h2>
+  {events.length === 0 ? (
+    <p><em>No events recorded yet.</em></p>
+  ) : (
+    <ul>
+      {events.map((e) => (
+        <li>
+          <code>{e.date}</code> · <strong>{e.type}</strong> — {e.summary}
+          {" "}<a href={e.source} rel="nofollow noopener">[source]</a>
+        </li>
+      ))}
+    </ul>
+  )}
+
+  <h2>Sources</h2>
+  <ul>{model.sources.map((s) => <li><a href={s} rel="nofollow noopener">{s}</a></li>)}</ul>
+
+  <p>
+    <a href={`/models/${model.id}.json`}>JSON</a> ·
+    <a href={`/models/${model.id}.md`}>Markdown</a>
+  </p>
+</Base>

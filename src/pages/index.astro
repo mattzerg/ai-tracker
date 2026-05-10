@@ -1,0 +1,27 @@
+---
+import Base from "../layouts/Base.astro";
+import { loadEvents, loadModels, loadTools } from "../lib/data.ts";
+
+const events = loadEvents().slice(0, 25);
+const modelCount = loadModels().length;
+const toolCount = loadTools().length;
+---
+<Base title="ai-tracker — what's shipping in AI" description="Canonical machine-readable timeline of AI models and tools.">
+  <h1>ai-tracker</h1>
+  <p>{modelCount} models · {toolCount} tools · {loadEvents().length} events tracked.</p>
+
+  <h2>Latest</h2>
+  {events.length === 0 ? (
+    <p><em>No events yet — repo just bootstrapped.</em></p>
+  ) : (
+    <ul>
+      {events.map((e) => (
+        <li>
+          <code>{e.date}</code> · <strong>{e.type}</strong> ·
+          <a href={`/${e.entity.includes("__") ? "models" : "tools"}/${e.entity}`}>{e.entity}</a>
+          — {e.summary}
+        </li>
+      ))}
+    </ul>
+  )}
+</Base>

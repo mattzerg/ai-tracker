@@ -1,0 +1,18 @@
+---
+import Base from "../../layouts/Base.astro";
+import { loadModels } from "../../lib/data.ts";
+
+const models = loadModels().sort((a, b) => b.released.localeCompare(a.released));
+---
+<Base title="Models — ai-tracker" description="All tracked AI models.">
+  <h1>Models</h1>
+  <p>{models.length} tracked.</p>
+  <ul>
+    {models.map((m) => (
+      <li>
+        <a href={`/models/${m.id}`}>{m.name}</a> · {m.provider} · released {m.released}
+        {m.context_window ? ` · ${m.context_window.toLocaleString()} ctx` : ""}
+      </li>
+    ))}
+  </ul>
+</Base>

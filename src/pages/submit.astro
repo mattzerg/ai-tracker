@@ -1,0 +1,43 @@
+---
+import Base from "../layouts/Base.astro";
+const apiBase = import.meta.env.PUBLIC_API_BASE ?? "https://api.ai-tracker.example";
+---
+<Base title="Submit — ai-tracker" description="Submit a model, tool, or event.">
+  <h1>Submit</h1>
+  <p>
+    Found a model, tool, or event we missed? Send it in. Submissions go through a moderation step
+    and land in a public PR queue — once Matt approves the batch, your contribution is live.
+  </p>
+  <p><em>Phase 4 wires up the live form. For now, open an issue or PR on the GitHub repo.</em></p>
+  <form id="submit-form" action={`${apiBase}/submit`} method="post">
+    <p>
+      <label>
+        Type
+        <select name="kind" required>
+          <option value="model">Model</option>
+          <option value="tool">Tool</option>
+          <option value="event">Event on existing entity</option>
+        </select>
+      </label>
+    </p>
+    <p>
+      <label>
+        Name / summary
+        <input type="text" name="name" required maxlength="120" />
+      </label>
+    </p>
+    <p>
+      <label>
+        Source URL
+        <input type="url" name="source" required />
+      </label>
+    </p>
+    <p>
+      <label>
+        Notes (optional)
+        <textarea name="notes" rows="4" maxlength="1000"></textarea>
+      </label>
+    </p>
+    <button type="submit" disabled>Submit (live in Phase 4)</button>
+  </form>
+</Base>

@@ -1,0 +1,29 @@
+{
+  "name": "ai-tracker",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "typecheck": "astro check && tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "verify:sources": "tsx scripts/verify-sources.ts",
+    "verify:refs": "tsx scripts/verify-refs.ts",
+    "verify:all": "pnpm verify:refs && pnpm verify:sources"
+  },
+  "dependencies": {
+    "astro": "^5.0.0",
+    "zod": "^3.23.0"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.0",
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0",
+    "vitest": "^2.1.0"
+  },
+  "packageManager": "pnpm@10.33.3"
+}
