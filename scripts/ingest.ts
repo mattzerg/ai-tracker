@@ -6,6 +6,7 @@ import { mergeModel, mergeTool } from "./ingest/merge.ts";
 import { writeDiff } from "./ingest/writer.ts";
 import { anthropicChangelog } from "./ingest/sources/anthropic-changelog.ts";
 import { geminiChangelog } from "./ingest/sources/gemini-changelog.ts";
+import { githubTrending } from "./ingest/sources/github-trending.ts";
 import { openrouter } from "./ingest/sources/openrouter.ts";
 import { xaiModels } from "./ingest/sources/xai-models.ts";
 import type { Event, Model, Tool } from "../schemas/index.ts";
@@ -16,7 +17,7 @@ const TMP = join(ROOT, "tmp");
 
 // Authoritative sources run FIRST so their data lands before supplementary aggregators
 // have a chance to overwrite. Each source dedupes within itself; first-write-wins across.
-const SOURCES: Source[] = [anthropicChangelog, geminiChangelog, xaiModels, openrouter];
+const SOURCES: Source[] = [anthropicChangelog, geminiChangelog, xaiModels, openrouter, githubTrending];
 
 const MAX_USD = Number(process.env.MAX_INGEST_USD ?? 2);
 
