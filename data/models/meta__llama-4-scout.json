@@ -3,14 +3,26 @@
   "id": "meta__llama-4-scout",
   "name": "Llama 4 Scout",
   "provider": "meta",
-  "released": null,
+  "released": "2025-04-05",
   "context_window": 10000000,
   "output_window": null,
-  "modalities": ["text", "vision"],
+  "modalities": [
+    "text",
+    "vision"
+  ],
   "license": "llama-community",
   "pricing": null,
-  "links": { "homepage": "https://www.llama.com" },
-  "tags": ["open-weights", "multimodal", "very-long-context"],
-  "sources": ["https://www.llama.com/"],
+  "links": {
+    "homepage": "https://www.llama.com"
+  },
+  "tags": [
+    "open-weights",
+    "multimodal",
+    "very-long-context"
+  ],
+  "sources": [
+    "https://www.llama.com/",
+    "https://ai.meta.com/blog/llama-4-multimodal-intelligence/"
+  ],
   "status": "ga"
 }

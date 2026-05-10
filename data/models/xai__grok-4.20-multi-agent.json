@@ -3,14 +3,29 @@
   "id": "xai__grok-4.20-multi-agent",
   "name": "Grok 4.20 Multi-Agent",
   "provider": "xai",
-  "released": null,
+  "released": "2026-03-31",
   "context_window": 2000000,
   "output_window": null,
-  "modalities": ["text"],
+  "modalities": [
+    "text"
+  ],
   "license": "proprietary",
-  "pricing": { "input_per_mtok": 2, "output_per_mtok": 6, "as_of": "2026-05-09" },
-  "links": { "homepage": "https://x.ai", "docs": "https://docs.x.ai/docs/models" },
-  "tags": ["multi-agent", "long-context"],
-  "sources": ["https://docs.x.ai/docs/models", "https://openrouter.ai/api/v1/models"],
+  "pricing": {
+    "input_per_mtok": 2,
+    "output_per_mtok": 6,
+    "as_of": "2026-05-09"
+  },
+  "links": {
+    "homepage": "https://x.ai",
+    "docs": "https://docs.x.ai/docs/models"
+  },
+  "tags": [
+    "multi-agent",
+    "long-context"
+  ],
+  "sources": [
+    "https://docs.x.ai/docs/models",
+    "https://openrouter.ai/api/v1/models"
+  ],
   "status": "ga"
 }
