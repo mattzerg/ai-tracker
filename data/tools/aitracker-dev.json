@@ -1,0 +1,20 @@
+{
+  "kind": "tool",
+  "id": "aitracker-dev",
+  "name": "AI Tracker (aitracker.dev)",
+  "vendor": "AI Tracker",
+  "category": "research",
+  "released": null,
+  "homepage": "https://aitracker.dev",
+  "built_on_models": [],
+  "oss": false,
+  "pricing_tiers": [
+    { "name": "Free", "monthly_usd": 0, "notes": "Public directory" }
+  ],
+  "free_tier": true,
+  "modalities": ["text"],
+  "links": { "homepage": "https://aitracker.dev" },
+  "tags": ["ai-directory", "competitor", "submission-form"],
+  "sources": ["https://aitracker.dev"],
+  "status": "ga"
+}

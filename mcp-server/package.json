@@ -1,0 +1,26 @@
+{
+  "name": "ai-tracker-mcp",
+  "version": "0.0.1",
+  "description": "MCP server for ai-tracker — query the canonical AI models & tools timeline.",
+  "type": "module",
+  "bin": {
+    "ai-tracker-mcp": "./dist/index.js"
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsx src/index.ts"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
