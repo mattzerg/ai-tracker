@@ -3,8 +3,11 @@ import { join, resolve } from "node:path";
 import { loadEvents, loadModels, loadTools } from "../src/lib/data.ts";
 import { diffEvents, diffModels, diffTools } from "./ingest/diff.ts";
 import { mergeModel, mergeTool } from "./ingest/merge.ts";
+import { writeDiff } from "./ingest/writer.ts";
 import { anthropicChangelog } from "./ingest/sources/anthropic-changelog.ts";
+import { geminiChangelog } from "./ingest/sources/gemini-changelog.ts";
 import { openrouter } from "./ingest/sources/openrouter.ts";
+import { xaiModels } from "./ingest/sources/xai-models.ts";
 import type { Event, Model, Tool } from "../schemas/index.ts";
 import type { Source, SourceContext, SourceTrust } from "./ingest/types.ts";
 
@@ -13,7 +16,7 @@ const TMP = join(ROOT, "tmp");
 
 // Authoritative sources run FIRST so their data lands before supplementary aggregators
 // have a chance to overwrite. Each source dedupes within itself; first-write-wins across.
-const SOURCES: Source[] = [anthropicChangelog, openrouter];
+const SOURCES: Source[] = [anthropicChangelog, geminiChangelog, xaiModels, openrouter];
 
 const MAX_USD = Number(process.env.MAX_INGEST_USD ?? 2);
 
@@ -22,11 +25,14 @@ function arg(name: string): boolean {
 }
 
 async function main() {
-  const dryRun = arg("dry-run");
-  const writeReport = arg("write-report") || dryRun;
+  const apply = arg("apply");
+  const writeStaging = arg("write-staging") || (!apply && arg("dry-run"));
+  const dryRun = !apply;
+  const writeReport = true;
 
+  const mode = apply ? "APPLY (writes data/)" : writeStaging ? "staging (writes tmp/proposed/)" : "dry-run (report only)";
   const ctx: SourceContext = { now: new Date(), dryRun };
-  console.log(`ai-tracker ingest — ${ctx.now.toISOString()} ${dryRun ? "(dry-run)" : ""}`);
+  console.log(`ai-tracker ingest — ${ctx.now.toISOString()} — ${mode}`);
   console.log(`sources: ${SOURCES.map((s) => s.id).join(", ")}`);
   console.log(`cost cap: $${MAX_USD.toFixed(2)}\n`);
 
@@ -116,9 +122,14 @@ async function main() {
     console.log(`\nreport: ${path}`);
   }
 
-  if (!dryRun) {
-    console.error("\nNon-dry-run materialization is not implemented yet (Phase 3 step 2). Use --dry-run to preview.");
-    process.exit(2);
+  if (writeStaging || apply) {
+    const target = apply
+      ? { dataRoot: join(ROOT, "data") }
+      : { dataRoot: join(TMP, "proposed"), fresh: true };
+    const result = writeDiff(modelDiff, toolDiff, eventDiff, mergedModels, mergedTools, target);
+    console.log(
+      `\nwrote ${result.paths.length} files to ${target.dataRoot}: +${result.modelsAdded}/${result.toolsAdded}/${result.eventsAdded} new, ~${result.modelsUpdated}/${result.toolsUpdated} updated`,
+    );
   }
 }
 
