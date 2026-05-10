@@ -1,0 +1,24 @@
+{
+  "kind": "model",
+  "id": "alibaba__qwen3-coder-plus",
+  "name": "Qwen3 Coder Plus",
+  "provider": "alibaba",
+  "released": "2025-09-23",
+  "context_window": 1000000,
+  "output_window": 65536,
+  "modalities": [
+    "text"
+  ],
+  "license": "open-weights",
+  "pricing": {
+    "input_per_mtok": 0.65,
+    "output_per_mtok": 3.25,
+    "as_of": "2026-05-10"
+  },
+  "links": {},
+  "tags": [],
+  "sources": [
+    "https://openrouter.ai/api/v1/models"
+  ],
+  "status": "ga"
+}

@@ -1,0 +1,24 @@
+{
+  "kind": "model",
+  "id": "meta__llama-3.3-70b-instruct",
+  "name": "Llama 3.3 70B Instruct",
+  "provider": "meta",
+  "released": "2024-12-06",
+  "context_window": 131072,
+  "output_window": 16384,
+  "modalities": [
+    "text"
+  ],
+  "license": "llama-community",
+  "pricing": {
+    "input_per_mtok": 0.09999999999999999,
+    "output_per_mtok": 0.32,
+    "as_of": "2026-05-10"
+  },
+  "links": {},
+  "tags": [],
+  "sources": [
+    "https://openrouter.ai/api/v1/models"
+  ],
+  "status": "ga"
+}

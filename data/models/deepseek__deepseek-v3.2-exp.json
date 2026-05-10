@@ -1,0 +1,24 @@
+{
+  "kind": "model",
+  "id": "deepseek__deepseek-v3.2-exp",
+  "name": "DeepSeek V3.2 Exp",
+  "provider": "deepseek",
+  "released": "2025-09-29",
+  "context_window": 163840,
+  "output_window": 65536,
+  "modalities": [
+    "text"
+  ],
+  "license": "proprietary",
+  "pricing": {
+    "input_per_mtok": 0.27,
+    "output_per_mtok": 0.41,
+    "as_of": "2026-05-10"
+  },
+  "links": {},
+  "tags": [],
+  "sources": [
+    "https://openrouter.ai/api/v1/models"
+  ],
+  "status": "ga"
+}

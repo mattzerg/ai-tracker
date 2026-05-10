@@ -1,0 +1,24 @@
+{
+  "kind": "model",
+  "id": "mistral__mistral-medium-3.1",
+  "name": "Mistral Medium 3.1",
+  "provider": "mistral",
+  "released": "2025-08-13",
+  "context_window": 131072,
+  "output_window": null,
+  "modalities": [
+    "text"
+  ],
+  "license": "open-weights",
+  "pricing": {
+    "input_per_mtok": 0.39999999999999997,
+    "output_per_mtok": 2,
+    "as_of": "2026-05-10"
+  },
+  "links": {},
+  "tags": [],
+  "sources": [
+    "https://openrouter.ai/api/v1/models"
+  ],
+  "status": "ga"
+}
