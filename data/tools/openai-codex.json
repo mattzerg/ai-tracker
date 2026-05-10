@@ -1,0 +1,20 @@
+{
+  "kind": "tool",
+  "id": "openai-codex",
+  "name": "Codex",
+  "vendor": "OpenAI",
+  "category": "agent-framework",
+  "released": null,
+  "homepage": "https://openai.com/codex",
+  "built_on_models": ["openai__gpt-5.3-codex", "openai__gpt-5.4"],
+  "oss": false,
+  "pricing_tiers": [
+    { "name": "Bundled with ChatGPT Plus/Pro/Team/Enterprise", "monthly_usd": null }
+  ],
+  "free_tier": false,
+  "modalities": ["text", "code"],
+  "links": { "homepage": "https://openai.com/codex" },
+  "tags": ["agent", "coding", "cloud-sandbox"],
+  "sources": ["https://openai.com/codex"],
+  "status": "ga"
+}

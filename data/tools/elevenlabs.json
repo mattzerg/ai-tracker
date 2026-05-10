@@ -1,0 +1,24 @@
+{
+  "kind": "tool",
+  "id": "elevenlabs",
+  "name": "ElevenLabs",
+  "vendor": "ElevenLabs",
+  "category": "voice",
+  "released": null,
+  "homepage": "https://elevenlabs.io",
+  "built_on_models": [],
+  "oss": false,
+  "pricing_tiers": [
+    { "name": "Free", "monthly_usd": 0, "notes": "10k characters/mo" },
+    { "name": "Starter", "monthly_usd": 5 },
+    { "name": "Creator", "monthly_usd": 22 },
+    { "name": "Pro", "monthly_usd": 99 },
+    { "name": "Scale", "monthly_usd": 330 }
+  ],
+  "free_tier": true,
+  "modalities": ["audio", "text"],
+  "links": { "homepage": "https://elevenlabs.io", "docs": "https://elevenlabs.io/docs" },
+  "tags": ["text-to-speech", "voice-clone", "dubbing"],
+  "sources": ["https://elevenlabs.io"],
+  "status": "ga"
+}

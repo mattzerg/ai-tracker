@@ -38,7 +38,7 @@ function renderTool(t: Tool, base: string): string[] {
   out.push("");
   out.push(`Vendor: ${t.vendor}`);
   out.push(`Category: ${t.category}`);
-  out.push(`Released: ${t.released}`);
+  out.push(`Released: ${t.released ?? "n/a"}`);
   out.push(`Open source: ${t.oss ? "yes" : "no"}`);
   out.push(`Free tier: ${t.free_tier ? "yes" : "no"}`);
   if (t.built_on_models.length) out.push(`Built on: ${t.built_on_models.join(", ")}`);
@@ -64,7 +64,7 @@ function renderTool(t: Tool, base: string): string[] {
 export const GET: APIRoute = ({ site }) => {
   const base = (site?.toString() ?? "").replace(/\/$/, "");
   const models = loadModels().sort((a, b) => (b.released ?? "0").localeCompare(a.released ?? "0"));
-  const tools = loadTools().sort((a, b) => b.released.localeCompare(a.released));
+  const tools = loadTools().sort((a, b) => (b.released ?? "0").localeCompare(a.released ?? "0"));
   const events = loadEvents();
 
   const lines: string[] = [];

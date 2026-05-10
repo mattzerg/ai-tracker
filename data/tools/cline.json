@@ -1,0 +1,21 @@
+{
+  "kind": "tool",
+  "id": "cline",
+  "name": "Cline",
+  "vendor": "Cline",
+  "category": "ide",
+  "released": null,
+  "homepage": "https://cline.bot",
+  "built_on_models": ["anthropic__claude-opus-4-7", "anthropic__claude-sonnet-4-6", "openai__gpt-5.4"],
+  "oss": true,
+  "oss_repo": "https://github.com/cline/cline",
+  "pricing_tiers": [
+    { "name": "Free", "monthly_usd": 0, "notes": "Bring your own API key" }
+  ],
+  "free_tier": true,
+  "modalities": ["text", "code"],
+  "links": { "homepage": "https://cline.bot", "docs": "https://docs.cline.bot" },
+  "tags": ["vscode-extension", "agent", "open-source"],
+  "sources": ["https://cline.bot", "https://github.com/cline/cline"],
+  "status": "ga"
+}

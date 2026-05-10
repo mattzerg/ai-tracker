@@ -12,7 +12,7 @@ function render(tool: Tool): string {
   lines.push("");
   lines.push(`**Vendor:** ${tool.vendor}`);
   lines.push(`**Category:** ${tool.category}`);
-  lines.push(`**Released:** ${tool.released}`);
+  lines.push(`**Released:** ${tool.released ?? "n/a"}`);
   lines.push(`**Open source:** ${tool.oss ? "yes" : "no"}`);
   if (tool.built_on_models.length) lines.push(`**Built on:** ${tool.built_on_models.join(", ")}`);
   if (tool.pricing_tiers.length) {

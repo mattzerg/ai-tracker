@@ -44,7 +44,7 @@ export const toolSchema = z.object({
   name: z.string().min(1),
   vendor: z.string().min(1),
   category: toolCategorySchema,
-  released: isoDate,
+  released: isoDate.nullable(),
   homepage: url,
   built_on_models: z.array(entityId).default([]),
   oss: z.boolean(),

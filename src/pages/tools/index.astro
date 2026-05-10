@@ -2,7 +2,7 @@
 import Base from "../../layouts/Base.astro";
 import { loadTools } from "../../lib/data.ts";
 
-const tools = loadTools().sort((a, b) => b.released.localeCompare(a.released));
+const tools = loadTools().sort((a, b) => (b.released ?? "0").localeCompare(a.released ?? "0"));
 ---
 <Base title="Tools — ai-tracker" description="All tracked AI tools.">
   <h1>Tools</h1>

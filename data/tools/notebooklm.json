@@ -1,0 +1,21 @@
+{
+  "kind": "tool",
+  "id": "notebooklm",
+  "name": "NotebookLM",
+  "vendor": "Google",
+  "category": "research",
+  "released": null,
+  "homepage": "https://notebooklm.google.com",
+  "built_on_models": ["google__gemini-3.1-pro", "google__gemini-2.5-pro"],
+  "oss": false,
+  "pricing_tiers": [
+    { "name": "Free", "monthly_usd": 0 },
+    { "name": "Plus", "monthly_usd": 20, "notes": "Higher caps + customization" }
+  ],
+  "free_tier": true,
+  "modalities": ["text", "audio", "video"],
+  "links": { "homepage": "https://notebooklm.google.com" },
+  "tags": ["rag", "research", "audio-overviews"],
+  "sources": ["https://notebooklm.google.com"],
+  "status": "ga"
+}

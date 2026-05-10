@@ -1,0 +1,23 @@
+{
+  "kind": "tool",
+  "id": "v0",
+  "name": "v0",
+  "vendor": "Vercel",
+  "category": "design",
+  "released": null,
+  "homepage": "https://v0.app",
+  "built_on_models": [],
+  "oss": false,
+  "pricing_tiers": [
+    { "name": "Free", "monthly_usd": 0 },
+    { "name": "Premium", "monthly_usd": 20, "per_seat": true },
+    { "name": "Team", "monthly_usd": 30, "per_seat": true },
+    { "name": "Enterprise", "monthly_usd": null, "notes": "Contact sales" }
+  ],
+  "free_tier": true,
+  "modalities": ["text", "code"],
+  "links": { "homepage": "https://v0.app", "docs": "https://v0.dev/docs" },
+  "tags": ["ui-generator", "react", "shadcn"],
+  "sources": ["https://v0.app"],
+  "status": "ga"
+}

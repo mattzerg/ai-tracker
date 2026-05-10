@@ -1,0 +1,24 @@
+{
+  "kind": "tool",
+  "id": "chatgpt",
+  "name": "ChatGPT",
+  "vendor": "OpenAI",
+  "category": "chat",
+  "released": "2022-11-30",
+  "homepage": "https://chatgpt.com",
+  "built_on_models": ["openai__gpt-5.5-pro", "openai__gpt-5.5", "openai__gpt-5.4", "openai__gpt-5.4-mini"],
+  "oss": false,
+  "pricing_tiers": [
+    { "name": "Free", "monthly_usd": 0 },
+    { "name": "Plus", "monthly_usd": 20, "per_seat": true },
+    { "name": "Pro", "monthly_usd": 200, "per_seat": true },
+    { "name": "Team", "monthly_usd": 30, "per_seat": true },
+    { "name": "Enterprise", "monthly_usd": null, "notes": "Contact sales" }
+  ],
+  "free_tier": true,
+  "modalities": ["text", "vision", "audio", "image"],
+  "links": { "homepage": "https://chatgpt.com" },
+  "tags": ["consumer", "frontier-chat", "multimodal"],
+  "sources": ["https://chatgpt.com", "https://openai.com/index/chatgpt/"],
+  "status": "ga"
+}

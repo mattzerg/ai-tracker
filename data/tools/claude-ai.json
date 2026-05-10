@@ -1,0 +1,24 @@
+{
+  "kind": "tool",
+  "id": "claude-ai",
+  "name": "Claude.ai",
+  "vendor": "Anthropic",
+  "category": "chat",
+  "released": null,
+  "homepage": "https://claude.ai",
+  "built_on_models": ["anthropic__claude-opus-4-7", "anthropic__claude-sonnet-4-6", "anthropic__claude-haiku-4-5"],
+  "oss": false,
+  "pricing_tiers": [
+    { "name": "Free", "monthly_usd": 0 },
+    { "name": "Pro", "monthly_usd": 20, "per_seat": true },
+    { "name": "Max", "monthly_usd": 200, "per_seat": true, "notes": "5x Pro usage + Claude Code included" },
+    { "name": "Team", "monthly_usd": 30, "per_seat": true },
+    { "name": "Enterprise", "monthly_usd": null, "notes": "Contact sales" }
+  ],
+  "free_tier": true,
+  "modalities": ["text", "vision"],
+  "links": { "homepage": "https://claude.ai" },
+  "tags": ["consumer", "frontier-chat", "long-context"],
+  "sources": ["https://claude.ai", "https://www.anthropic.com/claude"],
+  "status": "ga"
+}

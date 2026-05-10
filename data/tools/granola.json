@@ -1,0 +1,22 @@
+{
+  "kind": "tool",
+  "id": "granola",
+  "name": "Granola",
+  "vendor": "Granola",
+  "category": "writing",
+  "released": null,
+  "homepage": "https://www.granola.ai",
+  "built_on_models": [],
+  "oss": false,
+  "pricing_tiers": [
+    { "name": "Free", "monthly_usd": 0, "notes": "25 meetings" },
+    { "name": "Individual", "monthly_usd": 18, "per_seat": true },
+    { "name": "Business", "monthly_usd": 14, "per_seat": true, "notes": "Per seat in team workspace" }
+  ],
+  "free_tier": true,
+  "modalities": ["text", "audio"],
+  "links": { "homepage": "https://www.granola.ai" },
+  "tags": ["meeting-notes", "transcription", "macos"],
+  "sources": ["https://www.granola.ai"],
+  "status": "ga"
+}

@@ -4,7 +4,7 @@ import { loadEvents, loadModels, loadTools } from "../lib/data.ts";
 export const GET: APIRoute = ({ site }) => {
   const base = (site?.toString() ?? "").replace(/\/$/, "");
   const models = loadModels().sort((a, b) => (b.released ?? "0").localeCompare(a.released ?? "0"));
-  const tools = loadTools().sort((a, b) => b.released.localeCompare(a.released));
+  const tools = loadTools().sort((a, b) => (b.released ?? "0").localeCompare(a.released ?? "0"));
   const events = loadEvents();
 
   const lines: string[] = [];

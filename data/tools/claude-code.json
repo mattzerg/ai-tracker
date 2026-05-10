@@ -1,0 +1,21 @@
+{
+  "kind": "tool",
+  "id": "claude-code",
+  "name": "Claude Code",
+  "vendor": "Anthropic",
+  "category": "agent-framework",
+  "released": null,
+  "homepage": "https://www.anthropic.com/claude-code",
+  "built_on_models": ["anthropic__claude-opus-4-7", "anthropic__claude-sonnet-4-6", "anthropic__claude-haiku-4-5"],
+  "oss": false,
+  "pricing_tiers": [
+    { "name": "Pay-per-use (API)", "monthly_usd": null, "notes": "Token-metered via Anthropic API" },
+    { "name": "Max Plan", "monthly_usd": 200, "notes": "Includes Claude Code usage" }
+  ],
+  "free_tier": false,
+  "modalities": ["text", "code"],
+  "links": { "homepage": "https://www.anthropic.com/claude-code", "docs": "https://docs.anthropic.com/en/docs/claude-code" },
+  "tags": ["cli", "agent", "coding"],
+  "sources": ["https://www.anthropic.com/claude-code"],
+  "status": "ga"
+}

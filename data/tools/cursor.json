@@ -1,0 +1,22 @@
+{
+  "kind": "tool",
+  "id": "cursor",
+  "name": "Cursor",
+  "vendor": "Anysphere",
+  "category": "ide",
+  "released": null,
+  "homepage": "https://cursor.sh",
+  "built_on_models": ["anthropic__claude-opus-4-7", "anthropic__claude-sonnet-4-6", "openai__gpt-5.4", "openai__gpt-5.3-codex"],
+  "oss": false,
+  "pricing_tiers": [
+    { "name": "Hobby", "monthly_usd": 0, "per_seat": false, "notes": "Limited completions" },
+    { "name": "Pro", "monthly_usd": 20, "per_seat": true },
+    { "name": "Business", "monthly_usd": 40, "per_seat": true }
+  ],
+  "free_tier": true,
+  "modalities": ["text", "code"],
+  "links": { "homepage": "https://cursor.sh", "docs": "https://docs.cursor.com" },
+  "tags": ["ai-ide", "code-completion", "agent"],
+  "sources": ["https://cursor.sh"],
+  "status": "ga"
+}
