@@ -1,4 +1,5 @@
 import type { Model } from "../../../schemas/index.ts";
+import { canonicalizeId } from "../canonicalize.ts";
 import type { Source, SourceContext, SourceResult } from "../types.ts";
 
 interface OpenRouterModel {
@@ -35,7 +36,8 @@ function toEntityId(orId: string): { provider: string; id: string } | null {
   const provider = PROVIDER_PREFIX_TO_PROVIDER[prefix];
   if (!provider || !rest) return null;
   const cleanRest = rest.replace(/[^a-z0-9._-]/gi, "-").toLowerCase();
-  return { provider, id: `${provider}__${cleanRest}` };
+  const canonical = canonicalizeId(provider, cleanRest);
+  return { provider, id: `${provider}__${canonical}` };
 }
 
 function stripProviderPrefix(name: string): string {

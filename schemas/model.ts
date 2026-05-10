@@ -28,16 +28,12 @@ export const modelPricingSchema = z.object({
   as_of: isoDate,
 });
 
-export const modelBenchmarksSchema = z
-  .object({
-    mmlu: z.number().min(0).max(1).optional(),
-    humaneval: z.number().min(0).max(1).optional(),
-    swe_bench: z.number().min(0).max(1).optional(),
-    gpqa: z.number().min(0).max(1).optional(),
-    arena_elo: z.number().int().optional(),
-    aider_polyglot: z.number().min(0).max(1).optional(),
-  })
-  .partial();
+// Benchmarks accept arbitrary string keys with numeric values. Standard benchmarks
+// (mmlu, humaneval, swe_bench, gpqa) are 0-1 fractions. Arena Elo is an int.
+// Provider-bespoke benchmarks (cursorbench, xbow_visual_acuity, gdpval_aa, etc.)
+// also welcome — providers often publish their own evals before academic ones.
+// The renderer formats by heuristic (>1 = score, ≤1 = fraction).
+export const modelBenchmarksSchema = z.record(z.string(), z.number());
 
 export const modelSchema = z.object({
   kind: z.literal("model"),
