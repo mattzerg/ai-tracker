@@ -15,7 +15,9 @@
     "verify:all": "pnpm verify:refs && pnpm verify:sources",
     "ingest:dry": "tsx scripts/ingest.ts --dry-run",
     "ingest:staging": "tsx scripts/ingest.ts --write-staging",
-    "ingest:apply": "tsx scripts/ingest.ts --apply"
+    "ingest:apply": "tsx scripts/ingest.ts --apply",
+    "ingest:queue": "tsx scripts/ingest-to-queue.ts",
+    "ingest:queue:status": "tsx scripts/ingest-to-queue.ts --status"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.2",
