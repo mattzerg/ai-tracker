@@ -2,14 +2,18 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { loadEvents, loadModels, loadTools } from "../src/lib/data.ts";
 import { diffEvents, diffModels, diffTools } from "./ingest/diff.ts";
+import { mergeModel, mergeTool } from "./ingest/merge.ts";
+import { anthropicChangelog } from "./ingest/sources/anthropic-changelog.ts";
 import { openrouter } from "./ingest/sources/openrouter.ts";
 import type { Event, Model, Tool } from "../schemas/index.ts";
-import type { Source, SourceContext } from "./ingest/types.ts";
+import type { Source, SourceContext, SourceTrust } from "./ingest/types.ts";
 
 const ROOT = resolve(import.meta.dirname, "..");
 const TMP = join(ROOT, "tmp");
 
-const SOURCES: Source[] = [openrouter];
+// Authoritative sources run FIRST so their data lands before supplementary aggregators
+// have a chance to overwrite. Each source dedupes within itself; first-write-wins across.
+const SOURCES: Source[] = [anthropicChangelog, openrouter];
 
 const MAX_USD = Number(process.env.MAX_INGEST_USD ?? 2);
 
@@ -26,9 +30,7 @@ async function main() {
   console.log(`sources: ${SOURCES.map((s) => s.id).join(", ")}`);
   console.log(`cost cap: $${MAX_USD.toFixed(2)}\n`);
 
-  const allModels: Model[] = [];
-  const allTools: Tool[] = [];
-  const allEvents: Event[] = [];
+  const proposed: { models: { entry: Model; trust: SourceTrust }[]; tools: { entry: Tool; trust: SourceTrust }[]; events: Event[] } = { models: [], tools: [], events: [] };
   const allWarnings: { source: string; warning: string }[] = [];
   let totalCost = 0;
 
@@ -41,10 +43,10 @@ async function main() {
     const e = result.events?.length ?? 0;
     const cost = result.estimatedCostUsd ?? 0;
     totalCost += cost;
-    console.log(`  ${src.id}: ${m} models, ${t} tools, ${e} events, $${cost.toFixed(4)} (${ms} ms)`);
-    if (result.models) allModels.push(...result.models);
-    if (result.tools) allTools.push(...result.tools);
-    if (result.events) allEvents.push(...result.events);
+    console.log(`  ${src.id} [${src.trust}]: ${m} models, ${t} tools, ${e} events, $${cost.toFixed(4)} (${ms} ms)`);
+    if (result.models) for (const entry of result.models) proposed.models.push({ entry, trust: src.trust });
+    if (result.tools) for (const entry of result.tools) proposed.tools.push({ entry, trust: src.trust });
+    if (result.events) proposed.events.push(...result.events);
     if (result.warnings) for (const w of result.warnings) allWarnings.push({ source: src.id, warning: w });
     if (totalCost > MAX_USD) {
       console.warn(`  ! cost cap $${MAX_USD} exceeded, halting subsequent sources`);
@@ -55,10 +57,30 @@ async function main() {
   const currentModels = loadModels();
   const currentTools = loadTools();
   const currentEvents = loadEvents();
+  const currentModelById = new Map(currentModels.map((m) => [m.id, m]));
+  const currentToolById = new Map(currentTools.map((t) => [t.id, t]));
 
-  const modelDiff = diffModels(currentModels, allModels);
-  const toolDiff = diffTools(currentTools, allTools);
-  const eventDiff = diffEvents(currentEvents, allEvents);
+  // Merge each proposed entry against existing (so phantom diffs from supplementary sources collapse).
+  const mergedModels: Model[] = [];
+  const seenModelIds = new Set<string>();
+  for (const { entry, trust } of proposed.models) {
+    if (seenModelIds.has(entry.id)) continue;
+    seenModelIds.add(entry.id);
+    const existing = currentModelById.get(entry.id);
+    mergedModels.push(existing ? mergeModel(existing, entry, { trust }) : entry);
+  }
+  const mergedTools: Tool[] = [];
+  const seenToolIds = new Set<string>();
+  for (const { entry, trust } of proposed.tools) {
+    if (seenToolIds.has(entry.id)) continue;
+    seenToolIds.add(entry.id);
+    const existing = currentToolById.get(entry.id);
+    mergedTools.push(existing ? mergeTool(existing, entry, { trust }) : entry);
+  }
+
+  const modelDiff = diffModels(currentModels, mergedModels);
+  const toolDiff = diffTools(currentTools, mergedTools);
+  const eventDiff = diffEvents(currentEvents, proposed.events);
 
   console.log("\n--- diff summary ---");
   console.log(`Models   : +${modelDiff.added.length} new, ~${modelDiff.updated.length} updated, ${modelDiff.unchanged} unchanged`);

@@ -38,6 +38,12 @@ function toEntityId(orId: string): { provider: string; id: string } | null {
   return { provider, id: `${provider}__${cleanRest}` };
 }
 
+function stripProviderPrefix(name: string): string {
+  // OR names look like "OpenAI: GPT-5.5 Pro" — strip the leading "<Vendor>: " prefix.
+  const m = name.match(/^[A-Z][\w.&-]*:\s+(.+)$/);
+  return m ? m[1] : name;
+}
+
 function toModel(or: OpenRouterModel, now: Date): Model | null {
   const ent = toEntityId(or.id);
   if (!ent) return null;
@@ -49,7 +55,7 @@ function toModel(or: OpenRouterModel, now: Date): Model | null {
   return {
     kind: "model",
     id: ent.id,
-    name: or.name,
+    name: stripProviderPrefix(or.name),
     provider: ent.provider,
     released,
     context_window: ctx && ctx > 0 ? ctx : null,
@@ -70,6 +76,7 @@ function toModel(or: OpenRouterModel, now: Date): Model | null {
 export const openrouter: Source = {
   id: "openrouter",
   description: "OpenRouter /api/v1/models — aggregator catalog covering most frontier providers.",
+  trust: "supplementary",
   async run(ctx: SourceContext): Promise<SourceResult> {
     const warnings: string[] = [];
     let raw: { data: OpenRouterModel[] } | undefined;

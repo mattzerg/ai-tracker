@@ -1,5 +1,7 @@
 import type { Event, Model, Tool } from "../../schemas/index.ts";
 
+export type SourceTrust = "authoritative" | "supplementary";
+
 export interface SourceContext {
   now: Date;
   /** True when the runner is in dry-run mode — readers should still fetch but never write to disk. */
@@ -26,6 +28,8 @@ export interface Source {
   id: string;
   /** One-line description for the PR body and CLI output. */
   description: string;
+  /** "authoritative" for provider docs/news; "supplementary" for aggregators (OpenRouter, HF leaderboards). */
+  trust: SourceTrust;
   /** Run the source. Must be idempotent and side-effect-free except for tmp/ snapshots. */
   run(ctx: SourceContext): Promise<SourceResult>;
 }
