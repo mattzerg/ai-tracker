@@ -1,0 +1,27 @@
+{
+  "kind": "model",
+  "id": "anthropic__claude-haiku-4-5",
+  "name": "Claude Haiku 4.5",
+  "provider": "anthropic",
+  "released": "2025-10-15",
+  "context_window": 200000,
+  "output_window": 64000,
+  "modalities": ["text", "vision"],
+  "license": "proprietary",
+  "pricing": {
+    "input_per_mtok": 1,
+    "output_per_mtok": 5,
+    "as_of": "2026-05-09"
+  },
+  "links": {
+    "homepage": "https://www.anthropic.com/claude",
+    "docs": "https://platform.claude.com/docs/en/docs/about-claude/models/overview",
+    "card": "https://www.anthropic.com/news/claude-haiku-4-5"
+  },
+  "tags": ["fast", "extended-thinking", "small-model"],
+  "sources": [
+    "https://platform.claude.com/docs/en/docs/about-claude/models/overview",
+    "https://www.anthropic.com/news/claude-haiku-4-5"
+  ],
+  "status": "ga"
+}
