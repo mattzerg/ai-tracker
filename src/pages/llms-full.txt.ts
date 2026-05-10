@@ -7,7 +7,7 @@ function renderModel(m: Model, base: string): string[] {
   out.push(`## ${m.name}  (${base}/models/${m.id})`);
   out.push("");
   out.push(`Provider: ${m.provider}`);
-  out.push(`Released: ${m.released}`);
+  out.push(`Released: ${m.released ?? "n/a"}`);
   out.push(`License: ${m.license}`);
   if (m.context_window) out.push(`Context: ${m.context_window.toLocaleString()} tokens`);
   if (m.output_window) out.push(`Max output: ${m.output_window.toLocaleString()} tokens`);
@@ -63,7 +63,7 @@ function renderTool(t: Tool, base: string): string[] {
 
 export const GET: APIRoute = ({ site }) => {
   const base = (site?.toString() ?? "").replace(/\/$/, "");
-  const models = loadModels().sort((a, b) => b.released.localeCompare(a.released));
+  const models = loadModels().sort((a, b) => (b.released ?? "0").localeCompare(a.released ?? "0"));
   const tools = loadTools().sort((a, b) => b.released.localeCompare(a.released));
   const events = loadEvents();
 

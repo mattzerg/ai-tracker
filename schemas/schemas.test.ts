@@ -19,6 +19,23 @@ describe("modelSchema", () => {
     expect(r.success).toBe(true);
   });
 
+  it("accepts null released", () => {
+    const r = modelSchema.safeParse({
+      kind: "model",
+      id: "openai__gpt-5",
+      name: "GPT-5",
+      provider: "openai",
+      released: null,
+      context_window: 1_000_000,
+      modalities: ["text"],
+      license: "proprietary",
+      pricing: null,
+      links: {},
+      sources: ["https://example.com"],
+    });
+    expect(r.success).toBe(true);
+  });
+
   it("rejects bad date", () => {
     const r = modelSchema.safeParse({
       kind: "model",

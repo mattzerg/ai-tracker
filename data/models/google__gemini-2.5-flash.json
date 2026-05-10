@@ -1,0 +1,16 @@
+{
+  "kind": "model",
+  "id": "google__gemini-2.5-flash",
+  "name": "Gemini 2.5 Flash",
+  "provider": "google",
+  "released": null,
+  "context_window": 1048576,
+  "output_window": 65536,
+  "modalities": ["text", "vision", "video"],
+  "license": "proprietary",
+  "pricing": { "input_per_mtok": 0.30, "output_per_mtok": 2.50, "as_of": "2026-05-09" },
+  "links": { "homepage": "https://deepmind.google/technologies/gemini/", "docs": "https://ai.google.dev/gemini-api/docs/models" },
+  "tags": ["fast", "high-volume", "long-context"],
+  "sources": ["https://ai.google.dev/gemini-api/docs/pricing", "https://ai.google.dev/gemini-api/docs/models"],
+  "status": "ga"
+}

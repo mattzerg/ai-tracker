@@ -1,0 +1,25 @@
+{
+  "kind": "model",
+  "id": "openai__gpt-5.5-pro",
+  "name": "GPT-5.5 Pro",
+  "provider": "openai",
+  "released": null,
+  "context_window": 1050000,
+  "output_window": 128000,
+  "modalities": ["text", "vision"],
+  "license": "proprietary",
+  "pricing": {
+    "input_per_mtok": 30,
+    "output_per_mtok": 180,
+    "as_of": "2026-05-09"
+  },
+  "links": {
+    "homepage": "https://openai.com",
+    "docs": "https://platform.openai.com/docs/models"
+  },
+  "tags": ["frontier", "reasoning", "long-context"],
+  "sources": [
+    "https://openrouter.ai/api/v1/models"
+  ],
+  "status": "ga"
+}

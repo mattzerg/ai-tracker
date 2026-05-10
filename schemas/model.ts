@@ -44,7 +44,7 @@ export const modelSchema = z.object({
   id: entityId,
   name: z.string().min(1),
   provider: z.string().min(1),
-  released: isoDate,
+  released: isoDate.nullable(),
   context_window: z.number().int().positive().nullable(),
   output_window: z.number().int().positive().nullable().optional(),
   modalities: z.array(modalitySchema).min(1),

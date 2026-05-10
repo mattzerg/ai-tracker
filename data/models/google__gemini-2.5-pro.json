@@ -1,0 +1,16 @@
+{
+  "kind": "model",
+  "id": "google__gemini-2.5-pro",
+  "name": "Gemini 2.5 Pro",
+  "provider": "google",
+  "released": null,
+  "context_window": 1048576,
+  "output_window": 65536,
+  "modalities": ["text", "vision", "audio", "video"],
+  "license": "proprietary",
+  "pricing": { "input_per_mtok": 1.25, "output_per_mtok": 10, "as_of": "2026-05-09" },
+  "links": { "homepage": "https://deepmind.google/technologies/gemini/", "docs": "https://ai.google.dev/gemini-api/docs/models" },
+  "tags": ["balanced", "long-context", "multimodal"],
+  "sources": ["https://ai.google.dev/gemini-api/docs/pricing"],
+  "status": "ga"
+}

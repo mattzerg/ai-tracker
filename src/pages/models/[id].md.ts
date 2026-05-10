@@ -11,7 +11,7 @@ function render(model: Model): string {
   lines.push(`# ${model.name}`);
   lines.push("");
   lines.push(`**Provider:** ${model.provider}`);
-  lines.push(`**Released:** ${model.released}`);
+  lines.push(`**Released:** ${model.released ?? "n/a"}`);
   lines.push(`**License:** ${model.license}`);
   if (model.context_window) lines.push(`**Context window:** ${model.context_window.toLocaleString()} tokens`);
   lines.push(`**Modalities:** ${model.modalities.join(", ")}`);

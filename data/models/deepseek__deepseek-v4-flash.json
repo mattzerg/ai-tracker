@@ -1,0 +1,16 @@
+{
+  "kind": "model",
+  "id": "deepseek__deepseek-v4-flash",
+  "name": "DeepSeek V4 Flash",
+  "provider": "deepseek",
+  "released": null,
+  "context_window": 1048576,
+  "output_window": 384000,
+  "modalities": ["text"],
+  "license": "proprietary",
+  "pricing": { "input_per_mtok": 0.14, "output_per_mtok": 0.28, "as_of": "2026-05-09" },
+  "links": { "homepage": "https://deepseek.com", "docs": "https://api-docs.deepseek.com" },
+  "tags": ["fast", "cheap", "long-context"],
+  "sources": ["https://api-docs.deepseek.com/quick_start/pricing", "https://openrouter.ai/api/v1/models"],
+  "status": "ga"
+}

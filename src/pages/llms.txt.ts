@@ -3,7 +3,7 @@ import { loadEvents, loadModels, loadTools } from "../lib/data.ts";
 
 export const GET: APIRoute = ({ site }) => {
   const base = (site?.toString() ?? "").replace(/\/$/, "");
-  const models = loadModels().sort((a, b) => b.released.localeCompare(a.released));
+  const models = loadModels().sort((a, b) => (b.released ?? "0").localeCompare(a.released ?? "0"));
   const tools = loadTools().sort((a, b) => b.released.localeCompare(a.released));
   const events = loadEvents();
 
@@ -22,7 +22,7 @@ export const GET: APIRoute = ({ site }) => {
   lines.push(`## Models (${models.length})`);
   lines.push("");
   for (const m of models) {
-    lines.push(`- [${m.name}](${base}/models/${m.id}) — ${m.provider}, ${m.released}`);
+    lines.push(`- [${m.name}](${base}/models/${m.id}) — ${m.provider}, ${m.released ?? "n/a"}`);
   }
   lines.push("");
   lines.push(`## Tools (${tools.length})`);

@@ -1,0 +1,25 @@
+{
+  "kind": "model",
+  "id": "openai__gpt-5.4-mini",
+  "name": "GPT-5.4 mini",
+  "provider": "openai",
+  "released": null,
+  "context_window": 400000,
+  "output_window": 128000,
+  "modalities": ["text", "vision"],
+  "license": "proprietary",
+  "pricing": {
+    "input_per_mtok": 0.75,
+    "output_per_mtok": 4.5,
+    "as_of": "2026-05-09"
+  },
+  "links": {
+    "homepage": "https://openai.com",
+    "docs": "https://platform.openai.com/docs/models"
+  },
+  "tags": ["small", "fast"],
+  "sources": [
+    "https://openrouter.ai/api/v1/models"
+  ],
+  "status": "ga"
+}

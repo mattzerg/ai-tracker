@@ -1,0 +1,16 @@
+{
+  "kind": "model",
+  "id": "xai__grok-4.20",
+  "name": "Grok 4.20",
+  "provider": "xai",
+  "released": null,
+  "context_window": 2000000,
+  "output_window": null,
+  "modalities": ["text"],
+  "license": "proprietary",
+  "pricing": { "input_per_mtok": 1.25, "output_per_mtok": 2.50, "as_of": "2026-05-09" },
+  "links": { "homepage": "https://x.ai", "docs": "https://docs.x.ai/docs/models" },
+  "tags": ["reasoning", "long-context"],
+  "sources": ["https://docs.x.ai/docs/models", "https://openrouter.ai/api/v1/models"],
+  "status": "ga"
+}

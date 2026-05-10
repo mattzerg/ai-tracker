@@ -1,0 +1,16 @@
+{
+  "kind": "model",
+  "id": "openai__gpt-5.3-codex",
+  "name": "GPT-5.3 Codex",
+  "provider": "openai",
+  "released": null,
+  "context_window": 400000,
+  "output_window": 128000,
+  "modalities": ["text", "code"],
+  "license": "proprietary",
+  "pricing": { "input_per_mtok": 1.75, "output_per_mtok": 14, "as_of": "2026-05-09" },
+  "links": { "homepage": "https://openai.com", "docs": "https://platform.openai.com/docs/models" },
+  "tags": ["coding", "agentic"],
+  "sources": ["https://openrouter.ai/api/v1/models"],
+  "status": "ga"
+}

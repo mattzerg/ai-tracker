@@ -1,0 +1,16 @@
+{
+  "kind": "model",
+  "id": "meta__llama-4-scout",
+  "name": "Llama 4 Scout",
+  "provider": "meta",
+  "released": null,
+  "context_window": 10000000,
+  "output_window": null,
+  "modalities": ["text", "vision"],
+  "license": "llama-community",
+  "pricing": null,
+  "links": { "homepage": "https://www.llama.com" },
+  "tags": ["open-weights", "multimodal", "very-long-context"],
+  "sources": ["https://www.llama.com/"],
+  "status": "ga"
+}

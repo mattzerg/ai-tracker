@@ -1,0 +1,16 @@
+{
+  "kind": "model",
+  "id": "google__gemini-3.1-pro",
+  "name": "Gemini 3.1 Pro",
+  "provider": "google",
+  "released": null,
+  "context_window": 1048576,
+  "output_window": 65536,
+  "modalities": ["text", "vision", "audio", "video"],
+  "license": "proprietary",
+  "pricing": { "input_per_mtok": 2, "output_per_mtok": 12, "as_of": "2026-05-09" },
+  "links": { "homepage": "https://deepmind.google/technologies/gemini/", "docs": "https://ai.google.dev/gemini-api/docs/models" },
+  "tags": ["frontier", "long-context", "multimodal", "preview"],
+  "sources": ["https://openrouter.ai/api/v1/models", "https://ai.google.dev/gemini-api/docs/pricing"],
+  "status": "preview"
+}
