@@ -33,6 +33,7 @@ export const GET: APIRoute = ({ site }) => {
   urls.push(urlEntry(`${base}/dump/all.json`, today));
   urls.push(urlEntry(`${base}/dump/events-30d.json`, today));
   urls.push(urlEntry(`${base}/feed.xml`, today));
+  urls.push(urlEntry(`${base}/atom.xml`, today));
   urls.push(urlEntry(`${base}/api/votes.json`, today));
 
   // Per-entity twins + OG.

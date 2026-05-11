@@ -36,7 +36,8 @@ const absImage = ogImage
     {description ? <meta name="twitter:description" content={description} /> : null}
     {absImage ? <meta name="twitter:image" content={absImage} /> : null}
 
-    <link rel="alternate" type="application/rss+xml" title="ai-tracker — every event" href="/feed.xml" />
+    <link rel="alternate" type="application/rss+xml" title="ai-tracker — every event (RSS)" href="/feed.xml" />
+    <link rel="alternate" type="application/atom+xml" title="ai-tracker — every event (Atom)" href="/atom.xml" />
     <link rel="icon" href="/favicon.svg" />
   </head>
   <body>
@@ -57,7 +58,7 @@ const absImage = ogImage
       <slot />
     </main>
     <footer>
-      <p>Public data. <a href="/llms.txt">/llms.txt</a> · <a href="/dump/all.json">/dump/all.json</a> · <a href="/feed.xml">RSS</a></p>
+      <p>Public data. <a href="/llms.txt">/llms.txt</a> · <a href="/dump/all.json">/dump/all.json</a> · <a href="/feed.xml">RSS</a> · <a href="/atom.xml">Atom</a></p>
     </footer>
     <style is:global>
       :root {
