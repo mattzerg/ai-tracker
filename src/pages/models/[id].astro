@@ -1,5 +1,6 @@
 ---
 import Base from "../../layouts/Base.astro";
+import JsonLd from "../../components/JsonLd.astro";
 import { eventsForEntity, loadModels, loadTools } from "../../lib/data.ts";
 import type { Model } from "../../../schemas/index.ts";
 
@@ -13,8 +14,10 @@ const events = eventsForEntity(model.id);
 const usedBy = loadTools()
   .filter((t) => t.built_on_models.includes(model.id))
   .sort((a, b) => a.name.localeCompare(b.name));
+const canonicalUrl = new URL(`/models/${model.id}`, Astro.site).toString();
 ---
 <Base title={`${model.name} — ai-tracker`} description={`${model.name} by ${model.provider}.`}>
+  <JsonLd entity={model} url={canonicalUrl} />
   <p><a href="/models">← Models</a></p>
   <h1>{model.name}</h1>
   <p><strong><a href={`/providers/${model.provider}`}>{model.provider}</a></strong> · {model.released ? `released ${model.released}` : "release date n/a"} · {model.license}</p>

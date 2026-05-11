@@ -1,0 +1,99 @@
+---
+import Base from "../layouts/Base.astro";
+import { entityById, loadEvents } from "../lib/data.ts";
+
+// ISO week computation: returns "YYYY-Www" + the Monday-anchored start date.
+function isoWeekKey(dateStr: string): { key: string; weekStart: string } {
+  const d = new Date(dateStr + "T00:00:00Z");
+  const day = d.getUTCDay() || 7; // Mon=1..Sun=7
+  // Anchor to Monday of the week.
+  const monday = new Date(d);
+  monday.setUTCDate(d.getUTCDate() - (day - 1));
+  // Compute ISO week per https://en.wikipedia.org/wiki/ISO_week_date
+  const target = new Date(d.valueOf());
+  target.setUTCDate(target.getUTCDate() + 4 - day);
+  const yearStart = new Date(Date.UTC(target.getUTCFullYear(), 0, 1));
+  const week = Math.ceil(((target.valueOf() - yearStart.valueOf()) / 86400000 + 1) / 7);
+  const key = `${target.getUTCFullYear()}-W${String(week).padStart(2, "0")}`;
+  return { key, weekStart: monday.toISOString().slice(0, 10) };
+}
+
+interface WeekBucket {
+  key: string;
+  weekStart: string;
+  events: Array<{ event: ReturnType<typeof loadEvents>[number]; entityName: string; entityKind: "model" | "tool"; entityId: string }>;
+}
+
+const events = loadEvents(); // newest first
+const buckets = new Map<string, WeekBucket>();
+for (const e of events) {
+  const { key, weekStart } = isoWeekKey(e.date);
+  if (!buckets.has(key)) buckets.set(key, { key, weekStart, events: [] });
+  const ent = entityById(e.entity);
+  buckets.get(key)!.events.push({
+    event: e,
+    entityName: ent?.name ?? e.entity,
+    entityKind: (ent?.kind === "tool" ? "tool" : "model"),
+    entityId: e.entity,
+  });
+}
+
+const weeksAll = Array.from(buckets.values()).sort((a, b) => b.weekStart.localeCompare(a.weekStart));
+const weeksRecent = weeksAll.slice(0, 4);
+const weeksRest = weeksAll.slice(4);
+
+function fmtRange(weekStart: string): string {
+  const start = new Date(weekStart + "T00:00:00Z");
+  const end = new Date(start);
+  end.setUTCDate(start.getUTCDate() + 6);
+  const m = (d: Date) => d.toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "UTC" });
+  return `${m(start)} – ${m(end)}, ${end.getUTCFullYear()}`;
+}
+---
+<Base title="Changes by week — ai-tracker" description="Every tracked AI model and tool event, grouped by ISO week.">
+  <h1>Changes</h1>
+  <p>{events.length} events across {weeksAll.length} weeks. Newest first.</p>
+
+  <h2>Last 4 weeks</h2>
+  {weeksRecent.length === 0 ? (
+    <p><em>No events yet.</em></p>
+  ) : weeksRecent.map((w) => (
+    <section class="week recent">
+      <h3>{w.key} — {fmtRange(w.weekStart)} <span class="count">({w.events.length})</span></h3>
+      <ul>
+        {w.events.map(({ event, entityName, entityKind, entityId }) => (
+          <li>
+            <code>{event.date}</code> · <strong>{event.type}</strong> ·
+            <a href={`/${entityKind}s/${entityId}`}>{entityName}</a> — {event.summary}
+          </li>
+        ))}
+      </ul>
+    </section>
+  ))}
+
+  {weeksRest.length > 0 ? (
+    <>
+      <h2>Earlier</h2>
+      {weeksRest.map((w) => (
+        <section class="week">
+          <h3>{w.key} — {fmtRange(w.weekStart)} <span class="count">({w.events.length})</span></h3>
+          <ul>
+            {w.events.map(({ event, entityName, entityKind, entityId }) => (
+              <li>
+                <code>{event.date}</code> · <strong>{event.type}</strong> ·
+                <a href={`/${entityKind}s/${entityId}`}>{entityName}</a> — {event.summary}
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))}
+    </>
+  ) : null}
+
+  <style>
+    .week { margin: 1.5rem 0; }
+    .week h3 { font-size: 1.05rem; padding-bottom: 0.4rem; border-bottom: 1px solid #eee; }
+    .week.recent h3 { background: #f0f4ff; padding: 0.4rem 0.6rem; border-radius: 3px; border-bottom: none; }
+    .count { color: #666; font-weight: 400; font-size: 0.9rem; }
+  </style>
+</Base>

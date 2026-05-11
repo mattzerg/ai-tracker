@@ -1,0 +1,129 @@
+---
+import type { Model, Tool } from "../../schemas/index.ts";
+
+interface Props {
+  entity: Model | Tool;
+  url: string; // canonical URL for this page
+}
+const { entity, url } = Astro.props;
+
+function modelLd(m: Model, url: string) {
+  const offers = m.pricing
+    ? [
+        m.pricing.input_per_mtok != null
+          ? {
+              "@type": "Offer",
+              "name": "Input tokens",
+              "priceCurrency": "USD",
+              "price": m.pricing.input_per_mtok,
+              "priceSpecification": {
+                "@type": "UnitPriceSpecification",
+                "price": m.pricing.input_per_mtok,
+                "priceCurrency": "USD",
+                "unitText": "per million tokens",
+              },
+              "availability": "https://schema.org/InStock",
+              "validFrom": m.pricing.as_of,
+            }
+          : null,
+        m.pricing.output_per_mtok != null
+          ? {
+              "@type": "Offer",
+              "name": "Output tokens",
+              "priceCurrency": "USD",
+              "price": m.pricing.output_per_mtok,
+              "priceSpecification": {
+                "@type": "UnitPriceSpecification",
+                "price": m.pricing.output_per_mtok,
+                "priceCurrency": "USD",
+                "unitText": "per million tokens",
+              },
+              "availability": "https://schema.org/InStock",
+              "validFrom": m.pricing.as_of,
+            }
+          : null,
+      ].filter(Boolean)
+    : [];
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": m.name,
+    "applicationCategory": "AIApplication",
+    "applicationSubCategory": "LargeLanguageModel",
+    "url": url,
+    "operatingSystem": "Cloud API",
+    "softwareVersion": m.released ?? undefined,
+    "datePublished": m.released ?? undefined,
+    "license": m.license,
+    "creator": { "@type": "Organization", "name": m.provider },
+    "publisher": { "@type": "Organization", "name": m.provider },
+    "keywords": m.tags?.join(", ") || undefined,
+    ...(offers.length ? { "offers": offers } : {}),
+    "additionalProperty": [
+      m.context_window
+        ? {
+            "@type": "PropertyValue",
+            "name": "contextWindowTokens",
+            "value": m.context_window,
+          }
+        : null,
+      m.output_window
+        ? {
+            "@type": "PropertyValue",
+            "name": "maxOutputTokens",
+            "value": m.output_window,
+          }
+        : null,
+      m.modalities?.length
+        ? {
+            "@type": "PropertyValue",
+            "name": "modalities",
+            "value": m.modalities.join(", "),
+          }
+        : null,
+    ].filter(Boolean),
+    "sameAs": m.sources,
+  };
+}
+
+function toolLd(t: Tool, url: string) {
+  const offers = t.pricing_tiers.map((tier) => ({
+    "@type": "Offer",
+    "name": tier.name,
+    "priceCurrency": "USD",
+    "price": tier.monthly_usd ?? "Contact",
+    ...(tier.monthly_usd != null
+      ? {
+          "priceSpecification": {
+            "@type": "UnitPriceSpecification",
+            "price": tier.monthly_usd,
+            "priceCurrency": "USD",
+            "unitText": tier.per_seat ? "per seat per month" : "per month",
+          },
+        }
+      : {}),
+    "availability": "https://schema.org/InStock",
+  }));
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": t.name,
+    "applicationCategory": "AIApplication",
+    "applicationSubCategory": t.category,
+    "url": url,
+    "isAccessibleForFree": t.free_tier,
+    "datePublished": t.released ?? undefined,
+    "creator": { "@type": "Organization", "name": t.vendor },
+    "publisher": { "@type": "Organization", "name": t.vendor },
+    "keywords": t.tags?.join(", ") || undefined,
+    ...(t.oss && t.oss_repo ? { "codeRepository": t.oss_repo, "license": "Open Source" } : {}),
+    ...(offers.length ? { "offers": offers } : {}),
+    "sameAs": t.sources,
+  };
+}
+
+const ld = entity.kind === "model" ? modelLd(entity, url) : toolLd(entity, url);
+---
+<script type="application/ld+json" set:html={JSON.stringify(ld)}></script>
