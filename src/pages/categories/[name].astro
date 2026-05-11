@@ -1,0 +1,74 @@
+---
+import Base from "../../layouts/Base.astro";
+import { loadModels, loadTools } from "../../lib/data.ts";
+
+export function getStaticPaths() {
+  const categories = Array.from(new Set(loadTools().map((t) => t.category)));
+  return categories.map((name) => ({ params: { name }, props: { category: name } }));
+}
+
+interface Props { category: string; }
+const { category } = Astro.props;
+
+const tools = loadTools()
+  .filter((t) => t.category === category)
+  .sort((a, b) => a.name.localeCompare(b.name));
+
+const models = loadModels();
+const modelById = new Map(models.map((m) => [m.id, m]));
+
+// Which models power this category? Aggregate across all tools in the category.
+const modelUsage = new Map<string, number>();
+for (const t of tools) {
+  for (const id of t.built_on_models) {
+    modelUsage.set(id, (modelUsage.get(id) ?? 0) + 1);
+  }
+}
+const topModels = Array.from(modelUsage.entries())
+  .sort((a, b) => b[1] - a[1])
+  .slice(0, 10)
+  .map(([id, count]) => ({ model: modelById.get(id), count }))
+  .filter((x) => x.model);
+
+const ossCount = tools.filter((t) => t.oss).length;
+const freeCount = tools.filter((t) => t.free_tier).length;
+const vendors = new Set(tools.map((t) => t.vendor));
+---
+<Base title={`${category} — ai-tracker`} description={`All ${category} AI tools tracked, with OSS share, free-tier availability, and underlying model adoption.`}>
+  <p><a href="/categories">← Categories</a></p>
+  <h1>{category}</h1>
+  <p>
+    {tools.length} tool{tools.length === 1 ? "" : "s"} · {vendors.size} vendor{vendors.size === 1 ? "" : "s"}
+    · {ossCount} OSS · {freeCount} with free tier
+  </p>
+
+  <h2>Tools</h2>
+  <ul>
+    {tools.map((t) => (
+      <li>
+        <a href={`/tools/${t.id}`}>{t.name}</a> · {t.vendor}
+        {t.oss ? " · OSS" : ""}{t.free_tier ? " · free tier" : ""}
+      </li>
+    ))}
+  </ul>
+
+  {topModels.length > 0 ? (
+    <>
+      <h2>Most-used models in this category</h2>
+      <ol>
+        {topModels.map((x) => (
+          <li>
+            <a href={`/models/${x.model!.id}`}>{x.model!.name}</a>
+            <span class="muted"> · {x.model!.provider} · {x.count} tool{x.count === 1 ? "" : "s"}</span>
+          </li>
+        ))}
+      </ol>
+    </>
+  ) : (
+    <p><em>No model wirings declared for this category yet.</em></p>
+  )}
+
+  <style>
+    .muted { color: #666; }
+  </style>
+</Base>

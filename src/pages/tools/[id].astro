@@ -18,7 +18,7 @@ const builtOn = tool.built_on_models
   <p><a href="/tools">← Tools</a></p>
   <h1>{tool.name}</h1>
   <p>
-    <strong>{tool.vendor}</strong> · {tool.category} · {tool.released ? `released ${tool.released}` : "release date n/a"}
+    <strong>{tool.vendor}</strong> · <a href={`/categories/${tool.category}`}>{tool.category}</a> · {tool.released ? `released ${tool.released}` : "release date n/a"}
     {tool.oss ? " · open source" : ""}
   </p>
 

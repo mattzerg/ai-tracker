@@ -1,0 +1,67 @@
+---
+import Base from "../../layouts/Base.astro";
+import { loadTools } from "../../lib/data.ts";
+
+const tools = loadTools();
+
+interface CategoryRow {
+  name: string;
+  toolCount: number;
+  ossCount: number;
+  freeTierCount: number;
+  vendors: number;
+}
+
+const groups = new Map<string, typeof tools>();
+for (const t of tools) {
+  if (!groups.has(t.category)) groups.set(t.category, []);
+  groups.get(t.category)!.push(t);
+}
+
+const rows: CategoryRow[] = [];
+for (const [category, list] of groups) {
+  const vendors = new Set(list.map((t) => t.vendor));
+  rows.push({
+    name: category,
+    toolCount: list.length,
+    ossCount: list.filter((t) => t.oss).length,
+    freeTierCount: list.filter((t) => t.free_tier).length,
+    vendors: vendors.size,
+  });
+}
+rows.sort((a, b) => b.toolCount - a.toolCount);
+---
+<Base title="Categories — ai-tracker" description="All AI tool categories tracked, with OSS share, free-tier coverage, and vendor count.">
+  <h1>Categories</h1>
+  <p>{rows.length} categories · {tools.length} tools combined.</p>
+
+  <table class="categories">
+    <thead>
+      <tr>
+        <th>Category</th>
+        <th>Tools</th>
+        <th>OSS</th>
+        <th>Free tier</th>
+        <th>Vendors</th>
+      </tr>
+    </thead>
+    <tbody>
+      {rows.map((r) => (
+        <tr>
+          <td><a href={`/categories/${r.name}`}>{r.name}</a></td>
+          <td class="num">{r.toolCount}</td>
+          <td class="num">{r.ossCount}</td>
+          <td class="num">{r.freeTierCount}</td>
+          <td class="num">{r.vendors}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+
+  <style>
+    table.categories { width: 100%; border-collapse: collapse; font-size: 0.95rem; margin-top: 1rem; }
+    table.categories th, table.categories td { padding: 0.5rem 0.6rem; text-align: left; border-bottom: 1px solid #eee; }
+    table.categories th { background: #f9f9f9; font-weight: 600; }
+    table.categories td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  </style>
+</Base>

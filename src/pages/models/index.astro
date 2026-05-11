@@ -1,10 +1,13 @@
 ---
 import Base from "../../layouts/Base.astro";
-import { loadModels } from "../../lib/data.ts";
+import { loadModels, loadTools } from "../../lib/data.ts";
 
 const models = loadModels().sort((a, b) => (b.released ?? "0").localeCompare(a.released ?? "0"));
 const providers = Array.from(new Set(models.map((m) => m.provider))).sort();
 const licenses = Array.from(new Set(models.map((m) => m.license))).sort();
+
+const usageCount = new Map<string, number>();
+for (const t of loadTools()) for (const id of t.built_on_models) usageCount.set(id, (usageCount.get(id) ?? 0) + 1);
 ---
 <Base title="Models — ai-tracker" description="All tracked AI models.">
   <h1>Models</h1>
@@ -33,6 +36,7 @@ const licenses = Array.from(new Set(models.map((m) => m.license))).sort();
         <option value="price-asc">Input price ↑</option>
         <option value="price-desc">Input price ↓</option>
         <option value="context-desc">Context ↓</option>
+        <option value="tools-desc">Tools using ↓</option>
         <option value="name-asc">Name A→Z</option>
       </select>
     </label>
@@ -52,29 +56,34 @@ const licenses = Array.from(new Set(models.map((m) => m.license))).sort();
         <th>$/M in</th>
         <th>$/M out</th>
         <th>License</th>
+        <th>Tools</th>
       </tr>
     </thead>
     <tbody id="models-body">
-      {models.map((m) => (
+      {models.map((m) => {
+        const tu = usageCount.get(m.id) ?? 0;
+        return (
         <tr
           data-provider={m.provider}
           data-license={m.license}
           data-released={m.released ?? ""}
           data-input={m.pricing?.input_per_mtok ?? ""}
           data-context={m.context_window ?? ""}
+          data-tools={tu}
           data-name={m.name}
           data-id={m.id}
         >
           <td class="cmp-col"><input type="checkbox" class="cmp" data-id={m.id} aria-label={`Compare ${m.name}`} /></td>
           <td><a href={`/models/${m.id}`}>{m.name}</a></td>
-          <td>{m.provider}</td>
+          <td><a href={`/providers/${m.provider}`}>{m.provider}</a></td>
           <td>{m.released ?? "—"}</td>
           <td class="num">{m.context_window ? m.context_window.toLocaleString() : "—"}</td>
           <td class="num">{m.pricing?.input_per_mtok ?? "—"}</td>
           <td class="num">{m.pricing?.output_per_mtok ?? "—"}</td>
           <td>{m.license}</td>
+          <td class="num">{tu || "—"}</td>
         </tr>
-      ))}
+      );})}
     </tbody>
   </table>
 
@@ -117,6 +126,7 @@ const licenses = Array.from(new Set(models.map((m) => m.license))).sort();
         if (mode.startsWith("released")) return row.dataset.released || "";
         if (mode.startsWith("price")) return num(row.dataset.input);
         if (mode.startsWith("context")) return num(row.dataset.context);
+        if (mode.startsWith("tools")) return num(row.dataset.tools);
         return "";
       }
 
