@@ -1,0 +1,37 @@
+{
+  "kind": "tool",
+  "id": "composiohq-composio",
+  "name": "Composio",
+  "vendor": "Composio",
+  "category": "agent-framework",
+  "released": null,
+  "homepage": "https://composio.dev",
+  "built_on_models": [],
+  "oss": true,
+  "oss_repo": "https://github.com/ComposioHQ/composio",
+  "pricing_tiers": [
+    {
+      "name": "Free",
+      "monthly_usd": 0,
+      "per_seat": false,
+      "notes": "Open source"
+    }
+  ],
+  "free_tier": true,
+  "modalities": [
+    "text",
+    "code"
+  ],
+  "links": {
+    "homepage": "https://composio.dev",
+    "docs": "https://github.com/ComposioHQ/composio"
+  },
+  "tags": [
+    "agentic-ai",
+    "typescript"
+  ],
+  "sources": [
+    "https://github.com/ComposioHQ/composio"
+  ],
+  "status": "ga"
+}

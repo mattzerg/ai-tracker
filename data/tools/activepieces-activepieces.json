@@ -1,0 +1,37 @@
+{
+  "kind": "tool",
+  "id": "activepieces-activepieces",
+  "name": "Activepieces",
+  "vendor": "Activepieces",
+  "category": "ops",
+  "released": null,
+  "homepage": "https://www.activepieces.com",
+  "built_on_models": [],
+  "oss": true,
+  "oss_repo": "https://github.com/activepieces/activepieces",
+  "pricing_tiers": [
+    {
+      "name": "Free",
+      "monthly_usd": 0,
+      "per_seat": false,
+      "notes": "Open source"
+    }
+  ],
+  "free_tier": true,
+  "modalities": [
+    "text",
+    "code"
+  ],
+  "links": {
+    "homepage": "https://www.activepieces.com",
+    "docs": "https://github.com/activepieces/activepieces"
+  },
+  "tags": [
+    "ai-agent",
+    "typescript"
+  ],
+  "sources": [
+    "https://github.com/activepieces/activepieces"
+  ],
+  "status": "ga"
+}

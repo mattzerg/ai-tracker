@@ -1,0 +1,37 @@
+{
+  "kind": "tool",
+  "id": "copilotkit-copilotkit",
+  "name": "CopilotKit",
+  "vendor": "CopilotKit",
+  "category": "agent-framework",
+  "released": null,
+  "homepage": "https://copilotkit.ai",
+  "built_on_models": [],
+  "oss": true,
+  "oss_repo": "https://github.com/CopilotKit/CopilotKit",
+  "pricing_tiers": [
+    {
+      "name": "Free",
+      "monthly_usd": 0,
+      "per_seat": false,
+      "notes": "Open source"
+    }
+  ],
+  "free_tier": true,
+  "modalities": [
+    "text",
+    "code"
+  ],
+  "links": {
+    "homepage": "https://copilotkit.ai",
+    "docs": "https://github.com/CopilotKit/CopilotKit"
+  },
+  "tags": [
+    "ai-agent",
+    "typescript"
+  ],
+  "sources": [
+    "https://github.com/CopilotKit/CopilotKit"
+  ],
+  "status": "ga"
+}

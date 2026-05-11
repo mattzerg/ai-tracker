@@ -1,0 +1,37 @@
+{
+  "kind": "tool",
+  "id": "significant-gravitas-autogpt",
+  "name": "AutoGPT",
+  "vendor": "Significant Gravitas",
+  "category": "agent-framework",
+  "released": null,
+  "homepage": "https://agpt.co",
+  "built_on_models": [],
+  "oss": true,
+  "oss_repo": "https://github.com/Significant-Gravitas/AutoGPT",
+  "pricing_tiers": [
+    {
+      "name": "Free",
+      "monthly_usd": 0,
+      "per_seat": false,
+      "notes": "Open source"
+    }
+  ],
+  "free_tier": true,
+  "modalities": [
+    "text",
+    "code"
+  ],
+  "links": {
+    "homepage": "https://agpt.co",
+    "docs": "https://github.com/Significant-Gravitas/AutoGPT"
+  },
+  "tags": [
+    "agentic-ai",
+    "python"
+  ],
+  "sources": [
+    "https://github.com/Significant-Gravitas/AutoGPT"
+  ],
+  "status": "ga"
+}

@@ -1,0 +1,37 @@
+{
+  "kind": "tool",
+  "id": "flowiseai-flowise",
+  "name": "Flowise",
+  "vendor": "FlowiseAI",
+  "category": "agent-framework",
+  "released": null,
+  "homepage": "https://flowiseai.com",
+  "built_on_models": [],
+  "oss": true,
+  "oss_repo": "https://github.com/FlowiseAI/Flowise",
+  "pricing_tiers": [
+    {
+      "name": "Free",
+      "monthly_usd": 0,
+      "per_seat": false,
+      "notes": "Open source"
+    }
+  ],
+  "free_tier": true,
+  "modalities": [
+    "text",
+    "code"
+  ],
+  "links": {
+    "homepage": "https://flowiseai.com",
+    "docs": "https://github.com/FlowiseAI/Flowise"
+  },
+  "tags": [
+    "agentic-ai",
+    "typescript"
+  ],
+  "sources": [
+    "https://github.com/FlowiseAI/Flowise"
+  ],
+  "status": "ga"
+}

@@ -1,0 +1,37 @@
+{
+  "kind": "tool",
+  "id": "langgenius-dify",
+  "name": "Dify",
+  "vendor": "LangGenius",
+  "category": "agent-framework",
+  "released": null,
+  "homepage": "https://dify.ai",
+  "built_on_models": [],
+  "oss": true,
+  "oss_repo": "https://github.com/langgenius/dify",
+  "pricing_tiers": [
+    {
+      "name": "Free",
+      "monthly_usd": 0,
+      "per_seat": false,
+      "notes": "Open source"
+    }
+  ],
+  "free_tier": true,
+  "modalities": [
+    "text",
+    "code"
+  ],
+  "links": {
+    "homepage": "https://dify.ai",
+    "docs": "https://github.com/langgenius/dify"
+  },
+  "tags": [
+    "agentic-ai",
+    "typescript"
+  ],
+  "sources": [
+    "https://github.com/langgenius/dify"
+  ],
+  "status": "ga"
+}
