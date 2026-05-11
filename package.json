@@ -16,6 +16,7 @@
     "ingest:dry": "tsx scripts/ingest.ts --dry-run",
     "ingest:staging": "tsx scripts/ingest.ts --write-staging",
     "ingest:apply": "tsx scripts/ingest.ts --apply",
+    "ingest:apply:updates": "tsx scripts/ingest.ts --apply --updates-only",
     "ingest:queue": "tsx scripts/ingest-to-queue.ts",
     "ingest:queue:status": "tsx scripts/ingest-to-queue.ts --status"
   },

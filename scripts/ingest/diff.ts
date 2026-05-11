@@ -26,6 +26,9 @@ const MODEL_TRACKED_FIELDS = [
   "license",
   "pricing",
   "status",
+  "links",
+  "tags",
+  "sources",
 ] as const;
 
 const TOOL_TRACKED_FIELDS = [
@@ -40,6 +43,9 @@ const TOOL_TRACKED_FIELDS = [
   "free_tier",
   "modalities",
   "status",
+  "links",
+  "tags",
+  "sources",
 ] as const;
 
 function eq(a: unknown, b: unknown): boolean {

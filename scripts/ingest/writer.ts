@@ -8,6 +8,9 @@ export interface WriteTarget {
   dataRoot: string;
   /** True = clear & rewrite; false = additive (added writes only, updated entries get overwritten in place). */
   fresh?: boolean;
+  /** True = skip new entries (added.*), only write updated.* + events. Use when supplementary sources
+   * propose new entities that should require human review before being added to the curated set. */
+  updatesOnly?: boolean;
 }
 
 export interface WriteResult {
@@ -47,10 +50,12 @@ export function writeDiff(
   const paths: string[] = [];
 
   const mergedModelById = new Map(mergedModels.map((m) => [m.id, m]));
-  for (const m of modelDiff.added) {
-    const path = join(root, "models", `${m.id}.json`);
-    writeJson(path, m);
-    paths.push(path);
+  if (!target.updatesOnly) {
+    for (const m of modelDiff.added) {
+      const path = join(root, "models", `${m.id}.json`);
+      writeJson(path, m);
+      paths.push(path);
+    }
   }
   for (const u of modelDiff.updated) {
     const merged = mergedModelById.get(u.id);
@@ -61,10 +66,12 @@ export function writeDiff(
   }
 
   const mergedToolById = new Map(mergedTools.map((t) => [t.id, t]));
-  for (const t of toolDiff.added) {
-    const path = join(root, "tools", `${t.id}.json`);
-    writeJson(path, t);
-    paths.push(path);
+  if (!target.updatesOnly) {
+    for (const t of toolDiff.added) {
+      const path = join(root, "tools", `${t.id}.json`);
+      writeJson(path, t);
+      paths.push(path);
+    }
   }
   for (const u of toolDiff.updated) {
     const merged = mergedToolById.get(u.id);
@@ -81,9 +88,9 @@ export function writeDiff(
   }
 
   return {
-    modelsAdded: modelDiff.added.length,
+    modelsAdded: target.updatesOnly ? 0 : modelDiff.added.length,
     modelsUpdated: modelDiff.updated.length,
-    toolsAdded: toolDiff.added.length,
+    toolsAdded: target.updatesOnly ? 0 : toolDiff.added.length,
     toolsUpdated: toolDiff.updated.length,
     eventsAdded: eventDiff.added.length,
     paths,

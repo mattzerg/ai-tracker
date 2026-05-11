@@ -5,9 +5,11 @@ import { diffEvents, diffModels, diffTools } from "./ingest/diff.ts";
 import { mergeModel, mergeTool } from "./ingest/merge.ts";
 import { writeDiff } from "./ingest/writer.ts";
 import { anthropicChangelog } from "./ingest/sources/anthropic-changelog.ts";
+import { deepseekModels } from "./ingest/sources/deepseek-models.ts";
 import { geminiChangelog } from "./ingest/sources/gemini-changelog.ts";
 import { githubTrending } from "./ingest/sources/github-trending.ts";
 import { mistralModels } from "./ingest/sources/mistral-models.ts";
+import { openaiModels } from "./ingest/sources/openai-models.ts";
 import { openrouter } from "./ingest/sources/openrouter.ts";
 import { xaiModels } from "./ingest/sources/xai-models.ts";
 import type { Event, Model, Tool } from "../schemas/index.ts";
@@ -18,7 +20,16 @@ const TMP = join(ROOT, "tmp");
 
 // Authoritative sources run FIRST so their data lands before supplementary aggregators
 // have a chance to overwrite. Each source dedupes within itself; first-write-wins across.
-const SOURCES: Source[] = [anthropicChangelog, geminiChangelog, xaiModels, mistralModels, openrouter, githubTrending];
+const SOURCES: Source[] = [
+  anthropicChangelog,
+  geminiChangelog,
+  xaiModels,
+  mistralModels,
+  openaiModels,
+  deepseekModels,
+  openrouter,
+  githubTrending,
+];
 
 const MAX_USD = Number(process.env.MAX_INGEST_USD ?? 2);
 
@@ -28,11 +39,13 @@ function arg(name: string): boolean {
 
 async function main() {
   const apply = arg("apply");
+  const updatesOnly = arg("updates-only");
   const writeStaging = arg("write-staging") || (!apply && arg("dry-run"));
   const dryRun = !apply;
   const writeReport = true;
 
-  const mode = apply ? "APPLY (writes data/)" : writeStaging ? "staging (writes tmp/proposed/)" : "dry-run (report only)";
+  const applyLabel = updatesOnly ? "APPLY (updates only — supplementary new entries skipped)" : "APPLY (writes data/)";
+  const mode = apply ? applyLabel : writeStaging ? "staging (writes tmp/proposed/)" : "dry-run (report only)";
   const ctx: SourceContext = { now: new Date(), dryRun };
   console.log(`ai-tracker ingest — ${ctx.now.toISOString()} — ${mode}`);
   console.log(`sources: ${SOURCES.map((s) => s.id).join(", ")}`);
@@ -126,11 +139,14 @@ async function main() {
 
   if (writeStaging || apply) {
     const target = apply
-      ? { dataRoot: join(ROOT, "data") }
+      ? { dataRoot: join(ROOT, "data"), updatesOnly }
       : { dataRoot: join(TMP, "proposed"), fresh: true };
     const result = writeDiff(modelDiff, toolDiff, eventDiff, mergedModels, mergedTools, target);
+    const skipped = apply && updatesOnly
+      ? ` (skipped ${modelDiff.added.length} new models, ${toolDiff.added.length} new tools — review-required)`
+      : "";
     console.log(
-      `\nwrote ${result.paths.length} files to ${target.dataRoot}: +${result.modelsAdded}/${result.toolsAdded}/${result.eventsAdded} new, ~${result.modelsUpdated}/${result.toolsUpdated} updated`,
+      `\nwrote ${result.paths.length} files to ${target.dataRoot}: +${result.modelsAdded}/${result.toolsAdded}/${result.eventsAdded} new, ~${result.modelsUpdated}/${result.toolsUpdated} updated${skipped}`,
     );
   }
 }

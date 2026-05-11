@@ -25,7 +25,8 @@
     "agentic"
   ],
   "sources": [
-    "https://openrouter.ai/api/v1/models"
+    "https://openrouter.ai/api/v1/models",
+    "https://platform.openai.com/docs/models"
   ],
   "status": "ga"
 }

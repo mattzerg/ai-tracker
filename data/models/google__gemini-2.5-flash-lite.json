@@ -28,7 +28,8 @@
   ],
   "sources": [
     "https://ai.google.dev/gemini-api/docs/pricing",
-    "https://ai.google.dev/gemini-api/docs/changelog"
+    "https://ai.google.dev/gemini-api/docs/changelog",
+    "https://ai.google.dev/gemini-api/docs/models"
   ],
   "status": "ga"
 }

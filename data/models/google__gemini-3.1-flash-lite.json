@@ -29,7 +29,9 @@
   ],
   "sources": [
     "https://openrouter.ai/api/v1/models",
-    "https://ai.google.dev/gemini-api/docs/pricing"
+    "https://ai.google.dev/gemini-api/docs/pricing",
+    "https://ai.google.dev/gemini-api/docs/models",
+    "https://ai.google.dev/gemini-api/docs/changelog"
   ],
   "status": "ga"
 }
