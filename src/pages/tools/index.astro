@@ -3,16 +3,87 @@ import Base from "../../layouts/Base.astro";
 import { loadTools } from "../../lib/data.ts";
 
 const tools = loadTools().sort((a, b) => (b.released ?? "0").localeCompare(a.released ?? "0"));
+const vendors = Array.from(new Set(tools.map((t) => t.vendor))).sort();
+const categories = Array.from(new Set(tools.map((t) => t.category))).sort();
 ---
 <Base title="Tools — ai-tracker" description="All tracked AI tools.">
   <h1>Tools</h1>
   <p>{tools.length} tracked.</p>
-  <ul>
+
+  <div class="filters">
+    <label>
+      Vendor
+      <select id="filter-vendor">
+        <option value="">all</option>
+        {vendors.map((v) => <option value={v}>{v}</option>)}
+      </select>
+    </label>
+    <label>
+      Category
+      <select id="filter-category">
+        <option value="">all</option>
+        {categories.map((c) => <option value={c}>{c}</option>)}
+      </select>
+    </label>
+    <label>
+      <input type="checkbox" id="filter-oss" /> OSS only
+    </label>
+    <label>
+      <input type="checkbox" id="filter-free" /> Has free tier
+    </label>
+    <span id="visible-count" class="count">{tools.length} visible</span>
+  </div>
+
+  <ul id="tools-list">
     {tools.map((t) => (
-      <li>
+      <li
+        data-vendor={t.vendor}
+        data-category={t.category}
+        data-oss={t.oss ? "1" : "0"}
+        data-free={t.free_tier ? "1" : "0"}
+      >
         <a href={`/tools/${t.id}`}>{t.name}</a> · {t.vendor} · {t.category}
         {t.oss ? " · OSS" : ""}{t.free_tier ? " · free tier" : ""}
       </li>
     ))}
   </ul>
+
+  <style>
+    .filters { display: flex; gap: 1rem; align-items: center; margin: 1rem 0; padding: 0.75rem; background: #f6f6f6; border-radius: 4px; flex-wrap: wrap; }
+    .filters label { display: inline-flex; gap: 0.4rem; align-items: center; font-size: 0.9rem; }
+    .filters select { padding: 0.25rem 0.4rem; }
+    .count { margin-left: auto; color: #666; font-size: 0.85rem; }
+    li[hidden] { display: none; }
+  </style>
+  <script is:inline>
+    (() => {
+      const vSel = document.getElementById("filter-vendor");
+      const cSel = document.getElementById("filter-category");
+      const oss = document.getElementById("filter-oss");
+      const free = document.getElementById("filter-free");
+      const list = document.getElementById("tools-list");
+      const counter = document.getElementById("visible-count");
+      if (!vSel || !cSel || !oss || !free || !list || !counter) return;
+      const items = Array.from(list.querySelectorAll("li"));
+      function apply() {
+        const v = vSel.value;
+        const c = cSel.value;
+        let n = 0;
+        for (const li of items) {
+          const okV = !v || li.dataset.vendor === v;
+          const okC = !c || li.dataset.category === c;
+          const okOss = !oss.checked || li.dataset.oss === "1";
+          const okFree = !free.checked || li.dataset.free === "1";
+          const visible = okV && okC && okOss && okFree;
+          li.hidden = !visible;
+          if (visible) n++;
+        }
+        counter.textContent = n + " visible";
+      }
+      vSel.addEventListener("change", apply);
+      cSel.addEventListener("change", apply);
+      oss.addEventListener("change", apply);
+      free.addEventListener("change", apply);
+    })();
+  </script>
 </Base>

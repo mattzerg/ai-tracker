@@ -1,27 +1,91 @@
 ---
 import Base from "../layouts/Base.astro";
-import { loadEvents, loadModels, loadTools } from "../lib/data.ts";
+import { entityById, loadEvents, loadModels, loadTools } from "../lib/data.ts";
 
-const events = loadEvents().slice(0, 25);
-const modelCount = loadModels().length;
-const toolCount = loadTools().length;
+const allEvents = loadEvents();
+const events = allEvents.slice(0, 25);
+const models = loadModels();
+const tools = loadTools();
+
+// Highlights — actually useful comparisons.
+const cheapestInput = models
+  .filter((m) => m.pricing?.input_per_mtok != null)
+  .sort((a, b) => (a.pricing!.input_per_mtok! - b.pricing!.input_per_mtok!))
+  .slice(0, 3);
+const longestContext = models
+  .filter((m) => m.context_window != null)
+  .sort((a, b) => (b.context_window! - a.context_window!))
+  .slice(0, 3);
+const usageCount = new Map<string, number>();
+for (const t of tools) for (const id of t.built_on_models) usageCount.set(id, (usageCount.get(id) ?? 0) + 1);
+const mostUsed = Array.from(usageCount.entries())
+  .sort((a, b) => b[1] - a[1])
+  .slice(0, 5)
+  .map(([id, count]) => ({ model: models.find((m) => m.id === id)!, count }))
+  .filter((x) => x.model);
+
+function entityPath(id: string): string {
+  const e = entityById(id);
+  if (!e) return `#${id}`;
+  return e.kind === "model" ? `/models/${id}` : `/tools/${id}`;
+}
 ---
 <Base title="ai-tracker — what's shipping in AI" description="Canonical machine-readable timeline of AI models and tools.">
   <h1>ai-tracker</h1>
-  <p>{modelCount} models · {toolCount} tools · {loadEvents().length} events tracked.</p>
+  <p>{models.length} models · {tools.length} tools · {allEvents.length} events tracked.</p>
+
+  <section class="highlights">
+    <div class="card">
+      <h3>Cheapest input</h3>
+      <ol>
+        {cheapestInput.map((m) => (
+          <li><a href={`/models/${m.id}`}>{m.name}</a> — ${m.pricing!.input_per_mtok}/M</li>
+        ))}
+      </ol>
+    </div>
+    <div class="card">
+      <h3>Longest context</h3>
+      <ol>
+        {longestContext.map((m) => (
+          <li><a href={`/models/${m.id}`}>{m.name}</a> — {m.context_window!.toLocaleString()}</li>
+        ))}
+      </ol>
+    </div>
+    <div class="card">
+      <h3>Most used by tools</h3>
+      <ol>
+        {mostUsed.map((x) => (
+          <li><a href={`/models/${x.model.id}`}>{x.model.name}</a> — {x.count} tools</li>
+        ))}
+      </ol>
+    </div>
+  </section>
 
   <h2>Latest</h2>
   {events.length === 0 ? (
     <p><em>No events yet — repo just bootstrapped.</em></p>
   ) : (
     <ul>
-      {events.map((e) => (
-        <li>
-          <code>{e.date}</code> · <strong>{e.type}</strong> ·
-          <a href={`/${e.entity.includes("__") ? "models" : "tools"}/${e.entity}`}>{e.entity}</a>
-          — {e.summary}
-        </li>
-      ))}
+      {events.map((e) => {
+        const entity = entityById(e.entity);
+        return (
+          <li>
+            <code>{e.date}</code> · <strong>{e.type}</strong> ·
+            <a href={entityPath(e.entity)}>{entity?.name ?? e.entity}</a>
+            — {e.summary}
+          </li>
+        );
+      })}
     </ul>
   )}
+
+  <p><a href="/timeline">→ Full timeline ({allEvents.length} events)</a></p>
+
+  <style>
+    .highlights { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
+    .card { padding: 0.75rem 1rem; background: #f6f6f6; border-radius: 4px; }
+    .card h3 { margin: 0 0 0.5rem; font-size: 0.95rem; color: #555; }
+    .card ol { padding-left: 1.25rem; margin: 0; font-size: 0.92rem; }
+    .card li { margin-bottom: 0.2rem; }
+  </style>
 </Base>

@@ -3,16 +3,132 @@ import Base from "../../layouts/Base.astro";
 import { loadModels } from "../../lib/data.ts";
 
 const models = loadModels().sort((a, b) => (b.released ?? "0").localeCompare(a.released ?? "0"));
+const providers = Array.from(new Set(models.map((m) => m.provider))).sort();
+const licenses = Array.from(new Set(models.map((m) => m.license))).sort();
 ---
 <Base title="Models — ai-tracker" description="All tracked AI models.">
   <h1>Models</h1>
   <p>{models.length} tracked.</p>
-  <ul>
-    {models.map((m) => (
-      <li>
-        <a href={`/models/${m.id}`}>{m.name}</a> · {m.provider} · released {m.released ?? "n/a"}
-        {m.context_window ? ` · ${m.context_window.toLocaleString()} ctx` : ""}
-      </li>
-    ))}
-  </ul>
+
+  <div class="filters">
+    <label>
+      Provider
+      <select id="filter-provider">
+        <option value="">all</option>
+        {providers.map((p) => <option value={p}>{p}</option>)}
+      </select>
+    </label>
+    <label>
+      License
+      <select id="filter-license">
+        <option value="">all</option>
+        {licenses.map((l) => <option value={l}>{l}</option>)}
+      </select>
+    </label>
+    <label>
+      Sort
+      <select id="sort">
+        <option value="released-desc">Released ↓</option>
+        <option value="released-asc">Released ↑</option>
+        <option value="price-asc">Input price ↑</option>
+        <option value="price-desc">Input price ↓</option>
+        <option value="context-desc">Context ↓</option>
+        <option value="name-asc">Name A→Z</option>
+      </select>
+    </label>
+    <span id="visible-count" class="count">{models.length} visible</span>
+  </div>
+
+  <table class="models">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Provider</th>
+        <th>Released</th>
+        <th>Context</th>
+        <th>$/M in</th>
+        <th>$/M out</th>
+        <th>License</th>
+      </tr>
+    </thead>
+    <tbody id="models-body">
+      {models.map((m) => (
+        <tr
+          data-provider={m.provider}
+          data-license={m.license}
+          data-released={m.released ?? ""}
+          data-input={m.pricing?.input_per_mtok ?? ""}
+          data-context={m.context_window ?? ""}
+          data-name={m.name}
+        >
+          <td><a href={`/models/${m.id}`}>{m.name}</a></td>
+          <td>{m.provider}</td>
+          <td>{m.released ?? "—"}</td>
+          <td class="num">{m.context_window ? m.context_window.toLocaleString() : "—"}</td>
+          <td class="num">{m.pricing?.input_per_mtok ?? "—"}</td>
+          <td class="num">{m.pricing?.output_per_mtok ?? "—"}</td>
+          <td>{m.license}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+
+  <style>
+    .filters { display: flex; gap: 1rem; align-items: center; margin: 1rem 0; padding: 0.75rem; background: #f6f6f6; border-radius: 4px; flex-wrap: wrap; }
+    .filters label { display: inline-flex; gap: 0.4rem; align-items: center; font-size: 0.9rem; }
+    .filters select { padding: 0.25rem 0.4rem; }
+    .count { margin-left: auto; color: #666; font-size: 0.85rem; }
+    table.models { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+    table.models th, table.models td { padding: 0.4rem 0.5rem; text-align: left; border-bottom: 1px solid #eee; }
+    table.models th { background: #f9f9f9; font-weight: 600; }
+    table.models td.num { text-align: right; font-variant-numeric: tabular-nums; }
+    tr[hidden] { display: none; }
+  </style>
+  <script is:inline>
+    (() => {
+      const provSel = document.getElementById("filter-provider");
+      const licSel = document.getElementById("filter-license");
+      const sortSel = document.getElementById("sort");
+      const tbody = document.getElementById("models-body");
+      const counter = document.getElementById("visible-count");
+      if (!provSel || !licSel || !sortSel || !tbody || !counter) return;
+      const rows = Array.from(tbody.querySelectorAll("tr"));
+
+      function num(v) { const n = parseFloat(v); return Number.isFinite(n) ? n : null; }
+
+      function sortKey(row, mode) {
+        if (mode === "name-asc") return row.dataset.name.toLowerCase();
+        if (mode.startsWith("released")) return row.dataset.released || "";
+        if (mode.startsWith("price")) return num(row.dataset.input);
+        if (mode.startsWith("context")) return num(row.dataset.context);
+        return "";
+      }
+
+      function compare(a, b, mode) {
+        const desc = mode.endsWith("-desc");
+        const ka = sortKey(a, mode);
+        const kb = sortKey(b, mode);
+        // nulls last
+        if (ka == null && kb == null) return 0;
+        if (ka == null) return 1;
+        if (kb == null) return -1;
+        if (typeof ka === "number" && typeof kb === "number") return desc ? kb - ka : ka - kb;
+        return desc ? String(kb).localeCompare(String(ka)) : String(ka).localeCompare(String(kb));
+      }
+
+      function apply() {
+        const p = provSel.value;
+        const l = licSel.value;
+        const mode = sortSel.value;
+        const visible = rows.filter((r) => (!p || r.dataset.provider === p) && (!l || r.dataset.license === l));
+        for (const r of rows) r.hidden = !visible.includes(r);
+        const sorted = visible.slice().sort((a, b) => compare(a, b, mode));
+        for (const r of sorted) tbody.appendChild(r);
+        counter.textContent = visible.length + " visible";
+      }
+      provSel.addEventListener("change", apply);
+      licSel.addEventListener("change", apply);
+      sortSel.addEventListener("change", apply);
+    })();
+  </script>
 </Base>
