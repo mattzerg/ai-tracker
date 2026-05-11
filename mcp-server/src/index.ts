@@ -8,55 +8,80 @@ import {
 
 const BASE = (process.env.AI_TRACKER_BASE ?? "https://ai-tracker-dxu.pages.dev").replace(/\/$/, "");
 const CACHE_TTL_MS = 5 * 60 * 1000;
+const UA = { "user-agent": "ai-tracker-mcp/0.0.1" };
 
-interface Model {
+// Lean search index — used for browse/search/recent_events (24.5KB).
+interface LeanModel {
   kind: "model";
   id: string;
   name: string;
   provider: string;
-  released: string | null;
-  context_window: number | null;
-  modalities: string[];
-  license: string;
-  pricing: { input_per_mtok: number | null; output_per_mtok: number | null; as_of: string } | null;
+  context: number | null;
   tags: string[];
-  links: Record<string, string | undefined>;
+  license: string;
 }
-interface Tool {
+interface LeanTool {
   kind: "tool";
   id: string;
   name: string;
   vendor: string;
   category: string;
-  released: string | null;
-  homepage: string;
-  built_on_models: string[];
   oss: boolean;
   free_tier: boolean;
   tags: string[];
+  built_on: string[];
 }
-interface Event {
+interface LeanEvent {
+  slug: string;
   date: string;
-  entity: string;
   type: string;
+  entity: string;
+  entity_name: string | null;
   summary: string;
-  source: string;
 }
-interface Dump {
+interface SearchIndex {
   generated_at: string;
-  models: Model[];
-  tools: Tool[];
-  events: Event[];
+  schema_version: number;
+  models: LeanModel[];
+  tools: LeanTool[];
+  events: LeanEvent[];
 }
 
-let cache: { fetched: number; data: Dump } | null = null;
+// Per-entity twin — used for get_entity / get_timeline. Full record + events.
+interface EntityTwin {
+  kind: "model" | "tool";
+  id: string;
+  name: string;
+  [k: string]: unknown;
+  events?: Array<{ date: string; entity: string; type: string; summary: string; source: string }>;
+}
 
-async function getDump(): Promise<Dump> {
-  if (cache && Date.now() - cache.fetched < CACHE_TTL_MS) return cache.data;
-  const res = await fetch(`${BASE}/dump/all.json`, { headers: { "user-agent": "ai-tracker-mcp/0.0.1" } });
-  if (!res.ok) throw new Error(`failed to fetch dump: HTTP ${res.status}`);
-  const data = (await res.json()) as Dump;
-  cache = { fetched: Date.now(), data };
+let indexCache: { fetched: number; data: SearchIndex } | null = null;
+const entityCache = new Map<string, { fetched: number; data: EntityTwin }>();
+
+async function getIndex(): Promise<SearchIndex> {
+  if (indexCache && Date.now() - indexCache.fetched < CACHE_TTL_MS) return indexCache.data;
+  const res = await fetch(`${BASE}/api/search.json`, { headers: UA });
+  if (!res.ok) throw new Error(`failed to fetch search index: HTTP ${res.status}`);
+  const data = (await res.json()) as SearchIndex;
+  indexCache = { fetched: Date.now(), data };
+  return data;
+}
+
+async function getEntity(id: string): Promise<EntityTwin | null> {
+  const cached = entityCache.get(id);
+  if (cached && Date.now() - cached.fetched < CACHE_TTL_MS) return cached.data;
+  // Try /models/<id>.json first, then /tools/<id>.json. Order: fetch index to
+  // learn which bucket the id is in, then targeted fetch.
+  const idx = await getIndex();
+  const isModel = idx.models.some((m) => m.id === id);
+  const isTool = idx.tools.some((t) => t.id === id);
+  if (!isModel && !isTool) return null;
+  const path = isModel ? `/models/${id}.json` : `/tools/${id}.json`;
+  const res = await fetch(`${BASE}${path}`, { headers: UA });
+  if (!res.ok) return null;
+  const data = (await res.json()) as EntityTwin;
+  entityCache.set(id, { fetched: Date.now(), data });
   return data;
 }
 
@@ -78,7 +103,6 @@ const tools = [
         query: { type: "string", description: "Free-text query" },
         provider: { type: "string", description: "Exact provider (e.g. 'anthropic', 'openai')" },
         min_context: { type: "number", description: "Minimum context window in tokens" },
-        max_input_price: { type: "number", description: "Max input price per Mtok in USD" },
         limit: { type: "number", default: 20 },
       },
     },
@@ -129,63 +153,61 @@ const tools = [
   },
 ];
 
-const server = new Server({ name: "ai-tracker", version: "0.0.1" }, { capabilities: { tools: {} } });
+const server = new Server({ name: "ai-tracker", version: "0.0.2" }, { capabilities: { tools: {} } });
 
 server.setRequestHandler(ListToolsRequestSchema, async () => ({ tools }));
 
 server.setRequestHandler(CallToolRequestSchema, async (req) => {
-  const dump = await getDump();
   const args = (req.params.arguments ?? {}) as Record<string, unknown>;
-  const { models, tools: dumpTools, events } = dump;
 
   switch (req.params.name) {
     case "search_models": {
+      const idx = await getIndex();
       const q = (args.query as string | undefined) ?? "";
       const provider = args.provider as string | undefined;
       const minCtx = args.min_context as number | undefined;
-      const maxIn = args.max_input_price as number | undefined;
       const limit = (args.limit as number | undefined) ?? 20;
-      const out = models
+      const out = idx.models
         .filter((m) => !provider || m.provider === provider)
-        .filter((m) => !minCtx || (m.context_window ?? 0) >= minCtx)
-        .filter((m) => maxIn == null || (m.pricing?.input_per_mtok ?? Infinity) <= maxIn)
+        .filter((m) => !minCtx || (m.context ?? 0) >= minCtx)
         .filter((m) => !q || matchQuery(`${m.name} ${m.provider} ${(m.tags ?? []).join(" ")}`, q))
-        .slice(0, limit)
-        .map((m) => ({ id: m.id, name: m.name, provider: m.provider, released: m.released, context_window: m.context_window, pricing: m.pricing }));
+        .slice(0, limit);
       return textResult({ count: out.length, models: out });
     }
     case "search_tools": {
+      const idx = await getIndex();
       const q = (args.query as string | undefined) ?? "";
       const category = args.category as string | undefined;
       const ossOnly = args.oss_only as boolean | undefined;
       const freeOnly = args.free_tier_only as boolean | undefined;
       const limit = (args.limit as number | undefined) ?? 20;
-      const out = dumpTools
+      const out = idx.tools
         .filter((t) => !category || t.category === category)
         .filter((t) => !ossOnly || t.oss)
         .filter((t) => !freeOnly || t.free_tier)
         .filter((t) => !q || matchQuery(`${t.name} ${t.vendor} ${(t.tags ?? []).join(" ")}`, q))
-        .slice(0, limit)
-        .map((t) => ({ id: t.id, name: t.name, vendor: t.vendor, category: t.category, oss: t.oss, free_tier: t.free_tier, homepage: t.homepage, built_on_models: t.built_on_models }));
+        .slice(0, limit);
       return textResult({ count: out.length, tools: out });
     }
     case "get_entity": {
       const id = args.id as string;
-      const entity = models.find((m) => m.id === id) ?? dumpTools.find((t) => t.id === id);
+      const entity = await getEntity(id);
       if (!entity) return textResult({ error: `not found: ${id}` });
-      const entityEvents = events.filter((e) => e.entity === id);
-      return textResult({ entity, events: entityEvents });
+      return textResult({ entity });
     }
     case "get_timeline": {
       const id = args.id as string;
-      const entityEvents = events.filter((e) => e.entity === id);
-      return textResult({ id, count: entityEvents.length, events: entityEvents });
+      const entity = await getEntity(id);
+      if (!entity) return textResult({ error: `not found: ${id}` });
+      const events = entity.events ?? [];
+      return textResult({ id, count: events.length, events });
     }
     case "recent_events": {
+      const idx = await getIndex();
       const types = args.types as string[] | undefined;
       const since = args.since as string | undefined;
       const limit = (args.limit as number | undefined) ?? 50;
-      const out = events
+      const out = idx.events
         .filter((e) => !types || types.includes(e.type))
         .filter((e) => !since || e.date >= since)
         .slice(0, limit);
@@ -199,7 +221,7 @@ server.setRequestHandler(CallToolRequestSchema, async (req) => {
 async function main() {
   const transport = new StdioServerTransport();
   await server.connect(transport);
-  console.error(`ai-tracker-mcp connected. base=${BASE}`);
+  console.error(`ai-tracker-mcp v0.0.2 connected. base=${BASE}`);
 }
 
 main().catch((err) => {

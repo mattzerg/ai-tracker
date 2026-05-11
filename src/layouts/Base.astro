@@ -30,6 +30,7 @@ function relativeAge(dateStr: string): string {
   return `${Math.floor(days / 365)}y ago`;
 }
 const latestAge = latest ? relativeAge(latest.date) : "";
+const buildTime = new Date().toISOString().slice(0, 16).replace("T", " ");
 ---
 <!doctype html>
 <html lang="en">
@@ -87,6 +88,7 @@ const latestAge = latest ? relativeAge(latest.date) : "";
     </main>
     <footer>
       <p>Public data. <a href="/llms.txt">/llms.txt</a> · <a href="/dump/all.json">/dump/all.json</a> · <a href="/feed.xml">RSS</a> · <a href="/atom.xml">Atom</a></p>
+      <p class="build-time">Data refreshed {buildTime} UTC.</p>
     </footer>
     <style is:global>
       :root {
@@ -107,6 +109,8 @@ const latestAge = latest ? relativeAge(latest.date) : "";
       .latest-link strong { color: #1a4cff; }
       .latest-age { color: #888; font-variant-numeric: tabular-nums; }
       footer { max-width: 880px; margin: 2rem auto; padding: 1rem 1.5rem; border-top: 1px solid #eee; color: #666; font-size: 0.9rem; }
+      footer p { margin: 0.3rem 0; }
+      footer .build-time { color: #999; font-size: 0.8rem; }
       a { color: #1a4cff; }
       h1, h2, h3 { line-height: 1.2; }
       ul { padding-left: 1.25rem; }
