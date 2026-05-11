@@ -1,0 +1,99 @@
+---
+import Base from "../../layouts/Base.astro";
+import { loadEvents, loadModels, loadTools } from "../../lib/data.ts";
+import type { Model } from "../../../schemas/index.ts";
+
+export function getStaticPaths() {
+  const providers = Array.from(new Set(loadModels().map((m) => m.provider)));
+  return providers.map((name) => ({
+    params: { name },
+    props: { provider: name },
+  }));
+}
+
+interface Props { provider: string; }
+const { provider } = Astro.props;
+
+const models = loadModels()
+  .filter((m) => m.provider === provider)
+  .sort((a, b) => (b.released ?? "0").localeCompare(a.released ?? "0"));
+
+const modelIds = new Set(models.map((m) => m.id));
+const tools = loadTools()
+  .filter((t) => t.built_on_models.some((id) => modelIds.has(id)))
+  .sort((a, b) => a.name.localeCompare(b.name));
+
+const events = loadEvents()
+  .filter((e) => modelIds.has(e.entity))
+  .slice(0, 20);
+
+const prices = models.map((m) => m.pricing?.input_per_mtok).filter((v): v is number => v != null);
+const ctxs = models.map((m) => m.context_window).filter((v): v is number => v != null);
+const cheapest = prices.length ? Math.min(...prices) : null;
+const longest = ctxs.length ? Math.max(...ctxs) : null;
+---
+<Base title={`${provider} — ai-tracker`} description={`All ${provider} models tracked by ai-tracker, with pricing, context, and tool adoption.`}>
+  <p><a href="/providers">← Providers</a></p>
+  <h1>{provider}</h1>
+  <p>
+    {models.length} model{models.length === 1 ? "" : "s"} · {tools.length} tool{tools.length === 1 ? "" : "s"} built on this provider's models.
+    {cheapest != null ? <> · Cheapest input: <strong>${cheapest}/M</strong></> : null}
+    {longest != null ? <> · Longest context: <strong>{longest.toLocaleString()}</strong></> : null}
+  </p>
+
+  <h2>Models</h2>
+  <table class="models">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Released</th>
+        <th>Context</th>
+        <th>$/M in</th>
+        <th>$/M out</th>
+        <th>License</th>
+      </tr>
+    </thead>
+    <tbody>
+      {models.map((m: Model) => (
+        <tr>
+          <td><a href={`/models/${m.id}`}>{m.name}</a></td>
+          <td>{m.released ?? "—"}</td>
+          <td class="num">{m.context_window ? m.context_window.toLocaleString() : "—"}</td>
+          <td class="num">{m.pricing?.input_per_mtok ?? "—"}</td>
+          <td class="num">{m.pricing?.output_per_mtok ?? "—"}</td>
+          <td>{m.license}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+
+  {tools.length > 0 ? (
+    <>
+      <h2>Tools built on {provider} models</h2>
+      <ul>
+        {tools.map((t) => <li><a href={`/tools/${t.id}`}>{t.name}</a> · {t.vendor} · {t.category}</li>)}
+      </ul>
+    </>
+  ) : null}
+
+  {events.length > 0 ? (
+    <>
+      <h2>Recent events</h2>
+      <ul>
+        {events.map((e) => (
+          <li>
+            <code>{e.date}</code> · <strong>{e.type}</strong> ·
+            <a href={`/models/${e.entity}`}>{e.entity}</a> — {e.summary}
+          </li>
+        ))}
+      </ul>
+    </>
+  ) : null}
+
+  <style>
+    table.models { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+    table.models th, table.models td { padding: 0.4rem 0.5rem; text-align: left; border-bottom: 1px solid #eee; }
+    table.models th { background: #f9f9f9; font-weight: 600; }
+    table.models td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  </style>
+</Base>

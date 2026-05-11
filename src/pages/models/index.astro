@@ -44,6 +44,7 @@ const licenses = Array.from(new Set(models.map((m) => m.license))).sort();
   <table class="models">
     <thead>
       <tr>
+        <th class="cmp-col"></th>
         <th>Name</th>
         <th>Provider</th>
         <th>Released</th>
@@ -62,7 +63,9 @@ const licenses = Array.from(new Set(models.map((m) => m.license))).sort();
           data-input={m.pricing?.input_per_mtok ?? ""}
           data-context={m.context_window ?? ""}
           data-name={m.name}
+          data-id={m.id}
         >
+          <td class="cmp-col"><input type="checkbox" class="cmp" data-id={m.id} aria-label={`Compare ${m.name}`} /></td>
           <td><a href={`/models/${m.id}`}>{m.name}</a></td>
           <td>{m.provider}</td>
           <td>{m.released ?? "—"}</td>
@@ -75,6 +78,12 @@ const licenses = Array.from(new Set(models.map((m) => m.license))).sort();
     </tbody>
   </table>
 
+  <div id="cmp-bar" hidden>
+    <span id="cmp-count">0</span> selected — max 6.
+    <a id="cmp-link" href="#">Compare →</a>
+    <button id="cmp-clear" type="button">Clear</button>
+  </div>
+
   <style>
     .filters { display: flex; gap: 1rem; align-items: center; margin: 1rem 0; padding: 0.75rem; background: #f6f6f6; border-radius: 4px; flex-wrap: wrap; }
     .filters label { display: inline-flex; gap: 0.4rem; align-items: center; font-size: 0.9rem; }
@@ -84,7 +93,12 @@ const licenses = Array.from(new Set(models.map((m) => m.license))).sort();
     table.models th, table.models td { padding: 0.4rem 0.5rem; text-align: left; border-bottom: 1px solid #eee; }
     table.models th { background: #f9f9f9; font-weight: 600; }
     table.models td.num { text-align: right; font-variant-numeric: tabular-nums; }
+    table.models th.cmp-col, table.models td.cmp-col { width: 1.5rem; padding: 0.4rem 0.3rem; }
     tr[hidden] { display: none; }
+    #cmp-bar { position: fixed; bottom: 0; left: 0; right: 0; padding: 0.7rem 1rem; background: #111; color: #fff; display: flex; gap: 1rem; align-items: center; justify-content: center; box-shadow: 0 -2px 8px rgba(0,0,0,0.15); font-size: 0.95rem; }
+    #cmp-bar a { color: #8eb6ff; font-weight: 600; }
+    #cmp-bar button { background: transparent; color: #ccc; border: 1px solid #555; padding: 0.25rem 0.6rem; border-radius: 3px; cursor: pointer; }
+    #cmp-bar button:hover { color: #fff; border-color: #888; }
   </style>
   <script is:inline>
     (() => {
@@ -137,6 +151,32 @@ const licenses = Array.from(new Set(models.map((m) => m.license))).sort();
       if (clearLink) clearLink.addEventListener("click", (e) => {
         e.preventDefault(); provSel.value = ""; licSel.value = ""; apply();
       });
+
+      // Compare picker.
+      const cmpBar = document.getElementById("cmp-bar");
+      const cmpCount = document.getElementById("cmp-count");
+      const cmpLink = document.getElementById("cmp-link");
+      const cmpClear = document.getElementById("cmp-clear");
+      const checkboxes = Array.from(document.querySelectorAll("input.cmp"));
+      const MAX = 6;
+      function selected() { return checkboxes.filter((c) => c.checked).map((c) => c.dataset.id); }
+      function refreshBar() {
+        const ids = selected();
+        cmpCount.textContent = String(ids.length);
+        cmpBar.hidden = ids.length === 0;
+        cmpLink.href = "/compare?models=" + ids.join(",");
+      }
+      checkboxes.forEach((c) => c.addEventListener("change", () => {
+        const ids = selected();
+        if (ids.length > MAX) {
+          c.checked = false;
+          alert("Max " + MAX + " models. Uncheck one first.");
+          return;
+        }
+        refreshBar();
+      }));
+      cmpClear.addEventListener("click", () => { checkboxes.forEach((c) => (c.checked = false)); refreshBar(); });
+      refreshBar();
     })();
   </script>
 </Base>

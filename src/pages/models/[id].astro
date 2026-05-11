@@ -17,7 +17,7 @@ const usedBy = loadTools()
 <Base title={`${model.name} — ai-tracker`} description={`${model.name} by ${model.provider}.`}>
   <p><a href="/models">← Models</a></p>
   <h1>{model.name}</h1>
-  <p><strong>{model.provider}</strong> · {model.released ? `released ${model.released}` : "release date n/a"} · {model.license}</p>
+  <p><strong><a href={`/providers/${model.provider}`}>{model.provider}</a></strong> · {model.released ? `released ${model.released}` : "release date n/a"} · {model.license}</p>
 
   {model.pricing ? (
     <p>

@@ -1,0 +1,86 @@
+---
+import Base from "../../layouts/Base.astro";
+import { loadModels, loadTools } from "../../lib/data.ts";
+
+const models = loadModels();
+const tools = loadTools();
+
+interface ProviderRow {
+  name: string;
+  modelCount: number;
+  cheapestInput: number | null;
+  longestContext: number | null;
+  latestRelease: string | null;
+  toolsBuiltOn: number;
+}
+
+const rows: ProviderRow[] = [];
+const groups = new Map<string, typeof models>();
+for (const m of models) {
+  if (!groups.has(m.provider)) groups.set(m.provider, []);
+  groups.get(m.provider)!.push(m);
+}
+
+const toolUsage = new Map<string, number>(); // provider -> tool-use count
+for (const t of tools) {
+  const seenProviders = new Set<string>();
+  for (const id of t.built_on_models) {
+    const m = models.find((x) => x.id === id);
+    if (!m) continue;
+    if (seenProviders.has(m.provider)) continue;
+    seenProviders.add(m.provider);
+    toolUsage.set(m.provider, (toolUsage.get(m.provider) ?? 0) + 1);
+  }
+}
+
+for (const [provider, list] of groups) {
+  const prices = list.map((m) => m.pricing?.input_per_mtok).filter((v): v is number => v != null);
+  const ctxs = list.map((m) => m.context_window).filter((v): v is number => v != null);
+  const dates = list.map((m) => m.released).filter((v): v is string => !!v);
+  rows.push({
+    name: provider,
+    modelCount: list.length,
+    cheapestInput: prices.length ? Math.min(...prices) : null,
+    longestContext: ctxs.length ? Math.max(...ctxs) : null,
+    latestRelease: dates.length ? dates.sort().slice(-1)[0] : null,
+    toolsBuiltOn: toolUsage.get(provider) ?? 0,
+  });
+}
+rows.sort((a, b) => b.modelCount - a.modelCount);
+---
+<Base title="Providers — ai-tracker" description="All AI model providers tracked, with cheapest pricing, longest context, and tool adoption.">
+  <h1>Providers</h1>
+  <p>{rows.length} providers · {models.length} models combined.</p>
+
+  <table class="providers">
+    <thead>
+      <tr>
+        <th>Provider</th>
+        <th>Models</th>
+        <th>Cheapest $/M in</th>
+        <th>Longest context</th>
+        <th>Latest release</th>
+        <th>Tools using</th>
+      </tr>
+    </thead>
+    <tbody>
+      {rows.map((r) => (
+        <tr>
+          <td><a href={`/providers/${r.name}`}>{r.name}</a></td>
+          <td class="num">{r.modelCount}</td>
+          <td class="num">{r.cheapestInput ?? "—"}</td>
+          <td class="num">{r.longestContext ? r.longestContext.toLocaleString() : "—"}</td>
+          <td>{r.latestRelease ?? "—"}</td>
+          <td class="num">{r.toolsBuiltOn || "—"}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+
+  <style>
+    table.providers { width: 100%; border-collapse: collapse; font-size: 0.95rem; margin-top: 1rem; }
+    table.providers th, table.providers td { padding: 0.5rem 0.6rem; text-align: left; border-bottom: 1px solid #eee; }
+    table.providers th { background: #f9f9f9; font-weight: 600; }
+    table.providers td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  </style>
+</Base>
