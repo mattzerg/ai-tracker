@@ -1,6 +1,7 @@
 ---
 import Base from "../../layouts/Base.astro";
 import JsonLd from "../../components/JsonLd.astro";
+import ProviderMark from "../../components/ProviderMark.astro";
 import { eventsForEntity, loadModels, loadTools } from "../../lib/data.ts";
 import type { Model } from "../../../schemas/index.ts";
 
@@ -32,7 +33,7 @@ const description = `${model.name} by ${model.provider}.${ctxBit}${priceBit}`.tr
   <JsonLd entity={model} url={canonicalUrl} />
   <p><a href="/models">← Models</a></p>
   <h1>{model.name}</h1>
-  <p><strong><a href={`/providers/${model.provider}`}>{model.provider}</a></strong> · {model.released ? `released ${model.released}` : "release date n/a"} · {model.license}</p>
+  <p><ProviderMark provider={model.provider} /><strong><a href={`/providers/${model.provider}`}>{model.provider}</a></strong> · {model.released ? `released ${model.released}` : "release date n/a"} · {model.license}</p>
 
   {model.pricing ? (
     <p>

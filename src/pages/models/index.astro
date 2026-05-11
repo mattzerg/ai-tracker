@@ -1,5 +1,6 @@
 ---
 import Base from "../../layouts/Base.astro";
+import ProviderMark from "../../components/ProviderMark.astro";
 import { loadModels, loadTools } from "../../lib/data.ts";
 
 const models = loadModels().sort((a, b) => (b.released ?? "0").localeCompare(a.released ?? "0"));
@@ -87,7 +88,7 @@ const tags = Array.from(tagCounts.entries()).sort((a, b) => b[1] - a[1] || a[0].
         >
           <td class="cmp-col"><input type="checkbox" class="cmp" data-id={m.id} aria-label={`Compare ${m.name}`} /></td>
           <td><a href={`/models/${m.id}`}>{m.name}</a></td>
-          <td><a href={`/providers/${m.provider}`}>{m.provider}</a></td>
+          <td><ProviderMark provider={m.provider} size={18} /><a href={`/providers/${m.provider}`}>{m.provider}</a></td>
           <td>{m.released ?? "—"}</td>
           <td class="num">{m.context_window ? m.context_window.toLocaleString() : "—"}</td>
           <td class="num">{m.pricing?.input_per_mtok ?? "—"}</td>

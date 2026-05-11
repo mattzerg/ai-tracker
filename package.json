@@ -24,7 +24,9 @@
     "events:backfill-pricing": "tsx scripts/generate-pricing-events.ts",
     "events:backfill-pricing:dry": "tsx scripts/generate-pricing-events.ts --dry-run",
     "tools:fill-built-on": "tsx scripts/fill-built-on-models.ts",
-    "tools:fill-built-on:dry": "tsx scripts/fill-built-on-models.ts --dry-run"
+    "tools:fill-built-on:dry": "tsx scripts/fill-built-on-models.ts --dry-run",
+    "cache:sweep": "tsx scripts/png-cache-sweep.ts",
+    "cache:sweep:dry": "tsx scripts/png-cache-sweep.ts --dry-run"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.2",

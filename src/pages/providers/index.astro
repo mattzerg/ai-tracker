@@ -1,5 +1,6 @@
 ---
 import Base from "../../layouts/Base.astro";
+import ProviderMark from "../../components/ProviderMark.astro";
 import { loadModels, loadTools } from "../../lib/data.ts";
 
 const models = loadModels();
@@ -66,7 +67,7 @@ rows.sort((a, b) => b.modelCount - a.modelCount);
     <tbody>
       {rows.map((r) => (
         <tr>
-          <td><a href={`/providers/${r.name}`}>{r.name}</a></td>
+          <td><ProviderMark provider={r.name} /><a href={`/providers/${r.name}`}>{r.name}</a></td>
           <td class="num">{r.modelCount}</td>
           <td class="num">{r.cheapestInput ?? "—"}</td>
           <td class="num">{r.longestContext ? r.longestContext.toLocaleString() : "—"}</td>

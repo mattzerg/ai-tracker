@@ -1,0 +1,62 @@
+---
+// Tiny visual identifier per provider — initials in a colored square.
+// Avoids the trademark/sourcing risk of real logos while still giving each
+// provider a recognizable visual anchor. Color is provider-specific; for
+// unknown providers we fall back to a hash-derived color so it stays stable.
+
+interface Props {
+  provider: string;
+  size?: number;
+}
+const { provider, size = 22 } = Astro.props;
+
+const COLORS: Record<string, string> = {
+  anthropic: "#cc785c",
+  google: "#4285f4",
+  openai: "#10a37f",
+  xai: "#111111",
+  meta: "#0866ff",
+  mistral: "#ff7000",
+  deepseek: "#4d6bfe",
+  alibaba: "#ff6a00",
+  cohere: "#39594d",
+};
+
+function hashColor(s: string): string {
+  let h = 0;
+  for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0;
+  const hue = Math.abs(h) % 360;
+  return `hsl(${hue}, 55%, 45%)`;
+}
+
+const color = COLORS[provider.toLowerCase()] ?? hashColor(provider);
+
+function initials(s: string): string {
+  const cleaned = s.replace(/^the /i, "").trim();
+  const parts = cleaned.split(/[\s\-_]+/);
+  if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
+  return cleaned.slice(0, 2).toUpperCase();
+}
+
+const text = initials(provider);
+const radius = Math.max(2, Math.floor(size / 8));
+const fontSize = Math.floor(size * 0.5);
+---
+<span class="provider-mark" title={provider} aria-hidden="true">
+  <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} role="img">
+    <rect width={size} height={size} rx={radius} fill={color} />
+    <text
+      x="50%"
+      y="50%"
+      dominant-baseline="central"
+      text-anchor="middle"
+      fill="#fff"
+      font-family="-apple-system, system-ui, 'Segoe UI', sans-serif"
+      font-weight="700"
+      font-size={fontSize}
+    >{text}</text>
+  </svg>
+</span>
+<style>
+  .provider-mark { display: inline-flex; vertical-align: middle; margin-right: 0.35rem; }
+</style>
