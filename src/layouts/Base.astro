@@ -1,4 +1,6 @@
 ---
+import { entityById, eventSlug, loadEvents } from "../lib/data.ts";
+
 interface Props {
   title: string;
   description?: string;
@@ -11,6 +13,22 @@ const siteUrl = Astro.site?.toString().replace(/\/$/, "") ?? "";
 const canonicalUrl = canonical ?? (siteUrl + Astro.url.pathname);
 const resolvedImage = ogImage ?? "/og/default.png";
 const absImage = resolvedImage.startsWith("http") ? resolvedImage : siteUrl + resolvedImage;
+
+// Latest-event banner. Newest event surfaces with relative-age label so every
+// page reminds visitors the data is live.
+const latest = loadEvents()[0] ?? null;
+const latestEntity = latest ? entityById(latest.entity) : null;
+const latestPath = latest ? `/events/${eventSlug(latest)}` : null;
+const latestName = latestEntity?.name ?? latest?.entity ?? "";
+function relativeAge(dateStr: string): string {
+  const days = Math.floor((Date.now() - new Date(dateStr + "T12:00:00Z").getTime()) / 86400000);
+  if (days <= 0) return "today";
+  if (days === 1) return "1d ago";
+  if (days < 30) return `${days}d ago`;
+  if (days < 365) return `${Math.floor(days / 30)}mo ago`;
+  return `${Math.floor(days / 365)}y ago`;
+}
+const latestAge = latest ? relativeAge(latest.date) : "";
 ---
 <!doctype html>
 <html lang="en">
@@ -54,6 +72,15 @@ const absImage = resolvedImage.startsWith("http") ? resolvedImage : siteUrl + re
         <a href="/about">About</a>
       </nav>
     </header>
+    {latest && latestPath ? (
+      <div class="latest-bar">
+        <span class="latest-label">Latest</span>
+        <a href={latestPath} class="latest-link">
+          <strong>{latest.type}</strong> · {latestName} — {latest.summary}
+        </a>
+        <span class="latest-age">{latestAge}</span>
+      </div>
+    ) : null}
     <main>
       <slot />
     </main>
@@ -72,6 +99,12 @@ const absImage = resolvedImage.startsWith("http") ? resolvedImage : siteUrl + re
       header { padding: 1rem 1.5rem; border-bottom: 1px solid #eee; }
       header nav { display: flex; gap: 1rem; max-width: 880px; margin: 0 auto; flex-wrap: wrap; }
       header a { text-decoration: none; color: inherit; }
+      .latest-bar { max-width: 880px; margin: 0 auto; padding: 0.45rem 1.5rem; display: flex; gap: 0.6rem; align-items: baseline; font-size: 0.85rem; color: #444; border-bottom: 1px solid #f0f0f0; flex-wrap: wrap; }
+      .latest-label { background: #1a4cff; color: #fff; padding: 0.05rem 0.5rem; border-radius: 999px; font-weight: 600; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.5px; }
+      .latest-link { text-decoration: none; color: inherit; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .latest-link:hover { color: #1a4cff; }
+      .latest-link strong { color: #1a4cff; }
+      .latest-age { color: #888; font-variant-numeric: tabular-nums; }
       footer { max-width: 880px; margin: 2rem auto; padding: 1rem 1.5rem; border-top: 1px solid #eee; color: #666; font-size: 0.9rem; }
       a { color: #1a4cff; }
       h1, h2, h3 { line-height: 1.2; }

@@ -1,6 +1,6 @@
 import type { APIRoute } from "astro";
 import { loadTools } from "../../../lib/data.ts";
-import { categoryColor } from "../../../lib/categoryColors.ts";
+import { categoryCode, categoryColor } from "../../../lib/categoryColors.ts";
 import { ogCardSvg, svgResponse } from "../../../lib/ogSvg.ts";
 
 export function getStaticPaths() {
@@ -23,5 +23,12 @@ export const GET: APIRoute = ({ props }) => {
   }
   if (t.oss) bullets.push("Open source");
   if (t.released) bullets.push(`released ${t.released}`);
-  return svgResponse(ogCardSvg({ kind: "tool", title: t.name, subtitle, bullets, accent: categoryColor(t.category) }));
+  return svgResponse(ogCardSvg({
+    kind: "tool",
+    title: t.name,
+    subtitle,
+    bullets,
+    accent: categoryColor(t.category),
+    monogram: { text: categoryCode(t.category), color: categoryColor(t.category) },
+  }));
 };

@@ -35,3 +35,12 @@ const FALLBACK = "#0a8a4f"; // tool-default green
 export function categoryColor(category: string): string {
   return CATEGORY_COLORS[category] ?? FALLBACK;
 }
+
+// Short uppercase code for a category, used in monogram squares on OG cards.
+// Words separated by - or _ become initials (agent-framework → "AF"); short
+// single-word categories use the first 3 chars (rag → "RAG").
+export function categoryCode(category: string): string {
+  const parts = category.split(/[-_]/).filter(Boolean);
+  if (parts.length >= 2) return parts.map((p) => p[0]).join("").toUpperCase();
+  return category.slice(0, 3).toUpperCase();
+}
