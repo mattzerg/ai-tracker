@@ -66,13 +66,37 @@ export function svgResponse(svg: string): Response {
 
 // PNG conversion via @resvg/resvg-js. Closes the LinkedIn / strict-scraper gap
 // where SVG OG images aren't supported. Build-time only.
+//
+// Content-hash cache at tmp/png-cache/<sha256>.png so unchanged SVGs skip the
+// ~400ms resvg render on subsequent builds. The cache is git-ignored; stale
+// entries are inert (just disk).
 export async function svgToPng(svg: string): Promise<Uint8Array> {
+  const { createHash } = await import("node:crypto");
+  const { existsSync, mkdirSync, readFileSync, writeFileSync } = await import("node:fs");
+  const { join, resolve } = await import("node:path");
+  const { fileURLToPath } = await import("node:url");
+
+  const cacheRoot = resolve(fileURLToPath(import.meta.url), "../../..", "tmp", "png-cache");
+  const hash = createHash("sha256").update(svg).digest("hex");
+  const cachePath = join(cacheRoot, `${hash}.png`);
+  if (existsSync(cachePath)) {
+    return new Uint8Array(readFileSync(cachePath));
+  }
+
   const { Resvg } = await import("@resvg/resvg-js");
   const resvg = new Resvg(svg, {
     fitTo: { mode: "width", value: 1200 },
     background: "transparent",
   });
-  return resvg.render().asPng();
+  const png = resvg.render().asPng();
+
+  try {
+    mkdirSync(cacheRoot, { recursive: true });
+    writeFileSync(cachePath, png);
+  } catch {
+    /* cache best-effort; render still returned */
+  }
+  return png;
 }
 
 export async function pngResponse(svg: string): Promise<Response> {
