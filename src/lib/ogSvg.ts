@@ -17,20 +17,27 @@ function fitText(s: string, maxChars: number): string {
 }
 
 export interface OgCardOpts {
-  kind: "model" | "tool";
+  kind: "model" | "tool" | "site";
   title: string;
   subtitle: string; // e.g. "anthropic · 1M context"
   bullets: string[]; // 1-3 short lines, e.g. ["$5/M input · $25/M output", "released 2026-04-16"]
   badge?: string; // small top-right tag, e.g. "MODEL" / "TOOL"
+  accent?: string; // override the stripe color (e.g. provider-tinted model cards)
 }
+
+const DEFAULT_ACCENTS: Record<OgCardOpts["kind"], string> = {
+  model: "#1a4cff",
+  tool: "#0a8a4f",
+  site: "#1a4cff",
+};
 
 export function ogCardSvg(opts: OgCardOpts): string {
   const t = escape(fitText(opts.title, 38));
   const sub = escape(fitText(opts.subtitle, 60));
   const bullets = opts.bullets.slice(0, 3).map((b) => escape(fitText(b, 64)));
-  const badge = escape(opts.badge ?? (opts.kind === "model" ? "MODEL" : "TOOL"));
+  const badge = escape(opts.badge ?? (opts.kind === "model" ? "MODEL" : opts.kind === "tool" ? "TOOL" : "ai-tracker"));
 
-  const accent = opts.kind === "model" ? "#1a4cff" : "#0a8a4f";
+  const accent = opts.accent ?? DEFAULT_ACCENTS[opts.kind];
   const bg = "#0e1116";
   const fg = "#f5f6fa";
   const dim = "#9aa3b2";

@@ -1,6 +1,7 @@
 import type { APIRoute } from "astro";
 import { loadModels } from "../../../lib/data.ts";
 import { ogCardSvg, svgResponse } from "../../../lib/ogSvg.ts";
+import { providerColor } from "../../../lib/providerColors.ts";
 
 export function getStaticPaths() {
   return loadModels().map((m) => ({ params: { id: m.id }, props: { model: m } }));
@@ -18,5 +19,5 @@ export const GET: APIRoute = ({ props }) => {
   }
   if (m.released) bullets.push(`released ${m.released}`);
   if (m.modalities?.length) bullets.push(m.modalities.join(" + "));
-  return svgResponse(ogCardSvg({ kind: "model", title: m.name, subtitle, bullets }));
+  return svgResponse(ogCardSvg({ kind: "model", title: m.name, subtitle, bullets, accent: providerColor(m.provider) }));
 };

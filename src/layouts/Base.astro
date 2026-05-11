@@ -9,11 +9,8 @@ interface Props {
 const { title, description, ogImage, ogType = "website", canonical } = Astro.props;
 const siteUrl = Astro.site?.toString().replace(/\/$/, "") ?? "";
 const canonicalUrl = canonical ?? (siteUrl + Astro.url.pathname);
-const absImage = ogImage
-  ? ogImage.startsWith("http")
-    ? ogImage
-    : siteUrl + ogImage
-  : undefined;
+const resolvedImage = ogImage ?? "/og/default.png";
+const absImage = resolvedImage.startsWith("http") ? resolvedImage : siteUrl + resolvedImage;
 ---
 <!doctype html>
 <html lang="en">
