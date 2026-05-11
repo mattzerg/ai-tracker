@@ -5,7 +5,6 @@
   "vendor": "OpenAI",
   "category": "agent-framework",
   "released": null,
-  "homepage": "https://openai.com/codex",
   "built_on_models": [
     "openai__gpt-5.3-codex"
   ],

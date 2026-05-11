@@ -5,7 +5,6 @@
   "vendor": "Charm",
   "category": "ide",
   "released": null,
-  "homepage": "https://github.com/charmbracelet/crush",
   "built_on_models": [
     "anthropic__claude-sonnet-4-6",
     "openai__gpt-5.4",

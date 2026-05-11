@@ -5,7 +5,6 @@
   "vendor": "Google",
   "category": "ide",
   "released": null,
-  "homepage": "https://github.com/google-gemini/gemini-cli",
   "built_on_models": [
     "google__gemini-3.1-pro",
     "google__gemini-2.5-pro",

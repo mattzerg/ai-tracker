@@ -45,7 +45,6 @@ export const toolSchema = z.object({
   vendor: z.string().min(1),
   category: toolCategorySchema,
   released: isoDate.nullable(),
-  homepage: url,
   built_on_models: z.array(entityId).default([]),
   oss: z.boolean(),
   oss_repo: url.optional(),
@@ -55,7 +54,7 @@ export const toolSchema = z.object({
     .array(z.enum(["text", "vision", "audio", "video", "image", "code"]))
     .default(["text"]),
   links: z.object({
-    homepage: url.optional(),
+    homepage: url,
     docs: url.optional(),
     pricing: url.optional(),
     changelog: url.optional(),

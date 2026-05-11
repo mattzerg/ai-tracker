@@ -5,7 +5,6 @@
   "vendor": "Google",
   "category": "agent-framework",
   "released": null,
-  "homepage": "https://google.github.io/adk-docs/",
   "built_on_models": [
     "google__gemini-3.1-pro",
     "google__gemini-2.5-pro"

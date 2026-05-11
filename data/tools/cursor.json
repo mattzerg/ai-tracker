@@ -5,7 +5,6 @@
   "vendor": "Anysphere",
   "category": "ide",
   "released": null,
-  "homepage": "https://cursor.sh",
   "built_on_models": [
     "anthropic__claude-sonnet-4-6",
     "anthropic__claude-opus-4-7",

@@ -64,7 +64,6 @@ function toTool(repo: GhRepo, topic: string, now: Date): Tool {
     vendor: repo.owner.login,
     category: TOPIC_TO_CATEGORY[topic] ?? "other",
     released: null,
-    homepage,
     built_on_models: [],
     oss: true,
     oss_repo: ossRepo,

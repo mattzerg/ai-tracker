@@ -61,6 +61,13 @@ const categories = Array.from(new Set(tools.map((t) => t.category))).sort();
     <a href="/changes">recent changes</a>.
   </p>
 
+  <h2>What share cards look like</h2>
+  <p>Every model and tool detail page emits a 1200×630 OG card. Sample:</p>
+  <div class="og-samples">
+    <a href="/models/anthropic__claude-opus-4-7"><img src="/og/models/anthropic__claude-opus-4-7.png" alt="Sample model card — Claude Opus 4.7" width="600" height="315" /></a>
+    <a href="/tools/cursor"><img src="/og/tools/cursor.png" alt="Sample tool card — Cursor" width="600" height="315" /></a>
+  </div>
+
   <h2>For agents and integrators</h2>
   <ul>
     <li><a href="/llms.txt">/llms.txt</a> — discovery file (entity + event counts, links to full corpus).</li>
@@ -92,4 +99,9 @@ const categories = Array.from(new Set(tools.map((t) => t.category))).sort();
     No accounts. No login. No email subscriptions. No embeddable widgets. No API keys.
     No revenue, ads, or sponsorships.
   </p>
+
+  <style>
+    .og-samples { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin: 1rem 0; }
+    .og-samples img { width: 100%; height: auto; border-radius: 4px; border: 1px solid #ddd; display: block; }
+  </style>
 </Base>

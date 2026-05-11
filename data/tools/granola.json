@@ -5,7 +5,6 @@
   "vendor": "Granola",
   "category": "writing",
   "released": null,
-  "homepage": "https://www.granola.ai",
   "built_on_models": [
     "anthropic__claude-sonnet-4-6",
     "openai__gpt-5.4"

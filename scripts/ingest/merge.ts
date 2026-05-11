@@ -64,7 +64,6 @@ export function mergeTool(existing: Tool, proposed: Tool, opts: MergeOpts): Tool
     ...existing,
     name: existing.name,
     released: existing.released ?? proposed.released,
-    homepage: existing.homepage,
     built_on_models: unionStrings(existing.built_on_models, proposed.built_on_models),
     pricing_tiers: auth && proposed.pricing_tiers.length ? proposed.pricing_tiers : existing.pricing_tiers,
     free_tier: existing.free_tier,

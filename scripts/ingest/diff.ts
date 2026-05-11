@@ -36,7 +36,6 @@ const TOOL_TRACKED_FIELDS = [
   "vendor",
   "category",
   "released",
-  "homepage",
   "built_on_models",
   "oss",
   "pricing_tiers",
