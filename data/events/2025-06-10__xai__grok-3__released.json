@@ -1,0 +1,8 @@
+{
+  "date": "2025-06-10",
+  "entity": "xai__grok-3",
+  "type": "released",
+  "summary": "xAI: Grok 3 released by xai. 131,072-token context.",
+  "source": "https://openrouter.ai/api/v1/models",
+  "submitted_by": "ingest-bot"
+}

@@ -1,0 +1,8 @@
+{
+  "date": "2025-08-01",
+  "entity": "mistral__codestral-2508",
+  "type": "released",
+  "summary": "Codestral 2508 released by mistral. 256,000-token context.",
+  "source": "https://docs.mistral.ai/getting-started/models/models_overview/",
+  "submitted_by": "ingest-bot"
+}

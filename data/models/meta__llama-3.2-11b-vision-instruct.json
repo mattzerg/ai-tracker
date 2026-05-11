@@ -7,7 +7,8 @@
   "context_window": 131072,
   "output_window": 16384,
   "modalities": [
-    "text"
+    "text",
+    "vision"
   ],
   "license": "llama-community",
   "pricing": {
@@ -15,10 +16,18 @@
     "output_per_mtok": 0.245,
     "as_of": "2026-05-10"
   },
-  "links": {},
-  "tags": [],
+  "links": {
+    "homepage": "https://www.llama.com",
+    "docs": "https://www.llama.com/"
+  },
+  "tags": [
+    "open-weights",
+    "multimodal",
+    "small"
+  ],
   "sources": [
-    "https://openrouter.ai/api/v1/models"
+    "https://openrouter.ai/api/v1/models",
+    "https://www.llama.com/"
   ],
   "status": "ga"
 }

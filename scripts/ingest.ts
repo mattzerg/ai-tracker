@@ -4,10 +4,13 @@ import { loadEvents, loadModels, loadTools } from "../src/lib/data.ts";
 import { diffEvents, diffModels, diffTools } from "./ingest/diff.ts";
 import { mergeModel, mergeTool } from "./ingest/merge.ts";
 import { writeDiff } from "./ingest/writer.ts";
+import { alibabaQwenModels } from "./ingest/sources/alibaba-qwen-models.ts";
 import { anthropicChangelog } from "./ingest/sources/anthropic-changelog.ts";
+import { cohereModels } from "./ingest/sources/cohere-models.ts";
 import { deepseekModels } from "./ingest/sources/deepseek-models.ts";
 import { geminiChangelog } from "./ingest/sources/gemini-changelog.ts";
 import { githubTrending } from "./ingest/sources/github-trending.ts";
+import { metaLlamaModels } from "./ingest/sources/meta-llama-models.ts";
 import { mistralModels } from "./ingest/sources/mistral-models.ts";
 import { openaiModels } from "./ingest/sources/openai-models.ts";
 import { openrouter } from "./ingest/sources/openrouter.ts";
@@ -27,6 +30,9 @@ const SOURCES: Source[] = [
   mistralModels,
   openaiModels,
   deepseekModels,
+  metaLlamaModels,
+  alibabaQwenModels,
+  cohereModels,
   openrouter,
   githubTrending,
 ];

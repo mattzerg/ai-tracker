@@ -1,0 +1,8 @@
+{
+  "date": "2026-04-27",
+  "entity": "alibaba__qwen3.5-plus-20260420",
+  "type": "released",
+  "summary": "Qwen3.5 Plus 2026-04-20 released by alibaba. 1,000,000-token context.",
+  "source": "https://qwenlm.github.io/",
+  "submitted_by": "ingest-bot"
+}

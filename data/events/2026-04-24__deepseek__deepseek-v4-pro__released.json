@@ -1,0 +1,8 @@
+{
+  "date": "2026-04-24",
+  "entity": "deepseek__deepseek-v4-pro",
+  "type": "released",
+  "summary": "DeepSeek V4 Pro released by deepseek. 1,048,576-token context.",
+  "source": "https://api-docs.deepseek.com/quick_start/pricing",
+  "submitted_by": "ingest-bot"
+}

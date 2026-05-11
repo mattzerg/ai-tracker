@@ -1,0 +1,8 @@
+{
+  "date": "2026-02-24",
+  "entity": "openai__gpt-5.3-codex",
+  "type": "released",
+  "summary": "GPT-5.3 Codex released by openai. 400,000-token context.",
+  "source": "https://platform.openai.com/docs/models",
+  "submitted_by": "ingest-bot"
+}

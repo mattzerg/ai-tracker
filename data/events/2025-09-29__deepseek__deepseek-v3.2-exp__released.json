@@ -1,0 +1,8 @@
+{
+  "date": "2025-09-29",
+  "entity": "deepseek__deepseek-v3.2-exp",
+  "type": "released",
+  "summary": "DeepSeek V3.2 Exp released by deepseek. 163,840-token context.",
+  "source": "https://api-docs.deepseek.com/quick_start/pricing",
+  "submitted_by": "ingest-bot"
+}

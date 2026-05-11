@@ -1,0 +1,8 @@
+{
+  "date": "2024-11-19",
+  "entity": "mistral__pixtral-large-2411",
+  "type": "released",
+  "summary": "Pixtral Large 2411 released by mistral. 131,072-token context.",
+  "source": "https://docs.mistral.ai/getting-started/models/models_overview/",
+  "submitted_by": "ingest-bot"
+}

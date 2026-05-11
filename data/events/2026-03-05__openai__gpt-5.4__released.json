@@ -1,0 +1,8 @@
+{
+  "date": "2026-03-05",
+  "entity": "openai__gpt-5.4",
+  "type": "released",
+  "summary": "GPT-5.4 released by openai. 1,050,000-token context.",
+  "source": "https://platform.openai.com/docs/models",
+  "submitted_by": "ingest-bot"
+}

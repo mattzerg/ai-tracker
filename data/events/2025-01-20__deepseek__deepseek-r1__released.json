@@ -1,0 +1,8 @@
+{
+  "date": "2025-01-20",
+  "entity": "deepseek__deepseek-r1",
+  "type": "released",
+  "summary": "R1 released by deepseek. 64,000-token context.",
+  "source": "https://api-docs.deepseek.com/quick_start/pricing",
+  "submitted_by": "ingest-bot"
+}

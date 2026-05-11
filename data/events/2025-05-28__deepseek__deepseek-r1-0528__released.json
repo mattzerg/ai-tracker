@@ -1,0 +1,8 @@
+{
+  "date": "2025-05-28",
+  "entity": "deepseek__deepseek-r1-0528",
+  "type": "released",
+  "summary": "R1 0528 released by deepseek. 163,840-token context.",
+  "source": "https://api-docs.deepseek.com/quick_start/pricing",
+  "submitted_by": "ingest-bot"
+}

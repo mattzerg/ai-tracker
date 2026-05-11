@@ -1,0 +1,8 @@
+{
+  "date": "2025-09-19",
+  "entity": "xai__grok-4-fast",
+  "type": "released",
+  "summary": "xAI: Grok 4 Fast released by xai. 2,000,000-token context.",
+  "source": "https://openrouter.ai/api/v1/models",
+  "submitted_by": "ingest-bot"
+}

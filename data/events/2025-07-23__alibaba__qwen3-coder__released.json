@@ -1,0 +1,8 @@
+{
+  "date": "2025-07-23",
+  "entity": "alibaba__qwen3-coder",
+  "type": "released",
+  "summary": "Qwen3 Coder 480B A35B released by alibaba. 262,144-token context.",
+  "source": "https://qwenlm.github.io/",
+  "submitted_by": "ingest-bot"
+}

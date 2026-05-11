@@ -18,7 +18,9 @@
     "ingest:apply": "tsx scripts/ingest.ts --apply",
     "ingest:apply:updates": "tsx scripts/ingest.ts --apply --updates-only",
     "ingest:queue": "tsx scripts/ingest-to-queue.ts",
-    "ingest:queue:status": "tsx scripts/ingest-to-queue.ts --status"
+    "ingest:queue:status": "tsx scripts/ingest-to-queue.ts --status",
+    "events:backfill-releases": "tsx scripts/generate-release-events.ts",
+    "events:backfill-releases:dry": "tsx scripts/generate-release-events.ts --dry-run"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.2",

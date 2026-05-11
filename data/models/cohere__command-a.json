@@ -15,10 +15,18 @@
     "output_per_mtok": 10,
     "as_of": "2026-05-10"
   },
-  "links": {},
-  "tags": [],
+  "links": {
+    "homepage": "https://cohere.com",
+    "docs": "https://docs.cohere.com/docs/models"
+  },
+  "tags": [
+    "enterprise",
+    "long-context"
+  ],
   "sources": [
-    "https://openrouter.ai/api/v1/models"
+    "https://openrouter.ai/api/v1/models",
+    "https://docs.cohere.com/docs/models",
+    "https://cohere.com/pricing"
   ],
   "status": "ga"
 }

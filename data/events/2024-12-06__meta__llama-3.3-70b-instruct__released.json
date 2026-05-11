@@ -1,0 +1,8 @@
+{
+  "date": "2024-12-06",
+  "entity": "meta__llama-3.3-70b-instruct",
+  "type": "released",
+  "summary": "Llama 3.3 70B Instruct released by meta. 131,072-token context.",
+  "source": "https://www.llama.com/",
+  "submitted_by": "ingest-bot"
+}

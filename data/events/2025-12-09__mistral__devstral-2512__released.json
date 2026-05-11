@@ -1,0 +1,8 @@
+{
+  "date": "2025-12-09",
+  "entity": "mistral__devstral-2512",
+  "type": "released",
+  "summary": "Devstral 2 2512 released by mistral. 262,144-token context.",
+  "source": "https://docs.mistral.ai/getting-started/models/models_overview/",
+  "submitted_by": "ingest-bot"
+}

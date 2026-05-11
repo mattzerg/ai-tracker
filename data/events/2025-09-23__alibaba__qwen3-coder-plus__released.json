@@ -1,0 +1,8 @@
+{
+  "date": "2025-09-23",
+  "entity": "alibaba__qwen3-coder-plus",
+  "type": "released",
+  "summary": "Qwen3 Coder Plus released by alibaba. 1,000,000-token context.",
+  "source": "https://qwenlm.github.io/",
+  "submitted_by": "ingest-bot"
+}
