@@ -1,0 +1,37 @@
+{
+  "kind": "tool",
+  "id": "assafelovic-gpt-researcher",
+  "name": "GPT Researcher",
+  "vendor": "Assaf Elovic",
+  "category": "research",
+  "released": null,
+  "homepage": "https://gptr.dev",
+  "built_on_models": [],
+  "oss": true,
+  "oss_repo": "https://github.com/assafelovic/gpt-researcher",
+  "pricing_tiers": [
+    {
+      "name": "Free",
+      "monthly_usd": 0,
+      "per_seat": false,
+      "notes": "Open source"
+    }
+  ],
+  "free_tier": true,
+  "modalities": [
+    "text",
+    "code"
+  ],
+  "links": {
+    "homepage": "https://gptr.dev",
+    "docs": "https://github.com/assafelovic/gpt-researcher"
+  },
+  "tags": [
+    "mcp-server",
+    "python"
+  ],
+  "sources": [
+    "https://github.com/assafelovic/gpt-researcher"
+  ],
+  "status": "ga"
+}

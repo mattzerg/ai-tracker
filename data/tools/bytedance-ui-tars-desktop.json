@@ -1,0 +1,37 @@
+{
+  "kind": "tool",
+  "id": "bytedance-ui-tars-desktop",
+  "name": "UI-TARS Desktop",
+  "vendor": "ByteDance",
+  "category": "browser-automation",
+  "released": null,
+  "homepage": "https://github.com/bytedance/UI-TARS-desktop",
+  "built_on_models": [],
+  "oss": true,
+  "oss_repo": "https://github.com/bytedance/UI-TARS-desktop",
+  "pricing_tiers": [
+    {
+      "name": "Free",
+      "monthly_usd": 0,
+      "per_seat": false,
+      "notes": "Open source"
+    }
+  ],
+  "free_tier": true,
+  "modalities": [
+    "text",
+    "code"
+  ],
+  "links": {
+    "homepage": "https://github.com/bytedance/UI-TARS-desktop",
+    "docs": "https://github.com/bytedance/UI-TARS-desktop"
+  },
+  "tags": [
+    "mcp-server",
+    "typescript"
+  ],
+  "sources": [
+    "https://github.com/bytedance/UI-TARS-desktop"
+  ],
+  "status": "ga"
+}

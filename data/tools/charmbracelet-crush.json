@@ -1,0 +1,40 @@
+{
+  "kind": "tool",
+  "id": "charmbracelet-crush",
+  "name": "Crush",
+  "vendor": "Charm",
+  "category": "ide",
+  "released": null,
+  "homepage": "https://github.com/charmbracelet/crush",
+  "built_on_models": [
+    "anthropic__claude-opus-4-7",
+    "anthropic__claude-sonnet-4-6",
+    "openai__gpt-5.4"
+  ],
+  "oss": true,
+  "oss_repo": "https://github.com/charmbracelet/crush",
+  "pricing_tiers": [
+    {
+      "name": "Free",
+      "monthly_usd": 0,
+      "per_seat": false,
+      "notes": "Open source"
+    }
+  ],
+  "free_tier": true,
+  "modalities": [
+    "text",
+    "code"
+  ],
+  "links": {
+    "homepage": "https://github.com/charmbracelet/crush"
+  },
+  "tags": [
+    "agentic-ai",
+    "go"
+  ],
+  "sources": [
+    "https://github.com/charmbracelet/crush"
+  ],
+  "status": "ga"
+}

@@ -1,0 +1,41 @@
+{
+  "kind": "tool",
+  "id": "google-gemini-gemini-cli",
+  "name": "Gemini CLI",
+  "vendor": "Google",
+  "category": "ide",
+  "released": null,
+  "homepage": "https://github.com/google-gemini/gemini-cli",
+  "built_on_models": [
+    "google__gemini-3.1-pro",
+    "google__gemini-3.1-flash-lite",
+    "google__gemini-2.5-pro"
+  ],
+  "oss": true,
+  "oss_repo": "https://github.com/google-gemini/gemini-cli",
+  "pricing_tiers": [
+    {
+      "name": "Free",
+      "monthly_usd": 0,
+      "per_seat": false,
+      "notes": "Open source"
+    }
+  ],
+  "free_tier": true,
+  "modalities": [
+    "text",
+    "code"
+  ],
+  "links": {
+    "homepage": "https://github.com/google-gemini/gemini-cli",
+    "docs": "https://github.com/google-gemini/gemini-cli"
+  },
+  "tags": [
+    "mcp-server",
+    "typescript"
+  ],
+  "sources": [
+    "https://github.com/google-gemini/gemini-cli"
+  ],
+  "status": "ga"
+}

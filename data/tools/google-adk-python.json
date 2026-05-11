@@ -1,0 +1,40 @@
+{
+  "kind": "tool",
+  "id": "google-adk-python",
+  "name": "Agent Development Kit",
+  "vendor": "Google",
+  "category": "agent-framework",
+  "released": null,
+  "homepage": "https://google.github.io/adk-docs/",
+  "built_on_models": [
+    "google__gemini-3.1-pro",
+    "google__gemini-2.5-pro"
+  ],
+  "oss": true,
+  "oss_repo": "https://github.com/google/adk-python",
+  "pricing_tiers": [
+    {
+      "name": "Free",
+      "monthly_usd": 0,
+      "per_seat": false,
+      "notes": "Open source"
+    }
+  ],
+  "free_tier": true,
+  "modalities": [
+    "text",
+    "code"
+  ],
+  "links": {
+    "homepage": "https://google.github.io/adk-docs/",
+    "docs": "https://github.com/google/adk-python"
+  },
+  "tags": [
+    "agentic-ai",
+    "python"
+  ],
+  "sources": [
+    "https://github.com/google/adk-python"
+  ],
+  "status": "ga"
+}
