@@ -9,16 +9,22 @@
   "modalities": [
     "text"
   ],
-  "license": "open-weights",
+  "license": "proprietary",
   "pricing": {
-    "input_per_mtok": 0.39999999999999997,
+    "input_per_mtok": 0.4,
     "output_per_mtok": 2,
-    "as_of": "2026-05-10"
+    "as_of": "2026-05-11"
   },
-  "links": {},
-  "tags": [],
+  "links": {
+    "homepage": "https://mistral.ai",
+    "docs": "https://docs.mistral.ai/getting-started/models/models_overview/"
+  },
+  "tags": [
+    "mid-tier"
+  ],
   "sources": [
-    "https://openrouter.ai/api/v1/models"
+    "https://openrouter.ai/api/v1/models",
+    "https://docs.mistral.ai/getting-started/models/models_overview/"
   ],
   "status": "ga"
 }

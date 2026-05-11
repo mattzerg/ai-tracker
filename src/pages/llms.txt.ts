@@ -1,11 +1,13 @@
 import type { APIRoute } from "astro";
 import { loadEvents, loadModels, loadTools } from "../lib/data.ts";
+import { loadQueueStatus } from "../lib/queueStatus.ts";
 
 export const GET: APIRoute = ({ site }) => {
   const base = (site?.toString() ?? "").replace(/\/$/, "");
   const models = loadModels().sort((a, b) => (b.released ?? "0").localeCompare(a.released ?? "0"));
   const tools = loadTools().sort((a, b) => (b.released ?? "0").localeCompare(a.released ?? "0"));
   const events = loadEvents();
+  const queue = loadQueueStatus();
 
   const lines: string[] = [];
   lines.push("# ai-tracker");
@@ -19,6 +21,19 @@ export const GET: APIRoute = ({ site }) => {
   lines.push(`- Full text: ${base}/llms-full.txt`);
   lines.push(`- MCP server: npm install -g ai-tracker-mcp (Phase 5)`);
   lines.push("");
+  if (queue.available && queue.branches.length > 0) {
+    lines.push("## Review queue");
+    lines.push("");
+    if (queue.totalQueued === 0) {
+      lines.push("- Empty: all submissions and ingest runs reviewed.");
+    } else {
+      for (const b of queue.branches) {
+        const last = b.lastCommit ? ` — last update ${b.lastCommit.slice(0, 10)}` : "";
+        lines.push(`- ${b.name}: ${b.commitsAhead} pending${last}`);
+      }
+    }
+    lines.push("");
+  }
   lines.push(`## Models (${models.length})`);
   lines.push("");
   for (const m of models) {

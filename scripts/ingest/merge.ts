@@ -44,8 +44,9 @@ export function mergeModel(existing: Model, proposed: Model, opts: MergeOpts): M
         : auth
           ? proposed.pricing ?? existing.pricing
           : existing.pricing ?? proposed.pricing,
-    // License: only adopt proposed if existing missing.
-    license: existing.license ?? proposed.license,
+    // License: authoritative sources can correct a stale curated value (e.g. supplementary
+    // aggregator marked a proprietary model "open-weights"); supplementary only fills gaps.
+    license: auth ? proposed.license ?? existing.license : existing.license ?? proposed.license,
     // Tags: union.
     tags: unionStrings(existing.tags, proposed.tags),
     // Sources: union — keep all attribution.

@@ -1,5 +1,6 @@
 import type { APIRoute } from "astro";
 import { loadEvents, loadModels, loadTools } from "../../lib/data.ts";
+import { loadQueueStatus } from "../../lib/queueStatus.ts";
 
 export const GET: APIRoute = () => {
   const body = JSON.stringify(
@@ -8,6 +9,7 @@ export const GET: APIRoute = () => {
       models: loadModels(),
       tools: loadTools(),
       events: loadEvents(),
+      review_queue: loadQueueStatus(),
     },
     null,
     2,

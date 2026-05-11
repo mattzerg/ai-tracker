@@ -5,13 +5,17 @@
   "provider": "meta",
   "released": "2025-04-05",
   "context_window": 10000000,
-  "output_window": null,
+  "output_window": 16384,
   "modalities": [
     "text",
     "vision"
   ],
   "license": "llama-community",
-  "pricing": null,
+  "pricing": {
+    "input_per_mtok": 0.08,
+    "output_per_mtok": 0.3,
+    "as_of": "2026-05-11"
+  },
   "links": {
     "homepage": "https://www.llama.com"
   },
@@ -22,7 +26,8 @@
   ],
   "sources": [
     "https://www.llama.com/",
-    "https://ai.meta.com/blog/llama-4-multimodal-intelligence/"
+    "https://ai.meta.com/blog/llama-4-multimodal-intelligence/",
+    "https://openrouter.ai/api/v1/models"
   ],
   "status": "ga"
 }
