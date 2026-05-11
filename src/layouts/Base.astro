@@ -2,8 +2,18 @@
 interface Props {
   title: string;
   description?: string;
+  ogImage?: string; // path or absolute URL
+  ogType?: "website" | "article";
+  canonical?: string; // absolute URL of this page
 }
-const { title, description } = Astro.props;
+const { title, description, ogImage, ogType = "website", canonical } = Astro.props;
+const siteUrl = Astro.site?.toString().replace(/\/$/, "") ?? "";
+const canonicalUrl = canonical ?? (siteUrl + Astro.url.pathname);
+const absImage = ogImage
+  ? ogImage.startsWith("http")
+    ? ogImage
+    : siteUrl + ogImage
+  : undefined;
 ---
 <!doctype html>
 <html lang="en">
@@ -12,6 +22,21 @@ const { title, description } = Astro.props;
     <meta name="viewport" content="width=device-width" />
     <title>{title}</title>
     {description ? <meta name="description" content={description} /> : null}
+    {canonicalUrl ? <link rel="canonical" href={canonicalUrl} /> : null}
+
+    <meta property="og:title" content={title} />
+    {description ? <meta property="og:description" content={description} /> : null}
+    <meta property="og:type" content={ogType} />
+    {canonicalUrl ? <meta property="og:url" content={canonicalUrl} /> : null}
+    {absImage ? <meta property="og:image" content={absImage} /> : null}
+    <meta property="og:site_name" content="ai-tracker" />
+
+    <meta name="twitter:card" content={absImage ? "summary_large_image" : "summary"} />
+    <meta name="twitter:title" content={title} />
+    {description ? <meta name="twitter:description" content={description} /> : null}
+    {absImage ? <meta name="twitter:image" content={absImage} /> : null}
+
+    <link rel="alternate" type="application/rss+xml" title="ai-tracker — every event" href="/feed.xml" />
     <link rel="icon" href="/favicon.svg" />
   </head>
   <body>
@@ -32,7 +57,7 @@ const { title, description } = Astro.props;
       <slot />
     </main>
     <footer>
-      <p>Public data. <a href="/llms.txt">/llms.txt</a> · <a href="/dump/all.json">/dump/all.json</a></p>
+      <p>Public data. <a href="/llms.txt">/llms.txt</a> · <a href="/dump/all.json">/dump/all.json</a> · <a href="/feed.xml">RSS</a></p>
     </footer>
     <style is:global>
       :root {
@@ -44,7 +69,7 @@ const { title, description } = Astro.props;
       body { margin: 0; }
       main { max-width: 880px; margin: 0 auto; padding: 1.5rem; }
       header { padding: 1rem 1.5rem; border-bottom: 1px solid #eee; }
-      header nav { display: flex; gap: 1rem; max-width: 880px; margin: 0 auto; }
+      header nav { display: flex; gap: 1rem; max-width: 880px; margin: 0 auto; flex-wrap: wrap; }
       header a { text-decoration: none; color: inherit; }
       footer { max-width: 880px; margin: 2rem auto; padding: 1rem 1.5rem; border-top: 1px solid #eee; color: #666; font-size: 0.9rem; }
       a { color: #1a4cff; }

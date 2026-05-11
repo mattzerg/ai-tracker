@@ -15,8 +15,20 @@ const usedBy = loadTools()
   .filter((t) => t.built_on_models.includes(model.id))
   .sort((a, b) => a.name.localeCompare(b.name));
 const canonicalUrl = new URL(`/models/${model.id}`, Astro.site).toString();
+const priceBit =
+  model.pricing?.input_per_mtok != null && model.pricing?.output_per_mtok != null
+    ? ` $${model.pricing.input_per_mtok}/M in · $${model.pricing.output_per_mtok}/M out.`
+    : "";
+const ctxBit = model.context_window ? ` ${(model.context_window / 1000).toLocaleString()}K context.` : "";
+const description = `${model.name} by ${model.provider}.${ctxBit}${priceBit}`.trim();
 ---
-<Base title={`${model.name} — ai-tracker`} description={`${model.name} by ${model.provider}.`}>
+<Base
+  title={`${model.name} — ai-tracker`}
+  description={description}
+  ogImage={`/og/models/${model.id}.svg`}
+  ogType="article"
+  canonical={canonicalUrl}
+>
   <JsonLd entity={model} url={canonicalUrl} />
   <p><a href="/models">← Models</a></p>
   <h1>{model.name}</h1>

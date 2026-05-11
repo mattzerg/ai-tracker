@@ -15,8 +15,23 @@ const builtOn = tool.built_on_models
   .map((id) => entityById(id))
   .filter((m): m is NonNullable<ReturnType<typeof entityById>> => m != null);
 const canonicalUrl = new URL(`/tools/${tool.id}`, Astro.site).toString();
+const cheapestPaid = tool.pricing_tiers
+  .filter((t) => t.monthly_usd != null && t.monthly_usd > 0)
+  .sort((a, b) => a.monthly_usd! - b.monthly_usd!)[0];
+const priceBit = tool.free_tier && cheapestPaid
+  ? ` Free tier; ${cheapestPaid.name} from $${cheapestPaid.monthly_usd}/mo.`
+  : cheapestPaid
+    ? ` From $${cheapestPaid.monthly_usd}/mo.`
+    : tool.free_tier ? " Free tier available." : "";
+const description = `${tool.name} by ${tool.vendor} — ${tool.category}.${tool.oss ? " Open source." : ""}${priceBit}`.trim();
 ---
-<Base title={`${tool.name} — ai-tracker`} description={`${tool.name} by ${tool.vendor}.`}>
+<Base
+  title={`${tool.name} — ai-tracker`}
+  description={description}
+  ogImage={`/og/tools/${tool.id}.svg`}
+  ogType="article"
+  canonical={canonicalUrl}
+>
   <JsonLd entity={tool} url={canonicalUrl} />
   <p><a href="/tools">← Tools</a></p>
   <h1>{tool.name}</h1>
