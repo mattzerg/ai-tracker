@@ -8,6 +8,10 @@ const licenses = Array.from(new Set(models.map((m) => m.license))).sort();
 
 const usageCount = new Map<string, number>();
 for (const t of loadTools()) for (const id of t.built_on_models) usageCount.set(id, (usageCount.get(id) ?? 0) + 1);
+
+const tagCounts = new Map<string, number>();
+for (const m of models) for (const tag of m.tags) tagCounts.set(tag, (tagCounts.get(tag) ?? 0) + 1);
+const tags = Array.from(tagCounts.entries()).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
 ---
 <Base title="Models — ai-tracker" description="All tracked AI models.">
   <h1>Models</h1>
@@ -26,6 +30,13 @@ for (const t of loadTools()) for (const id of t.built_on_models) usageCount.set(
       <select id="filter-license">
         <option value="">all</option>
         {licenses.map((l) => <option value={l}>{l}</option>)}
+      </select>
+    </label>
+    <label>
+      Tag
+      <select id="filter-tag">
+        <option value="">all</option>
+        {tags.map(([t, n]) => <option value={t}>{t} ({n})</option>)}
       </select>
     </label>
     <label>
@@ -66,6 +77,7 @@ for (const t of loadTools()) for (const id of t.built_on_models) usageCount.set(
         <tr
           data-provider={m.provider}
           data-license={m.license}
+          data-tags={m.tags.join(" ")}
           data-released={m.released ?? ""}
           data-input={m.pricing?.input_per_mtok ?? ""}
           data-context={m.context_window ?? ""}
@@ -113,10 +125,11 @@ for (const t of loadTools()) for (const id of t.built_on_models) usageCount.set(
     (() => {
       const provSel = document.getElementById("filter-provider");
       const licSel = document.getElementById("filter-license");
+      const tagSel = document.getElementById("filter-tag");
       const sortSel = document.getElementById("sort");
       const tbody = document.getElementById("models-body");
       const counter = document.getElementById("visible-count");
-      if (!provSel || !licSel || !sortSel || !tbody || !counter) return;
+      if (!provSel || !licSel || !tagSel || !sortSel || !tbody || !counter) return;
       const rows = Array.from(tbody.querySelectorAll("tr"));
 
       function num(v) { const n = parseFloat(v); return Number.isFinite(n) ? n : null; }
@@ -147,8 +160,14 @@ for (const t of loadTools()) for (const id of t.built_on_models) usageCount.set(
       function apply() {
         const p = provSel.value;
         const l = licSel.value;
+        const tag = tagSel.value;
         const mode = sortSel.value;
-        const visible = rows.filter((r) => (!p || r.dataset.provider === p) && (!l || r.dataset.license === l));
+        const visible = rows.filter((r) => {
+          if (p && r.dataset.provider !== p) return false;
+          if (l && r.dataset.license !== l) return false;
+          if (tag && !(r.dataset.tags || "").split(" ").includes(tag)) return false;
+          return true;
+        });
         for (const r of rows) r.hidden = !visible.includes(r);
         const sorted = visible.slice().sort((a, b) => compare(a, b, mode));
         for (const r of sorted) tbody.appendChild(r);
@@ -157,9 +176,10 @@ for (const t of loadTools()) for (const id of t.built_on_models) usageCount.set(
       }
       provSel.addEventListener("change", apply);
       licSel.addEventListener("change", apply);
+      tagSel.addEventListener("change", apply);
       sortSel.addEventListener("change", apply);
       if (clearLink) clearLink.addEventListener("click", (e) => {
-        e.preventDefault(); provSel.value = ""; licSel.value = ""; apply();
+        e.preventDefault(); provSel.value = ""; licSel.value = ""; tagSel.value = ""; apply();
       });
 
       // Compare picker.
