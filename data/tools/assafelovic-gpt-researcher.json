@@ -6,7 +6,10 @@
   "category": "research",
   "released": null,
   "homepage": "https://gptr.dev",
-  "built_on_models": [],
+  "built_on_models": [
+    "openai__gpt-5.4",
+    "openai__gpt-5.4-mini"
+  ],
   "oss": true,
   "oss_repo": "https://github.com/assafelovic/gpt-researcher",
   "pricing_tiers": [

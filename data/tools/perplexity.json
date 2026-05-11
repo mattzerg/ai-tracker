@@ -6,17 +6,42 @@
   "category": "search",
   "released": null,
   "homepage": "https://www.perplexity.ai",
-  "built_on_models": ["openai__gpt-5.4", "anthropic__claude-sonnet-4-6"],
+  "built_on_models": [
+    "anthropic__claude-sonnet-4-6",
+    "openai__gpt-5.4",
+    "google__gemini-2.5-pro"
+  ],
   "oss": false,
   "pricing_tiers": [
-    { "name": "Free", "monthly_usd": 0 },
-    { "name": "Pro", "monthly_usd": 20, "per_seat": true },
-    { "name": "Enterprise Pro", "monthly_usd": 40, "per_seat": true }
+    {
+      "name": "Free",
+      "monthly_usd": 0
+    },
+    {
+      "name": "Pro",
+      "monthly_usd": 20,
+      "per_seat": true
+    },
+    {
+      "name": "Enterprise Pro",
+      "monthly_usd": 40,
+      "per_seat": true
+    }
   ],
   "free_tier": true,
-  "modalities": ["text"],
-  "links": { "homepage": "https://www.perplexity.ai" },
-  "tags": ["ai-search", "answer-engine", "citations"],
-  "sources": ["https://www.perplexity.ai"],
+  "modalities": [
+    "text"
+  ],
+  "links": {
+    "homepage": "https://www.perplexity.ai"
+  },
+  "tags": [
+    "ai-search",
+    "answer-engine",
+    "citations"
+  ],
+  "sources": [
+    "https://www.perplexity.ai"
+  ],
   "status": "ga"
 }

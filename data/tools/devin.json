@@ -6,17 +6,45 @@
   "category": "agent-framework",
   "released": null,
   "homepage": "https://devin.ai",
-  "built_on_models": [],
+  "built_on_models": [
+    "anthropic__claude-opus-4-7",
+    "openai__gpt-5.5-pro",
+    "openai__gpt-5.5"
+  ],
   "oss": false,
   "pricing_tiers": [
-    { "name": "Core", "monthly_usd": 20, "notes": "Pay-as-you-go after included credits" },
-    { "name": "Team", "monthly_usd": 500, "notes": "Includes 250 ACU credits" },
-    { "name": "Enterprise", "monthly_usd": null, "notes": "Contact sales" }
+    {
+      "name": "Core",
+      "monthly_usd": 20,
+      "notes": "Pay-as-you-go after included credits"
+    },
+    {
+      "name": "Team",
+      "monthly_usd": 500,
+      "notes": "Includes 250 ACU credits"
+    },
+    {
+      "name": "Enterprise",
+      "monthly_usd": null,
+      "notes": "Contact sales"
+    }
   ],
   "free_tier": false,
-  "modalities": ["text", "code"],
-  "links": { "homepage": "https://devin.ai", "docs": "https://docs.devin.ai" },
-  "tags": ["autonomous-agent", "swe-agent", "long-running"],
-  "sources": ["https://devin.ai"],
+  "modalities": [
+    "text",
+    "code"
+  ],
+  "links": {
+    "homepage": "https://devin.ai",
+    "docs": "https://docs.devin.ai"
+  },
+  "tags": [
+    "autonomous-agent",
+    "swe-agent",
+    "long-running"
+  ],
+  "sources": [
+    "https://devin.ai"
+  ],
   "status": "ga"
 }

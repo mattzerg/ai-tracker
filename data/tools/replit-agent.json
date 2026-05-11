@@ -6,17 +6,43 @@
   "category": "agent-framework",
   "released": null,
   "homepage": "https://replit.com",
-  "built_on_models": ["anthropic__claude-opus-4-7", "anthropic__claude-sonnet-4-6"],
+  "built_on_models": [
+    "anthropic__claude-sonnet-4-6",
+    "openai__gpt-5.4"
+  ],
   "oss": false,
   "pricing_tiers": [
-    { "name": "Free", "monthly_usd": 0 },
-    { "name": "Core", "monthly_usd": 25, "per_seat": true },
-    { "name": "Teams", "monthly_usd": 35, "per_seat": true }
+    {
+      "name": "Free",
+      "monthly_usd": 0
+    },
+    {
+      "name": "Core",
+      "monthly_usd": 25,
+      "per_seat": true
+    },
+    {
+      "name": "Teams",
+      "monthly_usd": 35,
+      "per_seat": true
+    }
   ],
   "free_tier": true,
-  "modalities": ["text", "code"],
-  "links": { "homepage": "https://replit.com", "docs": "https://docs.replit.com/replitai/agent" },
-  "tags": ["agent", "browser-ide", "deploy"],
-  "sources": ["https://replit.com"],
+  "modalities": [
+    "text",
+    "code"
+  ],
+  "links": {
+    "homepage": "https://replit.com",
+    "docs": "https://docs.replit.com/replitai/agent"
+  },
+  "tags": [
+    "agent",
+    "browser-ide",
+    "deploy"
+  ],
+  "sources": [
+    "https://replit.com"
+  ],
   "status": "ga"
 }

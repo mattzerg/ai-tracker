@@ -20,7 +20,9 @@
     "ingest:queue": "tsx scripts/ingest-to-queue.ts",
     "ingest:queue:status": "tsx scripts/ingest-to-queue.ts --status",
     "events:backfill-releases": "tsx scripts/generate-release-events.ts",
-    "events:backfill-releases:dry": "tsx scripts/generate-release-events.ts --dry-run"
+    "events:backfill-releases:dry": "tsx scripts/generate-release-events.ts --dry-run",
+    "tools:fill-built-on": "tsx scripts/fill-built-on-models.ts",
+    "tools:fill-built-on:dry": "tsx scripts/fill-built-on-models.ts --dry-run"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.2",

@@ -7,9 +7,9 @@
   "released": null,
   "homepage": "https://github.com/charmbracelet/crush",
   "built_on_models": [
-    "anthropic__claude-opus-4-7",
     "anthropic__claude-sonnet-4-6",
-    "openai__gpt-5.4"
+    "openai__gpt-5.4",
+    "google__gemini-2.5-pro"
   ],
   "oss": true,
   "oss_repo": "https://github.com/charmbracelet/crush",

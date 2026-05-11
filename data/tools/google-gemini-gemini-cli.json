@@ -8,8 +8,9 @@
   "homepage": "https://github.com/google-gemini/gemini-cli",
   "built_on_models": [
     "google__gemini-3.1-pro",
-    "google__gemini-3.1-flash-lite",
-    "google__gemini-2.5-pro"
+    "google__gemini-2.5-pro",
+    "google__gemini-2.5-flash",
+    "google__gemini-3.1-flash-lite"
   ],
   "oss": true,
   "oss_repo": "https://github.com/google-gemini/gemini-cli",

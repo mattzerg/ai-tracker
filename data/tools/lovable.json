@@ -6,16 +6,38 @@
   "category": "agent-framework",
   "released": null,
   "homepage": "https://lovable.dev",
-  "built_on_models": ["anthropic__claude-opus-4-7", "anthropic__claude-sonnet-4-6"],
+  "built_on_models": [
+    "anthropic__claude-sonnet-4-6",
+    "openai__gpt-5.4"
+  ],
   "oss": false,
   "pricing_tiers": [
-    { "name": "Free", "monthly_usd": 0, "notes": "Limited daily messages" },
-    { "name": "Pro", "monthly_usd": 25, "per_seat": true }
+    {
+      "name": "Free",
+      "monthly_usd": 0,
+      "notes": "Limited daily messages"
+    },
+    {
+      "name": "Pro",
+      "monthly_usd": 25,
+      "per_seat": true
+    }
   ],
   "free_tier": true,
-  "modalities": ["text", "code"],
-  "links": { "homepage": "https://lovable.dev" },
-  "tags": ["app-builder", "no-code", "vibe-coding"],
-  "sources": ["https://lovable.dev"],
+  "modalities": [
+    "text",
+    "code"
+  ],
+  "links": {
+    "homepage": "https://lovable.dev"
+  },
+  "tags": [
+    "app-builder",
+    "no-code",
+    "vibe-coding"
+  ],
+  "sources": [
+    "https://lovable.dev"
+  ],
   "status": "ga"
 }

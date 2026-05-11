@@ -1,6 +1,6 @@
 ---
 import Base from "../../layouts/Base.astro";
-import { eventsForEntity, loadModels } from "../../lib/data.ts";
+import { eventsForEntity, loadModels, loadTools } from "../../lib/data.ts";
 import type { Model } from "../../../schemas/index.ts";
 
 export function getStaticPaths() {
@@ -10,6 +10,9 @@ export function getStaticPaths() {
 interface Props { model: Model; }
 const { model } = Astro.props;
 const events = eventsForEntity(model.id);
+const usedBy = loadTools()
+  .filter((t) => t.built_on_models.includes(model.id))
+  .sort((a, b) => a.name.localeCompare(b.name));
 ---
 <Base title={`${model.name} — ai-tracker`} description={`${model.name} by ${model.provider}.`}>
   <p><a href="/models">← Models</a></p>
@@ -50,6 +53,15 @@ const events = eventsForEntity(model.id);
       ))}
     </ul>
   )}
+
+  {usedBy.length > 0 ? (
+    <>
+      <h2>Used by</h2>
+      <ul>
+        {usedBy.map((t) => <li><a href={`/tools/${t.id}`}>{t.name}</a> · {t.vendor} · {t.category}</li>)}
+      </ul>
+    </>
+  ) : null}
 
   <h2>Sources</h2>
   <ul>{model.sources.map((s) => <li><a href={s} rel="nofollow noopener">{s}</a></li>)}</ul>

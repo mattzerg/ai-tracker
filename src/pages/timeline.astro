@@ -1,21 +1,43 @@
 ---
 import Base from "../layouts/Base.astro";
-import { entityById, loadEvents } from "../lib/data.ts";
+import { entityById, loadEvents, loadModels } from "../lib/data.ts";
 
 const events = loadEvents();
+const providers = Array.from(new Set(loadModels().map((m) => m.provider))).sort();
+const types = Array.from(new Set(events.map((e) => e.type))).sort();
 ---
 <Base title="Timeline — ai-tracker" description="Every tracked AI event in chronological order.">
   <h1>Timeline</h1>
   <p>{events.length} events. Newest first.</p>
+
+  <div class="filters">
+    <label>
+      Provider
+      <select id="filter-provider">
+        <option value="">all</option>
+        {providers.map((p) => <option value={p}>{p}</option>)}
+      </select>
+    </label>
+    <label>
+      Type
+      <select id="filter-type">
+        <option value="">all</option>
+        {types.map((t) => <option value={t}>{t}</option>)}
+      </select>
+    </label>
+    <span id="visible-count" class="count">{events.length} visible</span>
+  </div>
+
   {events.length === 0 ? (
     <p><em>No events yet.</em></p>
   ) : (
-    <ul>
+    <ul id="timeline">
       {events.map((e) => {
         const entity = entityById(e.entity);
         const path = entity?.kind === "model" ? `/models/${e.entity}` : `/tools/${e.entity}`;
+        const provider = entity?.kind === "model" ? entity.provider : (entity as any)?.vendor ?? "";
         return (
-          <li>
+          <li data-provider={provider} data-type={e.type}>
             <code>{e.date}</code> · <strong>{e.type}</strong> ·
             <a href={path}>{entity?.name ?? e.entity}</a>
             — {e.summary}
@@ -25,4 +47,37 @@ const events = loadEvents();
       })}
     </ul>
   )}
+
+  <style>
+    .filters { display: flex; gap: 1rem; align-items: center; margin: 1rem 0; padding: 0.75rem; background: #f6f6f6; border-radius: 4px; }
+    .filters label { display: inline-flex; gap: 0.4rem; align-items: center; font-size: 0.9rem; }
+    .filters select { padding: 0.25rem 0.4rem; }
+    .count { margin-left: auto; color: #666; font-size: 0.85rem; }
+    li[hidden] { display: none; }
+  </style>
+  <script is:inline>
+    (() => {
+      const provSel = document.getElementById("filter-provider");
+      const typeSel = document.getElementById("filter-type");
+      const list = document.getElementById("timeline");
+      const counter = document.getElementById("visible-count");
+      if (!provSel || !typeSel || !list || !counter) return;
+      const items = Array.from(list.querySelectorAll("li"));
+      function apply() {
+        const p = provSel.value;
+        const t = typeSel.value;
+        let n = 0;
+        for (const li of items) {
+          const okP = !p || li.dataset.provider === p;
+          const okT = !t || li.dataset.type === t;
+          const visible = okP && okT;
+          li.hidden = !visible;
+          if (visible) n++;
+        }
+        counter.textContent = n + " visible";
+      }
+      provSel.addEventListener("change", apply);
+      typeSel.addEventListener("change", apply);
+    })();
+  </script>
 </Base>

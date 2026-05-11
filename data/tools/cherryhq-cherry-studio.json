@@ -6,7 +6,11 @@
   "category": "chat",
   "released": null,
   "homepage": "https://cherry-ai.com",
-  "built_on_models": [],
+  "built_on_models": [
+    "anthropic__claude-sonnet-4-6",
+    "openai__gpt-5.4",
+    "google__gemini-2.5-pro"
+  ],
   "oss": true,
   "oss_repo": "https://github.com/CherryHQ/cherry-studio",
   "pricing_tiers": [

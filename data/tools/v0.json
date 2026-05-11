@@ -6,18 +6,48 @@
   "category": "design",
   "released": null,
   "homepage": "https://v0.app",
-  "built_on_models": [],
+  "built_on_models": [
+    "anthropic__claude-sonnet-4-6",
+    "openai__gpt-5.5"
+  ],
   "oss": false,
   "pricing_tiers": [
-    { "name": "Free", "monthly_usd": 0 },
-    { "name": "Premium", "monthly_usd": 20, "per_seat": true },
-    { "name": "Team", "monthly_usd": 30, "per_seat": true },
-    { "name": "Enterprise", "monthly_usd": null, "notes": "Contact sales" }
+    {
+      "name": "Free",
+      "monthly_usd": 0
+    },
+    {
+      "name": "Premium",
+      "monthly_usd": 20,
+      "per_seat": true
+    },
+    {
+      "name": "Team",
+      "monthly_usd": 30,
+      "per_seat": true
+    },
+    {
+      "name": "Enterprise",
+      "monthly_usd": null,
+      "notes": "Contact sales"
+    }
   ],
   "free_tier": true,
-  "modalities": ["text", "code"],
-  "links": { "homepage": "https://v0.app", "docs": "https://v0.dev/docs" },
-  "tags": ["ui-generator", "react", "shadcn"],
-  "sources": ["https://v0.app"],
+  "modalities": [
+    "text",
+    "code"
+  ],
+  "links": {
+    "homepage": "https://v0.app",
+    "docs": "https://v0.dev/docs"
+  },
+  "tags": [
+    "ui-generator",
+    "react",
+    "shadcn"
+  ],
+  "sources": [
+    "https://v0.app"
+  ],
   "status": "ga"
 }
