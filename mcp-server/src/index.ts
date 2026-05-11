@@ -19,6 +19,8 @@ interface LeanModel {
   context: number | null;
   tags: string[];
   license: string;
+  input_price: number | null;
+  output_price: number | null;
 }
 interface LeanTool {
   kind: "tool";
@@ -103,6 +105,8 @@ const tools = [
         query: { type: "string", description: "Free-text query" },
         provider: { type: "string", description: "Exact provider (e.g. 'anthropic', 'openai')" },
         min_context: { type: "number", description: "Minimum context window in tokens" },
+        max_input_price: { type: "number", description: "Max input price per Mtok in USD" },
+        max_output_price: { type: "number", description: "Max output price per Mtok in USD" },
         limit: { type: "number", default: 20 },
       },
     },
@@ -153,7 +157,7 @@ const tools = [
   },
 ];
 
-const server = new Server({ name: "ai-tracker", version: "0.0.2" }, { capabilities: { tools: {} } });
+const server = new Server({ name: "ai-tracker", version: "0.0.3" }, { capabilities: { tools: {} } });
 
 server.setRequestHandler(ListToolsRequestSchema, async () => ({ tools }));
 
@@ -166,10 +170,14 @@ server.setRequestHandler(CallToolRequestSchema, async (req) => {
       const q = (args.query as string | undefined) ?? "";
       const provider = args.provider as string | undefined;
       const minCtx = args.min_context as number | undefined;
+      const maxIn = args.max_input_price as number | undefined;
+      const maxOut = args.max_output_price as number | undefined;
       const limit = (args.limit as number | undefined) ?? 20;
       const out = idx.models
         .filter((m) => !provider || m.provider === provider)
         .filter((m) => !minCtx || (m.context ?? 0) >= minCtx)
+        .filter((m) => maxIn == null || (m.input_price ?? Infinity) <= maxIn)
+        .filter((m) => maxOut == null || (m.output_price ?? Infinity) <= maxOut)
         .filter((m) => !q || matchQuery(`${m.name} ${m.provider} ${(m.tags ?? []).join(" ")}`, q))
         .slice(0, limit);
       return textResult({ count: out.length, models: out });
@@ -221,7 +229,7 @@ server.setRequestHandler(CallToolRequestSchema, async (req) => {
 async function main() {
   const transport = new StdioServerTransport();
   await server.connect(transport);
-  console.error(`ai-tracker-mcp v0.0.2 connected. base=${BASE}`);
+  console.error(`ai-tracker-mcp v0.0.3 connected. base=${BASE}`);
 }
 
 main().catch((err) => {

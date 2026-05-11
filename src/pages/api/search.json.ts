@@ -21,6 +21,8 @@ export const GET: APIRoute = () => {
     context: m.context_window ?? null,
     tags: m.tags,
     license: m.license,
+    input_price: m.pricing?.input_per_mtok ?? null,
+    output_price: m.pricing?.output_per_mtok ?? null,
   }));
   const tools = loadTools().map((t) => ({
     kind: "tool" as const,

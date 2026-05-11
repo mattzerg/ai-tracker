@@ -1,0 +1,41 @@
+# Cloudflare Pages reads this for runtime response headers.
+# See https://developers.cloudflare.com/pages/configuration/headers/
+
+# Site-wide: allow search engines + AI bots full preview rights so the 1200×630
+# OG cards we generate actually show up in rich previews.
+/*
+  X-Robots-Tag: max-image-preview:large, max-snippet:-1, max-video-preview:-1
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+
+# OG images: long cache (content-hash invalidates anyway).
+/og/*
+  Cache-Control: public, max-age=86400, s-maxage=86400
+
+# JSON dumps & API: short cache so agents can refetch fresh.
+/dump/*
+  Cache-Control: public, max-age=600, s-maxage=600
+  Access-Control-Allow-Origin: *
+
+/api/*
+  Cache-Control: public, max-age=600, s-maxage=600
+  Access-Control-Allow-Origin: *
+
+# Feeds: same short cache.
+/feed.xml
+  Cache-Control: public, max-age=900, s-maxage=900
+
+/atom.xml
+  Cache-Control: public, max-age=900, s-maxage=900
+
+# llms.txt + agent sitemap: short cache, CORS open.
+/llms.txt
+  Cache-Control: public, max-age=900, s-maxage=900
+  Access-Control-Allow-Origin: *
+
+/llms-full.txt
+  Cache-Control: public, max-age=900, s-maxage=900
+  Access-Control-Allow-Origin: *
+
+/sitemap-agents.xml
+  Cache-Control: public, max-age=900, s-maxage=900
