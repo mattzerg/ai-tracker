@@ -1,5 +1,5 @@
 import type { APIRoute } from "astro";
-import { entityById, loadEvents } from "../lib/data.ts";
+import { entityById, eventSlug, loadEvents } from "../lib/data.ts";
 
 function escape(s: string): string {
   return s
@@ -20,15 +20,14 @@ export const GET: APIRoute = ({ site }) => {
   const events = loadEvents().slice(0, 100); // newest first
   const items = events.map((e) => {
     const ent = entityById(e.entity);
-    const path = ent?.kind === "tool" ? `/tools/${e.entity}` : `/models/${e.entity}`;
-    const url = base + path;
+    const slug = eventSlug(e);
+    const url = `${base}/events/${slug}`;
     const name = ent?.name ?? e.entity;
     const title = `${name} — ${e.type}`;
-    const guid = `${e.date}__${e.entity}__${e.type}`;
     return `    <item>
       <title>${escape(title)}</title>
       <link>${escape(url)}</link>
-      <guid isPermaLink="false">${escape(guid)}</guid>
+      <guid isPermaLink="true">${escape(url)}</guid>
       <pubDate>${rfc822(e.date)}</pubDate>
       <category>${escape(e.type)}</category>
       <source url="${escape(e.source)}">${escape(e.source)}</source>

@@ -1,6 +1,6 @@
 ---
 import Base from "../layouts/Base.astro";
-import { entityById, loadEvents, loadModels } from "../lib/data.ts";
+import { entityById, eventSlug, loadEvents, loadModels } from "../lib/data.ts";
 
 const events = loadEvents();
 const providers = Array.from(new Set(loadModels().map((m) => m.provider))).sort();
@@ -43,6 +43,7 @@ const types = Array.from(new Set(events.map((e) => e.type))).sort();
             <code>{e.date}</code> · <strong>{e.type}</strong> ·
             <a href={path}>{entity?.name ?? e.entity}</a>
             — {e.summary}
+            {" "}<a href={`/events/${eventSlug(e)}`}>[details]</a>
             {" "}<a href={e.source} rel="nofollow noopener">[source]</a>
           </li>
         );

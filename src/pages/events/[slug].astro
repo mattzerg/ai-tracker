@@ -1,0 +1,120 @@
+---
+import Base from "../../layouts/Base.astro";
+import { entityById, eventSlug, eventsForEntity, loadEvents } from "../../lib/data.ts";
+import type { Event } from "../../../schemas/index.ts";
+
+export function getStaticPaths() {
+  const events = loadEvents();
+  return events.map((event, i) => {
+    const prev = events[i + 1] ?? null; // older
+    const next = events[i - 1] ?? null; // newer
+    return {
+      params: { slug: eventSlug(event) },
+      props: { event, prev, next },
+    };
+  });
+}
+
+interface Props { event: Event; prev: Event | null; next: Event | null; }
+const { event, prev, next } = Astro.props;
+const entity = entityById(event.entity);
+const entityKind = entity?.kind === "tool" ? "tool" : "model";
+const entityPath = `/${entityKind}s/${event.entity}`;
+const entityName = entity?.name ?? event.entity;
+const sibling = eventsForEntity(event.entity).filter((e) => eventSlug(e) !== eventSlug(event));
+
+const title = `${entityName} — ${event.type} — ${event.date}`;
+const description = event.summary;
+const ogImage = entity ? `/og/${entityKind}s/${event.entity}.svg` : undefined;
+const canonicalUrl = new URL(`/events/${eventSlug(event)}`, Astro.site).toString();
+---
+<Base
+  title={`${title} — ai-tracker`}
+  description={description}
+  ogImage={ogImage}
+  ogType="article"
+  canonical={canonicalUrl}
+>
+  <p><a href="/timeline">← Timeline</a> · <a href="/changes">Changes</a></p>
+
+  <div class="head">
+    <span class="badge type" data-type={event.type}>{event.type}</span>
+    <code class="date">{event.date}</code>
+  </div>
+  <h1>
+    <a href={entityPath}>{entityName}</a>
+  </h1>
+  {entity ? (
+    <p class="entity-line">
+      {entity.kind === "model" ? (
+        <>
+          <a href={`/providers/${(entity as any).provider}`}>{(entity as any).provider}</a>
+          {(entity as any).context_window ? <> · {(entity as any).context_window.toLocaleString()} ctx</> : null}
+        </>
+      ) : (
+        <>
+          {(entity as any).vendor}
+          {" · "}
+          <a href={`/categories/${(entity as any).category}`}>{(entity as any).category}</a>
+        </>
+      )}
+    </p>
+  ) : null}
+
+  <p class="summary">{event.summary}</p>
+
+  {event.delta ? (
+    <p class="delta">
+      <strong>Change:</strong>
+      <code>{event.delta.field}</code>:
+      <span class="from">{String(event.delta.from ?? "—")}</span>
+      → <span class="to">{String(event.delta.to ?? "—")}</span>
+    </p>
+  ) : null}
+
+  <p>
+    <strong>Source:</strong> <a href={event.source} rel="nofollow noopener">{event.source}</a>
+  </p>
+  <p class="meta">Submitted by <code>{event.submitted_by}</code></p>
+
+  {sibling.length > 0 ? (
+    <>
+      <h2>Other events for {entityName}</h2>
+      <ul>
+        {sibling.map((s) => (
+          <li>
+            <a href={`/events/${eventSlug(s)}`}>
+              <code>{s.date}</code> · {s.type} · {s.summary}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </>
+  ) : null}
+
+  <nav class="adjacent">
+    {prev ? (
+      <a href={`/events/${eventSlug(prev)}`} class="prev">← Older: {entityById(prev.entity)?.name ?? prev.entity} ({prev.date})</a>
+    ) : <span />}
+    {next ? (
+      <a href={`/events/${eventSlug(next)}`} class="next">Newer: {entityById(next.entity)?.name ?? next.entity} ({next.date}) →</a>
+    ) : <span />}
+  </nav>
+
+  <style>
+    .head { display: flex; gap: 0.6rem; align-items: center; margin: 1rem 0 0.5rem; }
+    .badge.type { background: #f0f4ff; color: #1a4cff; font-size: 0.8rem; padding: 0.15rem 0.5rem; border-radius: 3px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+    .badge.type[data-type="deprecated"] { background: #fff0f0; color: #c33; }
+    .badge.type[data-type="price_change"] { background: #fff8e0; color: #a87000; }
+    .date { color: #666; font-size: 1rem; }
+    .entity-line { color: #555; margin-top: -0.6rem; }
+    .summary { font-size: 1.1rem; line-height: 1.55; }
+    .delta { background: #f6f6f6; padding: 0.6rem 0.8rem; border-radius: 3px; }
+    .delta .from { color: #c33; }
+    .delta .to { color: #2a8a4f; font-weight: 600; }
+    .meta { color: #666; font-size: 0.85rem; }
+    nav.adjacent { display: flex; justify-content: space-between; gap: 1rem; margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #eee; font-size: 0.92rem; }
+    nav.adjacent .prev { margin-right: auto; }
+    nav.adjacent .next { margin-left: auto; }
+  </style>
+</Base>

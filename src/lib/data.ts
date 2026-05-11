@@ -58,6 +58,10 @@ export function eventsForEntity(id: string): Event[] {
   return loadEvents().filter((e) => e.entity === id);
 }
 
+export function eventSlug(e: Event): string {
+  return `${e.date}__${e.entity}__${e.type}`;
+}
+
 export function entityById(id: string): Model | Tool | undefined {
   return loadModels().find((m) => m.id === id) ?? loadTools().find((t) => t.id === id);
 }
