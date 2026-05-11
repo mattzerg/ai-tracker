@@ -1,0 +1,174 @@
+---
+import Base from "../layouts/Base.astro";
+import ProviderMark from "../components/ProviderMark.astro";
+import { entityById, eventSlug, loadEvents } from "../lib/data.ts";
+
+const events = loadEvents();
+const today = new Date().toISOString().slice(0, 10);
+function dateDaysAgo(n: number): string {
+  const d = new Date();
+  d.setUTCDate(d.getUTCDate() - n);
+  return d.toISOString().slice(0, 10);
+}
+const d7 = dateDaysAgo(7);
+const d30 = dateDaysAgo(30);
+const d90 = dateDaysAgo(90);
+
+function bucket(start: string, endExclusive?: string) {
+  return events.filter((e) => e.date >= start && (!endExclusive || e.date < endExclusive));
+}
+
+const todays = bucket(today);
+const last7 = bucket(d7);
+const last30 = bucket(d30);
+const last90 = bucket(d90);
+
+// Group last-30 by provider/vendor.
+function entityProvider(id: string): string {
+  const ent = entityById(id);
+  if (!ent) return "—";
+  return ent.kind === "model" ? (ent as any).provider : (ent as any).vendor ?? "—";
+}
+
+const byProvider = new Map<string, typeof events>();
+for (const e of last30) {
+  const p = entityProvider(e.entity);
+  if (!byProvider.has(p)) byProvider.set(p, []);
+  byProvider.get(p)!.push(e);
+}
+const providerGroups = Array.from(byProvider.entries()).sort((a, b) => b[1].length - a[1].length);
+
+const byType = new Map<string, typeof events>();
+for (const e of last30) {
+  if (!byType.has(e.type)) byType.set(e.type, []);
+  byType.get(e.type)!.push(e);
+}
+const typeGroups = Array.from(byType.entries()).sort((a, b) => b[1].length - a[1].length);
+
+function renderEvent(e: typeof events[number]) {
+  const ent = entityById(e.entity);
+  const path = ent?.kind === "tool" ? `/tools/${e.entity}` : `/models/${e.entity}`;
+  return { ent, path, slug: eventSlug(e) };
+}
+---
+<Base title="News — ai-tracker" description="What shipped today, this week, and this month in AI models and tools.">
+  <h1>News</h1>
+  <p>
+    Single-screen snapshot of recent AI activity. Different from
+    <a href="/timeline">/timeline</a> (flat chronology) and
+    <a href="/changes">/changes</a> (ISO-week buckets) — this view answers
+    "what should I tell my team this week?"
+  </p>
+
+  <div class="grid">
+    <section class="panel">
+      <h2>Today <span class="count">{todays.length}</span></h2>
+      {todays.length === 0 ? <p class="muted"><em>Nothing tracked today yet.</em></p> : (
+        <ul>
+          {todays.map((e) => {
+            const { ent, path, slug } = renderEvent(e);
+            return (
+              <li>
+                <strong>{e.type}</strong> · <a href={path}>{ent?.name ?? e.entity}</a>
+                — {e.summary} <a href={`/events/${slug}`} class="more">↗</a>
+              </li>
+            );
+          })}
+        </ul>
+      )}
+    </section>
+
+    <section class="panel">
+      <h2>Last 7 days <span class="count">{last7.length}</span></h2>
+      {last7.length === 0 ? <p class="muted"><em>No events in the last 7 days.</em></p> : (
+        <ul>
+          {last7.slice(0, 10).map((e) => {
+            const { ent, path, slug } = renderEvent(e);
+            return (
+              <li>
+                <code>{e.date}</code> · <strong>{e.type}</strong> · <a href={path}>{ent?.name ?? e.entity}</a>
+                — {e.summary} <a href={`/events/${slug}`} class="more">↗</a>
+              </li>
+            );
+          })}
+          {last7.length > 10 ? <li class="muted">…{last7.length - 10} more — <a href="/timeline">timeline ↗</a></li> : null}
+        </ul>
+      )}
+    </section>
+  </div>
+
+  <h2>Last 30 days by provider <span class="count">{last30.length}</span></h2>
+  {providerGroups.length === 0 ? <p class="muted"><em>No events in the last 30 days.</em></p> : (
+    <div class="provider-grid">
+      {providerGroups.map(([provider, group]) => (
+        <section class="provider-bucket">
+          <h3>
+            <ProviderMark provider={provider} />
+            {provider} <span class="count">{group.length}</span>
+          </h3>
+          <ul>
+            {group.slice(0, 5).map((e) => {
+              const { ent, path, slug } = renderEvent(e);
+              return (
+                <li>
+                  <code>{e.date}</code> · <a href={path}>{ent?.name ?? e.entity}</a>
+                  <span class="muted"> — {e.type}</span> <a href={`/events/${slug}`} class="more">↗</a>
+                </li>
+              );
+            })}
+            {group.length > 5 ? <li class="muted">…{group.length - 5} more</li> : null}
+          </ul>
+        </section>
+      ))}
+    </div>
+  )}
+
+  <h2>Last 30 days by type</h2>
+  {typeGroups.length === 0 ? <p class="muted"><em>No events.</em></p> : (
+    <ul class="types">
+      {typeGroups.map(([type, group]) => (
+        <li>
+          <strong>{type}</strong> · <span class="count">{group.length}</span>
+          <ul>
+            {group.slice(0, 3).map((e) => {
+              const { ent, path, slug } = renderEvent(e);
+              return (
+                <li>
+                  <code>{e.date}</code> · <a href={path}>{ent?.name ?? e.entity}</a> — {e.summary}
+                  {" "}<a href={`/events/${slug}`} class="more">↗</a>
+                </li>
+              );
+            })}
+            {group.length > 3 ? <li class="muted">…{group.length - 3} more</li> : null}
+          </ul>
+        </li>
+      ))}
+    </ul>
+  )}
+
+  <h2>Last 90 days <span class="count">{last90.length}</span></h2>
+  <p class="muted">
+    <a href="/timeline">→ Full timeline ({events.length} events)</a> ·
+    <a href="/changes">→ Changes by week</a> ·
+    <a href="/feed.xml">RSS</a> ·
+    <a href="/atom.xml">Atom</a>
+  </p>
+
+  <style>
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
+    .panel { background: #f6f6f6; border-radius: 4px; padding: 0.75rem 1rem; }
+    .panel h2 { margin-top: 0; font-size: 1.05rem; }
+    .count { display: inline-block; background: #1a4cff; color: #fff; font-size: 0.75rem; padding: 0.05rem 0.45rem; border-radius: 999px; vertical-align: middle; margin-left: 0.3rem; font-weight: 600; }
+    .panel ul, .types ul ul { padding-left: 1.1rem; }
+    .more { color: #999; text-decoration: none; }
+    .more:hover { color: #1a4cff; }
+    .muted { color: #777; }
+    .muted em { color: #777; }
+    .provider-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin: 1rem 0; }
+    .provider-bucket { background: #f6f6f6; border-radius: 4px; padding: 0.6rem 0.9rem; }
+    .provider-bucket h3 { font-size: 0.95rem; margin: 0 0 0.4rem; display: flex; align-items: center; gap: 0.4rem; }
+    .provider-bucket ul { padding-left: 1.1rem; margin: 0; font-size: 0.88rem; }
+    .types { padding-left: 1.25rem; }
+    .types > li { margin-bottom: 0.8rem; }
+  </style>
+</Base>

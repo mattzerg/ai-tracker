@@ -23,6 +23,8 @@ export interface OgCardOpts {
   bullets: string[]; // 1-3 short lines, e.g. ["$5/M input · $25/M output", "released 2026-04-16"]
   badge?: string; // small top-right tag, e.g. "MODEL" / "TOOL"
   accent?: string; // override the stripe color (e.g. provider-tinted model cards)
+  // Tiny monogram square shown next to the title (matches ProviderMark visually).
+  monogram?: { text: string; color: string };
 }
 
 const DEFAULT_ACCENTS: Record<OgCardOpts["kind"], string> = {
@@ -42,6 +44,14 @@ export function ogCardSvg(opts: OgCardOpts): string {
   const fg = "#f5f6fa";
   const dim = "#9aa3b2";
 
+  // Optional monogram square next to the title. Mirrors ProviderMark visuals
+  // (rounded square + bold white initials). Title shifts right to make room.
+  const mono = opts.monogram;
+  const monoSize = 96;
+  const monoX = 60;
+  const monoY = 200;
+  const titleX = mono ? monoX + monoSize + 24 : 60;
+
   return `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
   <rect width="1200" height="630" fill="${bg}"/>
@@ -49,9 +59,15 @@ export function ogCardSvg(opts: OgCardOpts): string {
   <g font-family="-apple-system, system-ui, 'Segoe UI', sans-serif">
     <text x="60" y="80" font-size="28" fill="${dim}" font-weight="500">ai-tracker</text>
     <text x="1140" y="80" font-size="22" fill="${accent}" font-weight="700" text-anchor="end" letter-spacing="2">${badge}</text>
-
-    <text x="60" y="270" font-size="84" fill="${fg}" font-weight="700">${t}</text>
-    <text x="60" y="330" font-size="32" fill="${dim}" font-weight="500">${sub}</text>
+${
+  mono
+    ? `
+    <rect x="${monoX}" y="${monoY}" width="${monoSize}" height="${monoSize}" rx="12" fill="${escape(mono.color)}"/>
+    <text x="${monoX + monoSize / 2}" y="${monoY + monoSize / 2}" dominant-baseline="central" text-anchor="middle" fill="#fff" font-weight="700" font-size="48">${escape(mono.text)}</text>`
+    : ""
+}
+    <text x="${titleX}" y="270" font-size="84" fill="${fg}" font-weight="700">${t}</text>
+    <text x="${titleX}" y="330" font-size="32" fill="${dim}" font-weight="500">${sub}</text>
 
     ${bullets
       .map((b, i) => `<text x="60" y="${430 + i * 48}" font-size="30" fill="${fg}" font-weight="400">${b}</text>`)

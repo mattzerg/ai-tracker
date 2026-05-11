@@ -19,6 +19,14 @@ export const GET: APIRoute = async ({ props }) => {
   }
   if (m.released) bullets.push(`released ${m.released}`);
   if (m.modalities?.length) bullets.push(m.modalities.join(" + "));
-  const svg = ogCardSvg({ kind: "model", title: m.name, subtitle, bullets, accent: providerColor(m.provider) });
+  const initials = m.provider.slice(0, 2).toUpperCase();
+  const svg = ogCardSvg({
+    kind: "model",
+    title: m.name,
+    subtitle,
+    bullets,
+    accent: providerColor(m.provider),
+    monogram: { text: initials, color: providerColor(m.provider) },
+  });
   return pngResponse(svg);
 };
