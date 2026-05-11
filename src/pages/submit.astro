@@ -1,43 +1,242 @@
 ---
 import Base from "../layouts/Base.astro";
-const apiBase = import.meta.env.PUBLIC_API_BASE ?? "https://api.ai-tracker.example";
+import { loadModels, loadTools } from "../lib/data.ts";
+
+// Worker endpoint resolves at runtime via PUBLIC_API_BASE; if unset, the form
+// degrades to "preview only" + GitHub-issue fallback. This means the page is
+// useful before Phase 4 ships and seamlessly upgrades after.
+const apiBase = import.meta.env.PUBLIC_API_BASE ?? "";
+const ghIssuesUrl = "https://github.com/mattzerg/ai-tracker/issues/new";
+
+const entities = [
+  ...loadModels().map((m) => ({ id: m.id, label: `${m.name} (model · ${m.provider})` })),
+  ...loadTools().map((t) => ({ id: t.id, label: `${t.name} (tool · ${t.vendor})` })),
+].sort((a, b) => a.label.localeCompare(b.label));
+
+const eventTypes = ["released", "price_change", "deprecated", "capability_added", "benchmark_update", "license_change", "model_swap", "shut_down", "rebrand", "acquired"];
 ---
-<Base title="Submit — ai-tracker" description="Submit a model, tool, or event.">
+<Base
+  title="Submit — ai-tracker"
+  description="Submit a new model, tool, or event. Goes through moderation and lands in a public PR queue."
+>
   <h1>Submit</h1>
   <p>
-    Found a model, tool, or event we missed? Send it in. Submissions go through a moderation step
-    and land in a public PR queue — once Matt approves the batch, your contribution is live.
+    Add a model, tool, or event. Submissions land in a moderated PR queue (Anthropic
+    Haiku classifies confidence ≥0.4 → queued, &lt;0.4 → dropped). Once the queue is
+    reviewed, your contribution goes live.
   </p>
-  <p><em>Phase 4 wires up the live form. For now, open an issue or PR on the GitHub repo.</em></p>
-  <form id="submit-form" action={`${apiBase}/submit`} method="post">
-    <p>
-      <label>
-        Type
-        <select name="kind" required>
-          <option value="model">Model</option>
-          <option value="tool">Tool</option>
-          <option value="event">Event on existing entity</option>
+  {!apiBase ? (
+    <p class="banner">
+      <strong>Phase 4 in progress</strong> — the live submission API isn't deployed yet.
+      The form below works as a preview; click <em>Open as GitHub issue</em> at the
+      bottom to submit by hand for now.
+    </p>
+  ) : null}
+
+  <form id="submit-form">
+    <div class="row">
+      <label for="kind">What kind of submission?</label>
+      <select id="kind" name="kind" required>
+        <option value="event">Event on an existing entity (price change, deprecation, etc.)</option>
+        <option value="model">New model</option>
+        <option value="tool">New tool</option>
+      </select>
+    </div>
+
+    <fieldset id="event-fields">
+      <legend>Event</legend>
+      <div class="row">
+        <label for="entity">Entity</label>
+        <input type="text" id="entity" name="entity" list="entity-list" placeholder="e.g. anthropic__claude-opus-4-7" />
+        <datalist id="entity-list">
+          {entities.map((e) => <option value={e.id}>{e.label}</option>)}
+        </datalist>
+      </div>
+      <div class="row">
+        <label for="type">Event type</label>
+        <select id="type" name="type">
+          {eventTypes.map((t) => <option value={t}>{t}</option>)}
         </select>
-      </label>
-    </p>
-    <p>
-      <label>
-        Name / summary
-        <input type="text" name="name" required maxlength="120" />
-      </label>
-    </p>
-    <p>
-      <label>
-        Source URL
-        <input type="url" name="source" required />
-      </label>
-    </p>
-    <p>
-      <label>
-        Notes (optional)
-        <textarea name="notes" rows="4" maxlength="1000"></textarea>
-      </label>
-    </p>
-    <button type="submit" disabled>Submit (live in Phase 4)</button>
+      </div>
+      <div class="row">
+        <label for="date">Date (ISO)</label>
+        <input type="date" id="date" name="date" />
+      </div>
+      <div class="row">
+        <label for="summary">Summary (max 280 chars)</label>
+        <textarea id="summary" name="summary" rows="3" maxlength="280"></textarea>
+      </div>
+      <div class="row delta">
+        <label>Delta (optional, for price/license/etc.)</label>
+        <div class="delta-inputs">
+          <input type="text" name="delta_field" placeholder="field path (e.g. pricing.input_per_mtok)" />
+          <input type="text" name="delta_from" placeholder="from" />
+          <input type="text" name="delta_to" placeholder="to" />
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset id="entity-fields" hidden>
+      <legend>New entity</legend>
+      <div class="row">
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" maxlength="120" />
+      </div>
+      <div class="row">
+        <label for="provider">Provider / vendor</label>
+        <input type="text" id="provider" name="provider" />
+      </div>
+      <div class="row">
+        <label for="released">Released (ISO date)</label>
+        <input type="date" id="released" name="released" />
+      </div>
+      <div class="row">
+        <label for="notes">Other details (pricing, context window, license, anything we should know)</label>
+        <textarea id="notes" name="notes" rows="5" maxlength="1000"></textarea>
+      </div>
+    </fieldset>
+
+    <div class="row">
+      <label for="source">Source URL (must be authoritative — provider docs, official blog, etc.)</label>
+      <input type="url" id="source" name="source" required placeholder="https://www.anthropic.com/news/..." />
+    </div>
+
+    <div class="row">
+      <label for="contact">Your contact (optional, for follow-up only)</label>
+      <input type="email" id="contact" name="contact" placeholder="you@example.com" />
+    </div>
+
+    {/* Turnstile placeholder — Phase 4 will inject the real widget. */}
+    <div id="turnstile-slot" class="turnstile-stub"></div>
+
+    <h3>Preview JSON</h3>
+    <pre id="preview" class="preview">{`{}`}</pre>
+
+    <div class="actions">
+      <button type="submit" id="submit-btn" disabled={!apiBase}>{apiBase ? "Submit" : "Submit (Phase 4 only)"}</button>
+      <a id="gh-fallback" href={ghIssuesUrl} target="_blank" rel="noopener">Open as GitHub issue</a>
+    </div>
+
+    <p id="result" class="result" hidden></p>
   </form>
+
+  <style>
+    form { display: flex; flex-direction: column; gap: 0; max-width: 100%; }
+    fieldset { margin: 1rem 0; padding: 0.8rem 1rem; border: 1px solid #ddd; border-radius: 4px; }
+    fieldset legend { font-weight: 600; padding: 0 0.4rem; color: #333; }
+    .row { display: flex; flex-direction: column; gap: 0.3rem; margin-bottom: 0.8rem; }
+    .row label { font-size: 0.9rem; font-weight: 500; color: #444; }
+    input[type="text"], input[type="url"], input[type="email"], input[type="date"], select, textarea {
+      padding: 0.45rem 0.6rem; border: 1px solid #ccc; border-radius: 3px; font: inherit; font-size: 0.95rem;
+    }
+    textarea { font-family: inherit; }
+    .delta-inputs { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 0.4rem; }
+    .preview { background: #0e1116; color: #d4d8e0; padding: 0.8rem 1rem; border-radius: 4px; font-size: 0.85rem; overflow-x: auto; }
+    .banner { background: #fff8e0; padding: 0.6rem 0.8rem; border-left: 3px solid #d4a02a; border-radius: 3px; }
+    .turnstile-stub { background: #f6f6f6; padding: 0.6rem; border: 1px dashed #ccc; border-radius: 3px; font-size: 0.8rem; color: #666; text-align: center; }
+    .turnstile-stub::before { content: "[Turnstile widget — Phase 4]"; }
+    .actions { display: flex; gap: 0.8rem; align-items: center; margin-top: 1rem; }
+    button { padding: 0.5rem 1.2rem; font: inherit; cursor: pointer; background: #1a4cff; color: #fff; border: none; border-radius: 3px; }
+    button:disabled { background: #999; cursor: not-allowed; }
+    .result { margin-top: 1rem; padding: 0.6rem 0.8rem; border-radius: 3px; }
+    .result.ok { background: #f0fff4; border-left: 3px solid #2a8a4f; }
+    .result.err { background: #fff0f0; border-left: 3px solid #c33; }
+  </style>
+
+  <script is:inline define:vars={{ apiBase, ghIssuesUrl }}>
+    (() => {
+      const form = document.getElementById("submit-form");
+      const kind = document.getElementById("kind");
+      const eventFields = document.getElementById("event-fields");
+      const entityFields = document.getElementById("entity-fields");
+      const preview = document.getElementById("preview");
+      const result = document.getElementById("result");
+      const submitBtn = document.getElementById("submit-btn");
+      const ghFallback = document.getElementById("gh-fallback");
+
+      function val(id) { const el = document.getElementById(id); return el ? el.value.trim() : ""; }
+      function pickByName(name) { const el = form.querySelector(`[name="${name}"]`); return el ? el.value.trim() : ""; }
+
+      function buildPayload() {
+        const k = kind.value;
+        const source = val("source");
+        const contact = val("contact");
+        const base = { kind: k, source, contact: contact || undefined };
+        if (k === "event") {
+          const delta_field = pickByName("delta_field");
+          const delta_from = pickByName("delta_from");
+          const delta_to = pickByName("delta_to");
+          const event = {
+            entity: val("entity"),
+            type: val("type"),
+            date: val("date"),
+            summary: val("summary"),
+            ...(delta_field ? { delta: { field: delta_field, from: delta_from || null, to: delta_to || null } } : {}),
+          };
+          return { ...base, event };
+        }
+        return {
+          ...base,
+          entity: {
+            kind: k,
+            name: val("name"),
+            provider: val("provider"),
+            released: val("released") || null,
+            notes: pickByName("notes"),
+          },
+        };
+      }
+
+      function refresh() {
+        const k = kind.value;
+        eventFields.hidden = k !== "event";
+        entityFields.hidden = k === "event";
+        const p = buildPayload();
+        preview.textContent = JSON.stringify(p, null, 2);
+        // Wire the GitHub fallback to pre-fill an issue with the JSON payload.
+        const issueUrl = new URL(ghIssuesUrl);
+        issueUrl.searchParams.set("title", `[submit] ${k}: ${val("summary") || val("name") || "untitled"}`);
+        issueUrl.searchParams.set("body", "```json\n" + JSON.stringify(p, null, 2) + "\n```");
+        ghFallback.href = issueUrl.toString();
+      }
+
+      form.addEventListener("input", refresh);
+      kind.addEventListener("change", refresh);
+      refresh();
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        if (!apiBase) {
+          result.hidden = false;
+          result.className = "result err";
+          result.textContent = "Live submission isn't enabled yet — use the GitHub issue link instead.";
+          return;
+        }
+        submitBtn.disabled = true;
+        result.hidden = false;
+        result.className = "result";
+        result.textContent = "Submitting…";
+        try {
+          const res = await fetch(`${apiBase}/submit`, {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify(buildPayload()),
+          });
+          const body = await res.json().catch(() => ({}));
+          if (res.ok) {
+            result.className = "result ok";
+            result.textContent = body.message || "Submitted. Watch the queue PR for review.";
+          } else {
+            result.className = "result err";
+            result.textContent = body.error || `Failed (${res.status}).`;
+          }
+        } catch (err) {
+          result.className = "result err";
+          result.textContent = "Network error: " + err.message;
+        } finally {
+          submitBtn.disabled = false;
+        }
+      });
+    })();
+  </script>
 </Base>

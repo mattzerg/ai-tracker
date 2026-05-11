@@ -1,0 +1,95 @@
+---
+import Base from "../layouts/Base.astro";
+import { loadEvents, loadModels, loadTools } from "../lib/data.ts";
+
+const models = loadModels();
+const tools = loadTools();
+const events = loadEvents();
+const providers = Array.from(new Set(models.map((m) => m.provider))).sort();
+const categories = Array.from(new Set(tools.map((t) => t.category))).sort();
+---
+<Base
+  title="About — ai-tracker"
+  description="ai-tracker is a public, machine-readable directory of AI models and tools — designed to be consumed by agents."
+>
+  <h1>About</h1>
+
+  <p>
+    <strong>ai-tracker</strong> is a public-utility directory and changelog for AI models and tools.
+    It tracks {models.length} models from {providers.length} providers and {tools.length} tools,
+    plus {events.length} events on the timeline. Free to use, no signup, no ads, no SaaS pitch.
+  </p>
+
+  <h2>The wedge</h2>
+  <p>
+    Other directories list AI products. This one is built so an LLM agent can answer
+    <em>what's changed for Claude Opus 4.7 in the last month</em> without scraping HTML.
+    Every entity has HTML, JSON, and Markdown twins; every event is in
+    <a href="/feed.xml">RSS</a>, <a href="/atom.xml">Atom</a>,
+    <a href="/dump/all.json">/dump/all.json</a>, and <a href="/llms.txt">/llms.txt</a>.
+    JSON-LD (<code>SoftwareApplication</code>) is embedded on every detail page.
+    The companion <code>ai-tracker-mcp</code> npm package exposes the data over MCP
+    for direct agent integration.
+  </p>
+
+  <h2>Where the data comes from</h2>
+  <p>
+    Sources are tagged <strong>authoritative</strong> or <strong>supplementary</strong>.
+    Authoritative readers (Anthropic / Google / xAI / Mistral / OpenAI / DeepSeek / Meta /
+    Alibaba / Cohere docs) can correct stale curated values. Supplementary aggregators
+    (OpenRouter, GitHub topic search) only fill gaps; they never overwrite a curated
+    field. This means a 12am floating-point pricing wobble from an aggregator can't
+    silently bump our canonical price.
+  </p>
+  <p>
+    Pricing diffs detected during ingest auto-emit <code>price_change</code> events
+    (with a noise filter: ≥1% AND ≥$0.01 absolute change required). Releases get
+    <code>released</code> events. Future event types: <code>deprecated</code>,
+    <code>capability_added</code>, <code>benchmark_update</code>,
+    <code>license_change</code>, <code>model_swap</code>, <code>shut_down</code>,
+    <code>rebrand</code>, <code>acquired</code>.
+  </p>
+
+  <h2>Coverage today</h2>
+  <p>
+    <strong>Providers</strong> ({providers.length}): {providers.join(", ")}.<br />
+    <strong>Tool categories</strong> ({categories.length}): {categories.join(", ")}.
+  </p>
+  <p>
+    For full breakdowns: <a href="/providers">all providers</a> ·
+    <a href="/categories">all categories</a> ·
+    <a href="/changes">recent changes</a>.
+  </p>
+
+  <h2>For agents and integrators</h2>
+  <ul>
+    <li><a href="/llms.txt">/llms.txt</a> — discovery file (entity + event counts, links to full corpus).</li>
+    <li><a href="/llms-full.txt">/llms-full.txt</a> — entire corpus as plain text, per-entity blocks.</li>
+    <li><a href="/dump/all.json">/dump/all.json</a> — bulk JSON of every model, tool, event, queue status.</li>
+    <li><a href="/dump/events-30d.json">/dump/events-30d.json</a> — last 30 days of events.</li>
+    <li><a href="/feed.xml">/feed.xml</a> · <a href="/atom.xml">/atom.xml</a> — every event, newest 100.</li>
+    <li><a href="/sitemap-agents.xml">/sitemap-agents.xml</a> — every agent-consumable URL.</li>
+    <li><code>ai-tracker-mcp</code> — MCP server (<code>search_models</code>, <code>get_entity</code>, <code>get_timeline</code>, etc.).</li>
+  </ul>
+
+  <h2>Submitting</h2>
+  <p>
+    Found something missing? Use <a href="/submit">/submit</a>. Submissions go through
+    a moderation step and land in a public PR queue. Bulk approvals via squash-merge.
+    A watchdog pings if a queue sits unreviewed for 24h.
+  </p>
+
+  <h2>License</h2>
+  <p>
+    All data is public, sourced from public materials, and free for any use including
+    AI training and retrieval. Source attribution is preserved on every entity and
+    event. <code>robots.txt</code> explicitly allows GPTBot, ClaudeBot, PerplexityBot,
+    Google-Extended, and the rest of the major AI-bot fleet.
+  </p>
+
+  <h2>Out of scope</h2>
+  <p>
+    No accounts. No login. No email subscriptions. No embeddable widgets. No API keys.
+    No revenue, ads, or sponsorships.
+  </p>
+</Base>
