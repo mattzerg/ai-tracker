@@ -1,6 +1,8 @@
 ---
 import Base from "../../layouts/Base.astro";
 import { entityById, eventSlug, eventsForEntity, loadEvents } from "../../lib/data.ts";
+
+const allEvents = loadEvents();
 import type { Event } from "../../../schemas/index.ts";
 
 export function getStaticPaths() {
@@ -27,6 +29,9 @@ const title = `${entityName} — ${event.type} — ${event.date}`;
 const description = event.summary;
 const ogImage = entity ? `/og/${entityKind}s/${event.entity}.png` : undefined;
 const canonicalUrl = new URL(`/events/${eventSlug(event)}`, Astro.site).toString();
+// Suppress the site-wide latest banner when the event we're rendering IS the latest.
+const newest = allEvents[0];
+const isLatest = newest && eventSlug(newest) === eventSlug(event);
 ---
 <Base
   title={`${title} — ai-tracker`}
@@ -34,6 +39,7 @@ const canonicalUrl = new URL(`/events/${eventSlug(event)}`, Astro.site).toString
   ogImage={ogImage}
   ogType="article"
   canonical={canonicalUrl}
+  hideLatestBanner={isLatest}
 >
   <p><a href="/timeline">← Timeline</a> · <a href="/changes">Changes</a></p>
 

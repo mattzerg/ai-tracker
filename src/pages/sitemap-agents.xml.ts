@@ -49,6 +49,7 @@ export const GET: APIRoute = ({ site }) => {
   urls.push(urlEntry(`${base}/llms-full.txt`, { lastmod: today, changefreq: "daily", priority: 0.8 }));
   // - Stub: low change/priority until Worker ships.
   urls.push(urlEntry(`${base}/api/votes.json`, { lastmod: today, changefreq: "monthly", priority: 0.2 }));
+  urls.push(urlEntry(`${base}/api/search.json`, { lastmod: today, changefreq: "daily", priority: 0.8 }));
   urls.push(urlEntry(`${base}/og/default.svg`, { lastmod: today, changefreq: "weekly", priority: 0.4 }));
   urls.push(urlEntry(`${base}/og/default.png`, { lastmod: today, changefreq: "weekly", priority: 0.4 }));
 

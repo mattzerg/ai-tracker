@@ -81,7 +81,7 @@ import Base from "../layouts/Base.astro";
         return hay.includes(q);
       }
       function toolMatches(t, q) {
-        const hay = [t.id, t.name, t.vendor, t.category, ...(t.tags || []), ...(t.built_on_models || [])].join(" ").toLowerCase();
+        const hay = [t.id, t.name, t.vendor, t.category, ...(t.tags || []), ...(t.built_on || t.built_on_models || [])].join(" ").toLowerCase();
         return hay.includes(q);
       }
       function eventMatches(e, q, namesById) {
@@ -112,16 +112,17 @@ import Base from "../layouts/Base.astro";
         buckets.tools.dataset.empty = ts.length ? "0" : "1";
         buckets.events.dataset.empty = es.length ? "0" : "1";
 
-        lists.models.innerHTML = ms.map((m) =>
-          `<li><a href="/models/${escape(m.id)}">${highlight(m.name, q)}</a> · ${highlight(m.provider, q)}` +
-          (m.context_window ? ` · ${m.context_window.toLocaleString()} ctx` : "") + `</li>`
-        ).join("");
+        lists.models.innerHTML = ms.map((m) => {
+          const ctx = m.context ?? m.context_window;
+          return `<li><a href="/models/${escape(m.id)}">${highlight(m.name, q)}</a> · ${highlight(m.provider, q)}` +
+            (ctx ? ` · ${ctx.toLocaleString()} ctx` : "") + `</li>`;
+        }).join("");
         lists.tools.innerHTML = ts.map((t) =>
           `<li><a href="/tools/${escape(t.id)}">${highlight(t.name, q)}</a> · ${highlight(t.vendor, q)} · ${highlight(t.category, q)}</li>`
         ).join("");
         lists.events.innerHTML = es.map((e) => {
-          const name = namesById.get(e.entity) || e.entity;
-          const slug = e.date + "__" + e.entity + "__" + e.type;
+          const name = e.entity_name || namesById.get(e.entity) || e.entity;
+          const slug = e.slug || (e.date + "__" + e.entity + "__" + e.type);
           return `<li><code>${e.date}</code> · ${highlight(e.type, q)} · <a href="/events/${escape(slug)}">${highlight(name, q)}</a> — ${highlight(e.summary, q)}</li>`;
         }).join("");
       }
@@ -142,7 +143,7 @@ import Base from "../layouts/Base.astro";
         timer = setTimeout(() => { writeUrl(); render(q.value); }, 80);
       });
 
-      fetch("/dump/all.json").then((r) => r.json()).then((d) => {
+      fetch("/api/search.json").then((r) => r.json()).then((d) => {
         DATA = d;
         render(q.value);
       }).catch((err) => {

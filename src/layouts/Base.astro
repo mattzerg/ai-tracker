@@ -7,8 +7,9 @@ interface Props {
   ogImage?: string; // path or absolute URL
   ogType?: "website" | "article";
   canonical?: string; // absolute URL of this page
+  hideLatestBanner?: boolean; // suppress the site-wide latest-event banner (e.g. on the event-self page)
 }
-const { title, description, ogImage, ogType = "website", canonical } = Astro.props;
+const { title, description, ogImage, ogType = "website", canonical, hideLatestBanner = false } = Astro.props;
 const siteUrl = Astro.site?.toString().replace(/\/$/, "") ?? "";
 const canonicalUrl = canonical ?? (siteUrl + Astro.url.pathname);
 const resolvedImage = ogImage ?? "/og/default.png";
@@ -72,7 +73,7 @@ const latestAge = latest ? relativeAge(latest.date) : "";
         <a href="/about">About</a>
       </nav>
     </header>
-    {latest && latestPath ? (
+    {latest && latestPath && !hideLatestBanner ? (
       <div class="latest-bar">
         <span class="latest-label">Latest</span>
         <a href={latestPath} class="latest-link">
