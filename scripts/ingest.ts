@@ -107,7 +107,50 @@ async function main() {
 
   const modelDiff = diffModels(currentModels, mergedModels);
   const toolDiff = diffTools(currentTools, mergedTools);
-  const eventDiff = diffEvents(currentEvents, proposed.events);
+
+  // Synthesize price_change events from any updated model whose pricing
+  // shifted by a non-noise amount. Filter mirrors generate-pricing-events.ts.
+  // Source attribution: the merged model's first authoritative-looking source.
+  const PRICE_FIELDS = ["input_per_mtok", "output_per_mtok"] as const;
+  const mergedById = new Map(mergedModels.map((m) => [m.id, m]));
+  const synthesizedEvents: Event[] = [];
+  for (const u of modelDiff.updated) {
+    if (!u.fields.includes("pricing")) continue;
+    const fromP = (u.from.pricing ?? null) as Model["pricing"] | null;
+    const toP = (u.to.pricing ?? null) as Model["pricing"] | null;
+    if (!fromP || !toP) continue;
+    const merged = mergedById.get(u.id);
+    if (!merged) continue;
+    const date = toP.as_of ?? "";
+    if (!date) continue;
+    const source = merged.sources.find((s) => !s.includes("openrouter.ai") && s.startsWith("http")) ?? merged.sources[0];
+    if (!source) continue;
+    for (const field of PRICE_FIELDS) {
+      const a = fromP[field];
+      const b = toP[field];
+      if (typeof a !== "number" || typeof b !== "number") continue;
+      if (a === b) continue;
+      const absDelta = Math.abs(a - b);
+      if (absDelta < 0.01 && Math.abs(absDelta / a) < 0.01) continue;
+      const direction = b > a ? "increased" : "decreased";
+      const pct = Math.abs(((b - a) / a) * 100).toFixed(0);
+      const tag = field === "input_per_mtok" ? "Input" : "Output";
+      synthesizedEvents.push({
+        date,
+        entity: u.id,
+        type: "price_change",
+        summary: `${merged.name}: ${tag} price ${direction} from $${a}/M to $${b}/M (${pct}% change).`,
+        delta: { field: `pricing.${field}`, from: a, to: b },
+        source,
+        submitted_by: "ingest-bot",
+      });
+    }
+  }
+  const allEvents = [...proposed.events, ...synthesizedEvents];
+  if (synthesizedEvents.length) {
+    console.log(`  ingest-events [synthesized]: ${synthesizedEvents.length} price_change events from pricing diffs`);
+  }
+  const eventDiff = diffEvents(currentEvents, allEvents);
 
   console.log("\n--- diff summary ---");
   console.log(`Models   : +${modelDiff.added.length} new, ~${modelDiff.updated.length} updated, ${modelDiff.unchanged} unchanged`);

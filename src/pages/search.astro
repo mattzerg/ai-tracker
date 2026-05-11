@@ -1,0 +1,153 @@
+---
+import Base from "../layouts/Base.astro";
+---
+<Base title="Search — ai-tracker" description="Search every model, tool, and event in the directory.">
+  <h1>Search</h1>
+  <p>Substring match across name, provider/vendor, tags, summary text, and IDs. URL is shareable: <code>/search?q=…</code></p>
+
+  <input type="search" id="q" placeholder="claude · grok · agent-framework · gpt-5.5…" autofocus />
+  <p id="status" class="status">Loading data…</p>
+
+  <section id="results" hidden>
+    <div class="bucket" id="bucket-models">
+      <h2>Models <span class="count" id="count-models">0</span></h2>
+      <ul></ul>
+    </div>
+    <div class="bucket" id="bucket-tools">
+      <h2>Tools <span class="count" id="count-tools">0</span></h2>
+      <ul></ul>
+    </div>
+    <div class="bucket" id="bucket-events">
+      <h2>Events <span class="count" id="count-events">0</span></h2>
+      <ul></ul>
+    </div>
+  </section>
+
+  <style>
+    #q { width: 100%; padding: 0.6rem 0.8rem; font-size: 1.1rem; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; margin: 0.5rem 0; }
+    .status { color: #666; font-size: 0.9rem; }
+    .bucket { margin: 1.5rem 0; }
+    .bucket h2 { font-size: 1.1rem; padding-bottom: 0.4rem; border-bottom: 1px solid #eee; }
+    .bucket .count { color: #666; font-weight: 400; font-size: 0.9rem; margin-left: 0.4rem; }
+    .bucket ul { padding-left: 1.25rem; }
+    .bucket[data-empty="1"] { display: none; }
+    mark { background: #fff5b1; padding: 0 1px; border-radius: 2px; }
+  </style>
+
+  <script is:inline>
+    (() => {
+      const q = document.getElementById("q");
+      const status = document.getElementById("status");
+      const results = document.getElementById("results");
+      const buckets = {
+        models: document.getElementById("bucket-models"),
+        tools: document.getElementById("bucket-tools"),
+        events: document.getElementById("bucket-events"),
+      };
+      const lists = {
+        models: buckets.models.querySelector("ul"),
+        tools: buckets.tools.querySelector("ul"),
+        events: buckets.events.querySelector("ul"),
+      };
+      const counts = {
+        models: document.getElementById("count-models"),
+        tools: document.getElementById("count-tools"),
+        events: document.getElementById("count-events"),
+      };
+
+      function escape(s) { return String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&apos;" }[c])); }
+      function highlight(text, query) {
+        if (!query) return escape(text);
+        const t = String(text);
+        const lower = t.toLowerCase();
+        const ql = query.toLowerCase();
+        let out = "";
+        let i = 0;
+        while (i < t.length) {
+          const idx = lower.indexOf(ql, i);
+          if (idx < 0) { out += escape(t.slice(i)); break; }
+          out += escape(t.slice(i, idx));
+          out += "<mark>" + escape(t.slice(idx, idx + ql.length)) + "</mark>";
+          i = idx + ql.length;
+        }
+        return out;
+      }
+
+      let DATA = null;
+      const MAX_PER_BUCKET = 50;
+
+      function modelMatches(m, q) {
+        const hay = [m.id, m.name, m.provider, ...(m.tags || []), m.license].join(" ").toLowerCase();
+        return hay.includes(q);
+      }
+      function toolMatches(t, q) {
+        const hay = [t.id, t.name, t.vendor, t.category, ...(t.tags || []), ...(t.built_on_models || [])].join(" ").toLowerCase();
+        return hay.includes(q);
+      }
+      function eventMatches(e, q, namesById) {
+        const hay = [e.entity, e.type, e.summary, namesById.get(e.entity) || ""].join(" ").toLowerCase();
+        return hay.includes(q);
+      }
+
+      function render(query) {
+        if (!DATA) return;
+        const q = (query || "").trim().toLowerCase();
+        results.hidden = !q;
+        if (!q) { status.textContent = "Type to search " + DATA.models.length + " models, " + DATA.tools.length + " tools, " + DATA.events.length + " events."; return; }
+        status.textContent = "";
+
+        const namesById = new Map();
+        for (const m of DATA.models) namesById.set(m.id, m.name);
+        for (const t of DATA.tools) namesById.set(t.id, t.name);
+
+        const ms = DATA.models.filter((m) => modelMatches(m, q)).slice(0, MAX_PER_BUCKET);
+        const ts = DATA.tools.filter((t) => toolMatches(t, q)).slice(0, MAX_PER_BUCKET);
+        const es = DATA.events.filter((e) => eventMatches(e, q, namesById)).slice(0, MAX_PER_BUCKET);
+
+        counts.models.textContent = ms.length === MAX_PER_BUCKET ? ms.length + "+" : ms.length;
+        counts.tools.textContent = ts.length === MAX_PER_BUCKET ? ts.length + "+" : ts.length;
+        counts.events.textContent = es.length === MAX_PER_BUCKET ? es.length + "+" : es.length;
+
+        buckets.models.dataset.empty = ms.length ? "0" : "1";
+        buckets.tools.dataset.empty = ts.length ? "0" : "1";
+        buckets.events.dataset.empty = es.length ? "0" : "1";
+
+        lists.models.innerHTML = ms.map((m) =>
+          `<li><a href="/models/${escape(m.id)}">${highlight(m.name, q)}</a> · ${highlight(m.provider, q)}` +
+          (m.context_window ? ` · ${m.context_window.toLocaleString()} ctx` : "") + `</li>`
+        ).join("");
+        lists.tools.innerHTML = ts.map((t) =>
+          `<li><a href="/tools/${escape(t.id)}">${highlight(t.name, q)}</a> · ${highlight(t.vendor, q)} · ${highlight(t.category, q)}</li>`
+        ).join("");
+        lists.events.innerHTML = es.map((e) => {
+          const name = namesById.get(e.entity) || e.entity;
+          const slug = e.date + "__" + e.entity + "__" + e.type;
+          return `<li><code>${e.date}</code> · ${highlight(e.type, q)} · <a href="/events/${escape(slug)}">${highlight(name, q)}</a> — ${highlight(e.summary, q)}</li>`;
+        }).join("");
+      }
+
+      const params = new URLSearchParams(location.search);
+      if (params.get("q")) q.value = params.get("q");
+
+      function writeUrl() {
+        const url = new URL(location.href);
+        if (q.value) url.searchParams.set("q", q.value);
+        else url.searchParams.delete("q");
+        history.replaceState({}, "", url);
+      }
+
+      let timer = null;
+      q.addEventListener("input", () => {
+        if (timer) clearTimeout(timer);
+        timer = setTimeout(() => { writeUrl(); render(q.value); }, 80);
+      });
+
+      fetch("/dump/all.json").then((r) => r.json()).then((d) => {
+        DATA = d;
+        render(q.value);
+      }).catch((err) => {
+        status.textContent = "Failed to load data: " + err.message;
+      });
+    })();
+  </script>
+</Base>
