@@ -5,10 +5,12 @@ import { entityById, eventSlug, loadEvents, loadModels } from "../lib/data.ts";
 const events = loadEvents();
 const providers = Array.from(new Set(loadModels().map((m) => m.provider))).sort();
 const types = Array.from(new Set(events.map((e) => e.type))).sort();
+const minDate = events.length ? events[events.length - 1].date : "";
+const maxDate = events.length ? events[0].date : "";
 ---
 <Base title="Timeline — ai-tracker" description="Every tracked AI event in chronological order.">
   <h1>Timeline</h1>
-  <p>{events.length} events. Newest first.</p>
+  <p>{events.length} events. Newest first. Date range covers {minDate} to {maxDate}.</p>
 
   <div class="filters">
     <label>
@@ -25,6 +27,14 @@ const types = Array.from(new Set(events.map((e) => e.type))).sort();
         {types.map((t) => <option value={t}>{t}</option>)}
       </select>
     </label>
+    <label>
+      From
+      <input type="date" id="filter-from" min={minDate} max={maxDate} />
+    </label>
+    <label>
+      To
+      <input type="date" id="filter-to" min={minDate} max={maxDate} />
+    </label>
     <span id="visible-count" class="count">{events.length} visible</span>
   </div>
 
@@ -39,7 +49,7 @@ const types = Array.from(new Set(events.map((e) => e.type))).sort();
         const path = entity?.kind === "model" ? `/models/${e.entity}` : `/tools/${e.entity}`;
         const provider = entity?.kind === "model" ? entity.provider : (entity as any)?.vendor ?? "";
         return (
-          <li data-provider={provider} data-type={e.type}>
+          <li data-provider={provider} data-type={e.type} data-date={e.date}>
             <code>{e.date}</code> · <strong>{e.type}</strong> ·
             <a href={path}>{entity?.name ?? e.entity}</a>
             — {e.summary}
@@ -52,9 +62,9 @@ const types = Array.from(new Set(events.map((e) => e.type))).sort();
   )}
 
   <style>
-    .filters { display: flex; gap: 1rem; align-items: center; margin: 1rem 0; padding: 0.75rem; background: #f6f6f6; border-radius: 4px; }
+    .filters { display: flex; gap: 1rem; align-items: center; margin: 1rem 0; padding: 0.75rem; background: #f6f6f6; border-radius: 4px; flex-wrap: wrap; }
     .filters label { display: inline-flex; gap: 0.4rem; align-items: center; font-size: 0.9rem; }
-    .filters select { padding: 0.25rem 0.4rem; }
+    .filters select, .filters input[type="date"] { padding: 0.25rem 0.4rem; font: inherit; }
     .count { margin-left: auto; color: #666; font-size: 0.85rem; }
     li[hidden] { display: none; }
   </style>
@@ -62,31 +72,63 @@ const types = Array.from(new Set(events.map((e) => e.type))).sort();
     (() => {
       const provSel = document.getElementById("filter-provider");
       const typeSel = document.getElementById("filter-type");
+      const fromInp = document.getElementById("filter-from");
+      const toInp = document.getElementById("filter-to");
       const list = document.getElementById("timeline");
       const counter = document.getElementById("visible-count");
-      if (!provSel || !typeSel || !list || !counter) return;
+      if (!provSel || !typeSel || !fromInp || !toInp || !list || !counter) return;
       const items = Array.from(list.querySelectorAll("li"));
       const empty = document.getElementById("empty-state");
       const clearLink = document.getElementById("clear-filters");
+
+      // Read URL params on load for shareable filtered URLs.
+      const params = new URLSearchParams(location.search);
+      if (params.get("provider")) provSel.value = params.get("provider");
+      if (params.get("type")) typeSel.value = params.get("type");
+      if (params.get("from")) fromInp.value = params.get("from");
+      if (params.get("to")) toInp.value = params.get("to");
+
+      function writeUrl() {
+        const url = new URL(location.href);
+        const setOrDel = (k, v) => v ? url.searchParams.set(k, v) : url.searchParams.delete(k);
+        setOrDel("provider", provSel.value);
+        setOrDel("type", typeSel.value);
+        setOrDel("from", fromInp.value);
+        setOrDel("to", toInp.value);
+        history.replaceState({}, "", url);
+      }
+
       function apply() {
         const p = provSel.value;
         const t = typeSel.value;
+        const from = fromInp.value;
+        const to = toInp.value;
         let n = 0;
         for (const li of items) {
+          const d = li.dataset.date;
           const okP = !p || li.dataset.provider === p;
           const okT = !t || li.dataset.type === t;
-          const visible = okP && okT;
+          const okFrom = !from || d >= from;
+          const okTo = !to || d <= to;
+          const visible = okP && okT && okFrom && okTo;
           li.hidden = !visible;
           if (visible) n++;
         }
         counter.textContent = n + " visible";
         if (empty) empty.hidden = n > 0 || items.length === 0;
+        writeUrl();
       }
       provSel.addEventListener("change", apply);
       typeSel.addEventListener("change", apply);
+      fromInp.addEventListener("change", apply);
+      toInp.addEventListener("change", apply);
       if (clearLink) clearLink.addEventListener("click", (e) => {
-        e.preventDefault(); provSel.value = ""; typeSel.value = ""; apply();
+        e.preventDefault();
+        provSel.value = ""; typeSel.value = ""; fromInp.value = ""; toInp.value = "";
+        apply();
       });
+      // Apply once at load to respect any URL params.
+      apply();
     })();
   </script>
 </Base>

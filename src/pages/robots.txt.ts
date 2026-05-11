@@ -30,6 +30,7 @@ export const GET: APIRoute = ({ site }) => {
       "cohere-ai",
     ].flatMap((bot) => [`User-agent: ${bot}`, "Allow: /", ""]),
     `Sitemap: ${base}/sitemap-index.xml`,
+    `Sitemap: ${base}/sitemap-agents.xml`,
     "",
   ];
   return new Response(lines.join("\n"), {
