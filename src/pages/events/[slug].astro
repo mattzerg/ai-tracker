@@ -25,7 +25,7 @@ const sibling = eventsForEntity(event.entity).filter((e) => eventSlug(e) !== eve
 
 const title = `${entityName} — ${event.type} — ${event.date}`;
 const description = event.summary;
-const ogImage = entity ? `/og/${entityKind}s/${event.entity}.svg` : undefined;
+const ogImage = entity ? `/og/${entityKind}s/${event.entity}.png` : undefined;
 const canonicalUrl = new URL(`/events/${eventSlug(event)}`, Astro.site).toString();
 ---
 <Base

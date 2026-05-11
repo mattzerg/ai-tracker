@@ -42,12 +42,14 @@ export const GET: APIRoute = ({ site }) => {
     urls.push(urlEntry(`${base}/models/${m.id}.json`, lm));
     urls.push(urlEntry(`${base}/models/${m.id}.md`, lm));
     urls.push(urlEntry(`${base}/og/models/${m.id}.svg`, lm));
+    urls.push(urlEntry(`${base}/og/models/${m.id}.png`, lm));
   }
   for (const t of loadTools()) {
     const lm = t.released ?? today;
     urls.push(urlEntry(`${base}/tools/${t.id}.json`, lm));
     urls.push(urlEntry(`${base}/tools/${t.id}.md`, lm));
     urls.push(urlEntry(`${base}/og/tools/${t.id}.svg`, lm));
+    urls.push(urlEntry(`${base}/og/tools/${t.id}.png`, lm));
   }
 
   // Event detail pages — added to the agent sitemap because their

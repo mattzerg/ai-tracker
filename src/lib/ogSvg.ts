@@ -63,3 +63,24 @@ export function svgResponse(svg: string): Response {
     },
   });
 }
+
+// PNG conversion via @resvg/resvg-js. Closes the LinkedIn / strict-scraper gap
+// where SVG OG images aren't supported. Build-time only.
+export async function svgToPng(svg: string): Promise<Uint8Array> {
+  const { Resvg } = await import("@resvg/resvg-js");
+  const resvg = new Resvg(svg, {
+    fitTo: { mode: "width", value: 1200 },
+    background: "transparent",
+  });
+  return resvg.render().asPng();
+}
+
+export async function pngResponse(svg: string): Promise<Response> {
+  const png = await svgToPng(svg);
+  return new Response(png, {
+    headers: {
+      "content-type": "image/png",
+      "cache-control": "public, max-age=86400",
+    },
+  });
+}

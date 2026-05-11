@@ -112,8 +112,10 @@ const eventTypes = ["released", "price_change", "deprecated", "capability_added"
     <h3>Preview JSON</h3>
     <pre id="preview" class="preview">{`{}`}</pre>
 
+    <div id="errors" class="errors" hidden></div>
+
     <div class="actions">
-      <button type="submit" id="submit-btn" disabled={!apiBase}>{apiBase ? "Submit" : "Submit (Phase 4 only)"}</button>
+      <button type="submit" id="submit-btn" disabled>Submit</button>
       <a id="gh-fallback" href={ghIssuesUrl} target="_blank" rel="noopener">Open as GitHub issue</a>
     </div>
 
@@ -135,6 +137,8 @@ const eventTypes = ["released", "price_change", "deprecated", "capability_added"
     .banner { background: #fff8e0; padding: 0.6rem 0.8rem; border-left: 3px solid #d4a02a; border-radius: 3px; }
     .turnstile-stub { background: #f6f6f6; padding: 0.6rem; border: 1px dashed #ccc; border-radius: 3px; font-size: 0.8rem; color: #666; text-align: center; }
     .turnstile-stub::before { content: "[Turnstile widget — Phase 4]"; }
+    .errors { background: #fff0f0; border-left: 3px solid #c33; padding: 0.5rem 0.8rem; border-radius: 3px; font-size: 0.88rem; margin-top: 0.5rem; }
+    .errors ul { margin: 0; padding-left: 1.2rem; }
     .actions { display: flex; gap: 0.8rem; align-items: center; margin-top: 1rem; }
     button { padding: 0.5rem 1.2rem; font: inherit; cursor: pointer; background: #1a4cff; color: #fff; border: none; border-radius: 3px; }
     button:disabled { background: #999; cursor: not-allowed; }
@@ -153,6 +157,44 @@ const eventTypes = ["released", "price_change", "deprecated", "capability_added"
       const result = document.getElementById("result");
       const submitBtn = document.getElementById("submit-btn");
       const ghFallback = document.getElementById("gh-fallback");
+      const errBox = document.getElementById("errors");
+
+      // Mirror of the Zod rules from schemas/event.ts and schemas/common.ts.
+      // Keep in sync if either changes.
+      const ENTITY_ID_RX = /^[a-z0-9][a-z0-9_-]*(?:__[a-z0-9][a-z0-9_.-]*)?$/i;
+      const ISO_DATE_RX = /^\d{4}-\d{2}-\d{2}$/;
+      const URL_RX = /^https?:\/\/\S+$/;
+      const EVENT_TYPES = new Set(["released","price_change","deprecated","capability_added","benchmark_update","license_change","model_swap","shut_down","rebrand","acquired"]);
+
+      function validate(payload) {
+        const errs = [];
+        if (!payload.source) errs.push("Source URL is required.");
+        else if (!URL_RX.test(payload.source)) errs.push("Source must be a valid http(s) URL.");
+        if (payload.contact && !/^\S+@\S+\.\S+$/.test(payload.contact)) errs.push("Contact must be a valid email.");
+        if (payload.kind === "event") {
+          const ev = payload.event;
+          if (!ev.entity) errs.push("Entity is required (use the autocomplete).");
+          else if (!ENTITY_ID_RX.test(ev.entity)) errs.push("Entity must look like an existing id (e.g. anthropic__claude-opus-4-7).");
+          if (!ev.type || !EVENT_TYPES.has(ev.type)) errs.push("Event type must be one of: " + Array.from(EVENT_TYPES).join(", ") + ".");
+          if (!ev.date) errs.push("Date is required.");
+          else if (!ISO_DATE_RX.test(ev.date)) errs.push("Date must be ISO YYYY-MM-DD.");
+          if (!ev.summary) errs.push("Summary is required.");
+          else if (ev.summary.length > 280) errs.push("Summary must be 280 chars or fewer.");
+          if (ev.delta && (ev.delta.from === "" || ev.delta.to === "")) {
+            // delta_field present without both from/to — flag if field is set
+            if (!ev.delta.field) errs.push("Delta field is required when from/to are set.");
+          }
+          if (ev.delta && ev.delta.field && (ev.delta.from === undefined || ev.delta.to === undefined)) {
+            errs.push("Delta requires from and to values.");
+          }
+        } else {
+          const ent = payload.entity;
+          if (!ent.name) errs.push("Name is required.");
+          if (!ent.provider) errs.push((payload.kind === "tool" ? "Vendor" : "Provider") + " is required.");
+          if (ent.released && !ISO_DATE_RX.test(ent.released)) errs.push("Released must be ISO YYYY-MM-DD or empty.");
+        }
+        return errs;
+      }
 
       function val(id) { const el = document.getElementById(id); return el ? el.value.trim() : ""; }
       function pickByName(name) { const el = form.querySelector(`[name="${name}"]`); return el ? el.value.trim() : ""; }
@@ -198,6 +240,18 @@ const eventTypes = ["released", "price_change", "deprecated", "capability_added"
         issueUrl.searchParams.set("title", `[submit] ${k}: ${val("summary") || val("name") || "untitled"}`);
         issueUrl.searchParams.set("body", "```json\n" + JSON.stringify(p, null, 2) + "\n```");
         ghFallback.href = issueUrl.toString();
+        // Validation gate.
+        const errs = validate(p);
+        if (errs.length === 0) {
+          errBox.hidden = true;
+          submitBtn.disabled = !apiBase;
+          submitBtn.textContent = apiBase ? "Submit" : "Submit (Phase 4 only)";
+        } else {
+          errBox.hidden = false;
+          errBox.innerHTML = "<strong>Fix these before submitting:</strong><ul>" + errs.map((m) => "<li>" + m.replace(/&/g, "&amp;").replace(/</g, "&lt;") + "</li>").join("") + "</ul>";
+          submitBtn.disabled = true;
+          submitBtn.textContent = "Submit (fix errors)";
+        }
       }
 
       form.addEventListener("input", refresh);
