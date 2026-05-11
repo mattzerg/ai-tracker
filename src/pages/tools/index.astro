@@ -34,6 +34,8 @@ const categories = Array.from(new Set(tools.map((t) => t.category))).sort();
     <span id="visible-count" class="count">{tools.length} visible</span>
   </div>
 
+  <p id="empty-state" hidden><em>No tools match those filters. <a href="#" id="clear-filters">Clear filters</a>.</em></p>
+
   <ul id="tools-list">
     {tools.map((t) => (
       <li
@@ -65,6 +67,8 @@ const categories = Array.from(new Set(tools.map((t) => t.category))).sort();
       const counter = document.getElementById("visible-count");
       if (!vSel || !cSel || !oss || !free || !list || !counter) return;
       const items = Array.from(list.querySelectorAll("li"));
+      const empty = document.getElementById("empty-state");
+      const clearLink = document.getElementById("clear-filters");
       function apply() {
         const v = vSel.value;
         const c = cSel.value;
@@ -79,11 +83,16 @@ const categories = Array.from(new Set(tools.map((t) => t.category))).sort();
           if (visible) n++;
         }
         counter.textContent = n + " visible";
+        if (empty) empty.hidden = n > 0;
       }
       vSel.addEventListener("change", apply);
       cSel.addEventListener("change", apply);
       oss.addEventListener("change", apply);
       free.addEventListener("change", apply);
+      if (clearLink) clearLink.addEventListener("click", (e) => {
+        e.preventDefault();
+        vSel.value = ""; cSel.value = ""; oss.checked = false; free.checked = false; apply();
+      });
     })();
   </script>
 </Base>

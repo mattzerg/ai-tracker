@@ -28,6 +28,8 @@ const types = Array.from(new Set(events.map((e) => e.type))).sort();
     <span id="visible-count" class="count">{events.length} visible</span>
   </div>
 
+  <p id="empty-state" hidden><em>No events match those filters. <a href="#" id="clear-filters">Clear filters</a>.</em></p>
+
   {events.length === 0 ? (
     <p><em>No events yet.</em></p>
   ) : (
@@ -63,6 +65,8 @@ const types = Array.from(new Set(events.map((e) => e.type))).sort();
       const counter = document.getElementById("visible-count");
       if (!provSel || !typeSel || !list || !counter) return;
       const items = Array.from(list.querySelectorAll("li"));
+      const empty = document.getElementById("empty-state");
+      const clearLink = document.getElementById("clear-filters");
       function apply() {
         const p = provSel.value;
         const t = typeSel.value;
@@ -75,9 +79,13 @@ const types = Array.from(new Set(events.map((e) => e.type))).sort();
           if (visible) n++;
         }
         counter.textContent = n + " visible";
+        if (empty) empty.hidden = n > 0 || items.length === 0;
       }
       provSel.addEventListener("change", apply);
       typeSel.addEventListener("change", apply);
+      if (clearLink) clearLink.addEventListener("click", (e) => {
+        e.preventDefault(); provSel.value = ""; typeSel.value = ""; apply();
+      });
     })();
   </script>
 </Base>

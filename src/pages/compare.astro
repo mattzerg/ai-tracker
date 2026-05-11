@@ -1,0 +1,148 @@
+---
+import Base from "../layouts/Base.astro";
+import { loadModels } from "../lib/data.ts";
+
+const models = loadModels().sort((a, b) => a.name.localeCompare(b.name));
+// Field labels in render order. Each gets its own row in the side-by-side table.
+const FIELDS = [
+  { key: "provider", label: "Provider" },
+  { key: "released", label: "Released" },
+  { key: "context_window", label: "Context window", num: true },
+  { key: "output_window", label: "Max output", num: true },
+  { key: "modalities", label: "Modalities", list: true },
+  { key: "license", label: "License" },
+  { key: "input", label: "$/M input", num: true },
+  { key: "output", label: "$/M output", num: true },
+  { key: "as_of", label: "Pricing as of" },
+  { key: "tags", label: "Tags", list: true },
+];
+---
+<Base title="Compare models — ai-tracker" description="Side-by-side comparison of any AI models in the directory.">
+  <h1>Compare</h1>
+  <p>Pick up to 6 models. URL is shareable: <code>/compare?models=id1,id2,id3</code>.</p>
+
+  <div class="picker">
+    <label>
+      Add model
+      <select id="picker">
+        <option value="">— select —</option>
+        {models.map((m) => (
+          <option value={m.id} data-name={m.name}>{m.name} ({m.provider})</option>
+        ))}
+      </select>
+    </label>
+    <button id="clear" type="button">Clear</button>
+  </div>
+
+  <p id="empty" style="display:none"><em>No models selected. Pick one above or visit <code>?models=anthropic__claude-opus-4-7,openai__gpt-5.5,google__gemini-3.1-pro</code>.</em></p>
+
+  <div id="table-wrap"></div>
+
+  <script id="models-data" type="application/json" set:html={JSON.stringify(models)}></script>
+  <script id="fields-data" type="application/json" set:html={JSON.stringify(FIELDS)}></script>
+
+  <style>
+    .picker { display: flex; gap: 0.75rem; align-items: center; margin: 1rem 0; padding: 0.75rem; background: #f6f6f6; border-radius: 4px; flex-wrap: wrap; }
+    .picker label { display: inline-flex; gap: 0.4rem; align-items: center; font-size: 0.9rem; }
+    .picker select { padding: 0.25rem 0.4rem; min-width: 240px; }
+    button { padding: 0.3rem 0.75rem; cursor: pointer; }
+    table.compare { width: 100%; border-collapse: collapse; font-size: 0.92rem; margin-top: 0.5rem; }
+    table.compare th, table.compare td { padding: 0.45rem 0.6rem; text-align: left; border-bottom: 1px solid #eee; vertical-align: top; }
+    table.compare th { background: #f9f9f9; font-weight: 600; }
+    table.compare td.num { text-align: right; font-variant-numeric: tabular-nums; }
+    table.compare th.field { width: 12rem; color: #555; font-weight: 500; }
+    table.compare th.model { background: #f0f4ff; }
+    .remove { background: none; border: none; color: #c33; cursor: pointer; font-size: 0.85rem; padding: 0; margin-left: 0.4rem; }
+    .best { background: #f0fff4; font-weight: 600; }
+  </style>
+  <script is:inline>
+    (() => {
+      const models = JSON.parse(document.getElementById("models-data").textContent);
+      const fields = JSON.parse(document.getElementById("fields-data").textContent);
+      const byId = new Map(models.map((m) => [m.id, m]));
+      const picker = document.getElementById("picker");
+      const clearBtn = document.getElementById("clear");
+      const wrap = document.getElementById("table-wrap");
+      const empty = document.getElementById("empty");
+
+      function readUrl() {
+        const p = new URLSearchParams(location.search).get("models") ?? "";
+        return p.split(",").map((s) => s.trim()).filter((s) => s && byId.has(s)).slice(0, 6);
+      }
+      function writeUrl(ids) {
+        const url = new URL(location.href);
+        if (ids.length) url.searchParams.set("models", ids.join(","));
+        else url.searchParams.delete("models");
+        history.replaceState({}, "", url);
+      }
+
+      function fmt(value, field) {
+        if (value == null || value === "") return "—";
+        if (field.num) return Number(value).toLocaleString();
+        if (field.list) return Array.isArray(value) ? value.join(", ") : String(value);
+        return String(value);
+      }
+
+      function rowValues(field, picked) {
+        return picked.map((m) => {
+          if (field.key === "input") return m.pricing?.input_per_mtok ?? null;
+          if (field.key === "output") return m.pricing?.output_per_mtok ?? null;
+          if (field.key === "as_of") return m.pricing?.as_of ?? null;
+          return m[field.key];
+        });
+      }
+
+      // For numeric fields, highlight the "best" cell (lowest price = best, highest context = best).
+      function bestIndex(field, values) {
+        if (!field.num) return -1;
+        const numeric = values.map((v) => (v == null ? null : Number(v)));
+        if (numeric.every((n) => n == null)) return -1;
+        const isLowerBetter = field.key === "input" || field.key === "output";
+        let bi = -1;
+        let bv = isLowerBetter ? Infinity : -Infinity;
+        numeric.forEach((n, i) => {
+          if (n == null) return;
+          if (isLowerBetter ? n < bv : n > bv) { bv = n; bi = i; }
+        });
+        return bi;
+      }
+
+      function render() {
+        const ids = readUrl();
+        if (!ids.length) { wrap.innerHTML = ""; empty.style.display = ""; return; }
+        empty.style.display = "none";
+        const picked = ids.map((id) => byId.get(id));
+        const head = `<thead><tr><th class="field"></th>${picked.map((m, i) =>
+          `<th class="model"><a href="/models/${m.id}">${m.name}</a><button class="remove" data-i="${i}" type="button" aria-label="remove">×</button></th>`
+        ).join("")}</tr></thead>`;
+        const body = fields.map((f) => {
+          const values = rowValues(f, picked);
+          const bi = bestIndex(f, values);
+          return `<tr><th class="field">${f.label}</th>${values.map((v, i) =>
+            `<td class="${f.num ? "num" : ""}${i === bi ? " best" : ""}">${fmt(v, f)}</td>`
+          ).join("")}</tr>`;
+        }).join("");
+        wrap.innerHTML = `<table class="compare">${head}<tbody>${body}</tbody></table>`;
+        wrap.querySelectorAll(".remove").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            const i = Number(btn.dataset.i);
+            const next = readUrl().filter((_, j) => j !== i);
+            writeUrl(next); render();
+          });
+        });
+      }
+
+      picker.addEventListener("change", () => {
+        const v = picker.value;
+        if (!v) return;
+        const cur = readUrl();
+        if (cur.includes(v)) { picker.value = ""; return; }
+        if (cur.length >= 6) { alert("Max 6 models. Remove one first."); picker.value = ""; return; }
+        writeUrl([...cur, v]); render(); picker.value = "";
+      });
+      clearBtn.addEventListener("click", () => { writeUrl([]); render(); });
+      window.addEventListener("popstate", render);
+      render();
+    })();
+  </script>
+</Base>

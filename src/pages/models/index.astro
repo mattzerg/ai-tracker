@@ -39,6 +39,8 @@ const licenses = Array.from(new Set(models.map((m) => m.license))).sort();
     <span id="visible-count" class="count">{models.length} visible</span>
   </div>
 
+  <p id="empty-state" hidden><em>No models match those filters. <a href="#" id="clear-filters">Clear filters</a>.</em></p>
+
   <table class="models">
     <thead>
       <tr>
@@ -116,6 +118,8 @@ const licenses = Array.from(new Set(models.map((m) => m.license))).sort();
         return desc ? String(kb).localeCompare(String(ka)) : String(ka).localeCompare(String(kb));
       }
 
+      const empty = document.getElementById("empty-state");
+      const clearLink = document.getElementById("clear-filters");
       function apply() {
         const p = provSel.value;
         const l = licSel.value;
@@ -125,10 +129,14 @@ const licenses = Array.from(new Set(models.map((m) => m.license))).sort();
         const sorted = visible.slice().sort((a, b) => compare(a, b, mode));
         for (const r of sorted) tbody.appendChild(r);
         counter.textContent = visible.length + " visible";
+        if (empty) empty.hidden = visible.length > 0;
       }
       provSel.addEventListener("change", apply);
       licSel.addEventListener("change", apply);
       sortSel.addEventListener("change", apply);
+      if (clearLink) clearLink.addEventListener("click", (e) => {
+        e.preventDefault(); provSel.value = ""; licSel.value = ""; apply();
+      });
     })();
   </script>
 </Base>
