@@ -13,7 +13,7 @@
     "verify:sources": "tsx scripts/verify-sources.ts",
     "verify:refs": "tsx scripts/verify-refs.ts",
     "verify:headers": "tsx scripts/verify-headers.ts",
-    "verify:all": "pnpm verify:refs && pnpm verify:sources",
+    "verify:all": "pnpm verify:refs && pnpm verify:sources && pnpm verify:headers",
     "ingest:dry": "tsx scripts/ingest.ts --dry-run",
     "ingest:staging": "tsx scripts/ingest.ts --write-staging",
     "ingest:apply": "tsx scripts/ingest.ts --apply",
