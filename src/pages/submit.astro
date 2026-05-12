@@ -6,6 +6,7 @@ import { loadModels, loadTools } from "../lib/data.ts";
 // degrades to "preview only" + GitHub-issue fallback. This means the page is
 // useful before Phase 4 ships and seamlessly upgrades after.
 const apiBase = import.meta.env.PUBLIC_API_BASE ?? "";
+const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITEKEY ?? "";
 const ghIssuesUrl = "https://github.com/mattzerg/ai-tracker/issues/new";
 
 const entities = [
@@ -106,8 +107,12 @@ const eventTypes = ["released", "price_change", "deprecated", "capability_added"
       <input type="email" id="contact" name="contact" placeholder="you@example.com" />
     </div>
 
-    {/* Turnstile placeholder — Phase 4 will inject the real widget. */}
-    <div id="turnstile-slot" class="turnstile-stub"></div>
+    {turnstileSiteKey ? (
+      <div id="turnstile-slot" class="cf-turnstile" data-sitekey={turnstileSiteKey} data-callback="onTurnstileToken"></div>
+    ) : (
+      <div id="turnstile-slot" class="turnstile-stub"></div>
+    )}
+    <input type="hidden" id="turnstile-token" name="turnstile" value="" />
 
     <h3>Preview JSON</h3>
     <pre id="preview" class="preview">{`{}`}</pre>
@@ -147,7 +152,16 @@ const eventTypes = ["released", "price_change", "deprecated", "capability_added"
     .result.err { background: #fff0f0; border-left: 3px solid #c33; }
   </style>
 
-  <script is:inline define:vars={{ apiBase, ghIssuesUrl }}>
+  {turnstileSiteKey ? (
+    <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+  ) : null}
+  <script is:inline define:vars={{ apiBase, ghIssuesUrl, turnstileSiteKey }}>
+    window.onTurnstileToken = (token) => {
+      const el = document.getElementById("turnstile-token");
+      if (el) el.value = token;
+    };
+  </script>
+  <script is:inline define:vars={{ apiBase, ghIssuesUrl, turnstileSiteKey }}>
     (() => {
       const form = document.getElementById("submit-form");
       const kind = document.getElementById("kind");
@@ -171,6 +185,7 @@ const eventTypes = ["released", "price_change", "deprecated", "capability_added"
         if (!payload.source) errs.push("Source URL is required.");
         else if (!URL_RX.test(payload.source)) errs.push("Source must be a valid http(s) URL.");
         if (payload.contact && !/^\S+@\S+\.\S+$/.test(payload.contact)) errs.push("Contact must be a valid email.");
+        if (turnstileSiteKey && apiBase && !payload.turnstile) errs.push("Solve the Turnstile challenge before submitting.");
         if (payload.kind === "event") {
           const ev = payload.event;
           if (!ev.entity) errs.push("Entity is required (use the autocomplete).");
@@ -203,7 +218,8 @@ const eventTypes = ["released", "price_change", "deprecated", "capability_added"
         const k = kind.value;
         const source = val("source");
         const contact = val("contact");
-        const base = { kind: k, source, contact: contact || undefined };
+        const turnstile = val("turnstile-token") || undefined;
+        const base = { kind: k, source, contact: contact || undefined, turnstile };
         if (k === "event") {
           const delta_field = pickByName("delta_field");
           const delta_from = pickByName("delta_from");
