@@ -124,7 +124,9 @@ export async function svgToPng(svg: string): Promise<Uint8Array> {
 
 export async function pngResponse(svg: string): Promise<Response> {
   const png = await svgToPng(svg);
-  return new Response(png, {
+  // resvg returns Uint8Array<ArrayBufferLike>; Node 22's BodyInit only accepts
+  // ArrayBuffer-backed views, so re-slice into a fresh ArrayBuffer via Buffer.
+  return new Response(new Blob([Buffer.from(png)]), {
     headers: {
       "content-type": "image/png",
       "cache-control": "public, max-age=86400",

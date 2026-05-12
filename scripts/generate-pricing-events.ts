@@ -95,7 +95,6 @@ function main() {
     if (commits.length < 2) continue;
 
     let prev: ModelShape | null = null;
-    let prevCommit: string | null = null;
     for (const commit of commits) {
       const curr = readAt(commit, relPath);
       if (!curr) continue;
@@ -124,7 +123,6 @@ function main() {
         }
       }
       prev = curr;
-      prevCommit = commit;
     }
   }
 

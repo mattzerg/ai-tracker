@@ -34,7 +34,6 @@ const TOPIC_TO_CATEGORY: Record<string, Tool["category"]> = {
 const TOPICS = ["ai-agent", "agentic-ai", "mcp-server"];
 const MIN_STARS = 1500;
 const PER_TOPIC_LIMIT = 30;
-const MAX_DESCRIPTION_LEN = 280;
 
 function slugify(owner: string, name: string): string {
   // schema slug regex: /^[a-z0-9][a-z0-9_-]*$/
@@ -53,8 +52,7 @@ function toModalities(language: string | null): Tool["modalities"] {
   return ["text"];
 }
 
-function toTool(repo: GhRepo, topic: string, now: Date): Tool {
-  const description = (repo.description ?? "").slice(0, MAX_DESCRIPTION_LEN);
+function toTool(repo: GhRepo, topic: string): Tool {
   const ossRepo = repo.url;
   const homepage = repo.homepage && repo.homepage.startsWith("http") ? repo.homepage : ossRepo;
   return {
@@ -96,7 +94,7 @@ export const githubTrending: Source = {
   id: "github-trending",
   description: "GitHub repo search — top OSS AI projects across ai-agent / agentic-ai / mcp-server topics.",
   trust: "supplementary",
-  async run(ctx: SourceContext): Promise<SourceResult> {
+  async run(_ctx: SourceContext): Promise<SourceResult> {
     const warnings: string[] = [];
     const seen = new Set<string>();
     const tools: Tool[] = [];
@@ -113,7 +111,7 @@ export const githubTrending: Source = {
         if (r.isArchived) continue;
         if (r.stargazersCount < MIN_STARS) continue;
         if (!r.description || !r.description.trim()) continue;
-        const t = toTool(r, topic, ctx.now);
+        const t = toTool(r, topic);
         if (seen.has(t.id)) continue;
         seen.add(t.id);
         tools.push(t);

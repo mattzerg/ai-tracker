@@ -4,7 +4,7 @@
 // Default: delete entries older than 30 days. Override with --days=N.
 // --dry-run shows what would go without touching disk.
 
-import { existsSync, mkdirSync, readdirSync, statSync, unlinkSync } from "node:fs";
+import { existsSync, readdirSync, statSync, unlinkSync } from "node:fs";
 import { join, resolve } from "node:path";
 
 const ROOT = resolve(import.meta.dirname, "..");

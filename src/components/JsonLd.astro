@@ -126,4 +126,4 @@ function toolLd(t: Tool, url: string) {
 
 const ld = entity.kind === "model" ? modelLd(entity, url) : toolLd(entity, url);
 ---
-<script type="application/ld+json" set:html={JSON.stringify(ld)}></script>
+<script is:inline type="application/ld+json" set:html={JSON.stringify(ld)}></script>

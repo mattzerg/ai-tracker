@@ -10,7 +10,7 @@ interface MistralRow {
   released: string | null;
   contextWindow: number;
   modalities: Model["modalities"];
-  license: string;
+  license: Model["license"];
   inputPerMtok: number;
   outputPerMtok: number;
   tags: string[];

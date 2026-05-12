@@ -38,8 +38,8 @@ const FIELDS = [
 
   <div id="table-wrap"></div>
 
-  <script id="models-data" type="application/json" set:html={JSON.stringify(models)}></script>
-  <script id="fields-data" type="application/json" set:html={JSON.stringify(FIELDS)}></script>
+  <script is:inline id="models-data" type="application/json" set:html={JSON.stringify(models)}></script>
+  <script is:inline id="fields-data" type="application/json" set:html={JSON.stringify(FIELDS)}></script>
 
   <style>
     .picker { display: flex; gap: 0.75rem; align-items: center; margin: 1rem 0; padding: 0.75rem; background: #f6f6f6; border-radius: 4px; flex-wrap: wrap; }
