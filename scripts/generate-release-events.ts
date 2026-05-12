@@ -4,7 +4,7 @@
 
 import { writeFileSync, existsSync, mkdirSync } from "node:fs";
 import { join, resolve } from "node:path";
-import { loadEvents, loadModels } from "../src/lib/data.ts";
+import { loadEvents, loadModels, loadTools } from "../src/lib/data.ts";
 
 const ROOT = resolve(import.meta.dirname, "..");
 const EVENTS_DIR = join(ROOT, "data", "events");
@@ -13,6 +13,10 @@ const dryRun = process.argv.includes("--dry-run");
 function summaryFor(name: string, provider: string, contextWindow: number | null | undefined): string {
   const ctx = contextWindow ? ` ${contextWindow.toLocaleString()}-token context.` : "";
   return `${name} released by ${provider}.${ctx}`.trim();
+}
+
+function toolSummary(name: string, vendor: string, category: string): string {
+  return `${name} released by ${vendor} (${category}).`;
 }
 
 function sourceFor(model: { sources: string[] }): string {
@@ -25,6 +29,7 @@ function sourceFor(model: { sources: string[] }): string {
 
 function main() {
   const models = loadModels();
+  const tools = loadTools();
   const events = loadEvents();
   const existingKeys = new Set(events.map((e) => `${e.date}__${e.entity}__${e.type}`));
 
@@ -35,36 +40,51 @@ function main() {
 
   if (!dryRun) mkdirSync(EVENTS_DIR, { recursive: true });
 
-  for (const m of models) {
-    if (!m.released) {
+  type Releasable = { id: string; released: string | null; sources: string[]; summary: string };
+  const items: Releasable[] = [
+    ...models.map((m) => ({
+      id: m.id,
+      released: m.released ?? null,
+      sources: m.sources,
+      summary: summaryFor(m.name, m.provider, m.context_window),
+    })),
+    ...tools.map((t) => ({
+      id: t.id,
+      released: t.released ?? null,
+      sources: t.sources,
+      summary: toolSummary(t.name, t.vendor, t.category),
+    })),
+  ];
+
+  for (const it of items) {
+    if (!it.released) {
       skippedNoRelease++;
       continue;
     }
-    const key = `${m.released}__${m.id}__released`;
+    const key = `${it.released}__${it.id}__released`;
     if (existingKeys.has(key)) {
       skipped++;
       continue;
     }
-    const source = sourceFor(m);
+    const source = sourceFor({ sources: it.sources });
     if (!source) {
       skippedNoSource++;
-      console.warn(`  skip (no source): ${m.id}`);
+      console.warn(`  skip (no source): ${it.id}`);
       continue;
     }
     const event = {
-      date: m.released,
-      entity: m.id,
+      date: it.released,
+      entity: it.id,
       type: "released" as const,
-      summary: summaryFor(m.name, m.provider, m.context_window),
+      summary: it.summary,
       source,
       submitted_by: "ingest-bot" as const,
     };
-    const path = join(EVENTS_DIR, `${m.released}__${m.id}__released.json`);
+    const path = join(EVENTS_DIR, `${it.released}__${it.id}__released.json`);
     if (dryRun) {
       console.log(`  WOULD write: ${path}`);
     } else {
       if (existsSync(path)) {
-        // Different (date,entity,type) hash equals same key — shouldn't happen, but be safe.
         skipped++;
         continue;
       }
@@ -74,7 +94,7 @@ function main() {
   }
 
   console.log(`\ngenerate-release-events ${dryRun ? "(dry-run)" : ""}`);
-  console.log(`  models: ${models.length}`);
+  console.log(`  models: ${models.length} · tools: ${tools.length}`);
   console.log(`  ${dryRun ? "would write" : "wrote"}: ${written}`);
   console.log(`  skipped (already had event): ${skipped}`);
   console.log(`  skipped (no released date): ${skippedNoRelease}`);

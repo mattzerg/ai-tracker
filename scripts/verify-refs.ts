@@ -49,6 +49,25 @@ for (const t of tools) {
   seen.set(t.id, t.file);
 }
 
+// Every entity with a release date must have a `released` event matching that
+// date. Catches drift between model.released and the events log — easy to
+// introduce when adding a model by hand without running events:backfill-releases.
+const releaseEventKeys = new Set(
+  events.filter((e) => e.type === "released").map((e) => `${e.entity}__${e.date}`),
+);
+for (const m of models) {
+  if (!m.released) continue;
+  if (!releaseEventKeys.has(`${m.id}__${m.released}`)) {
+    fail(`models/${m.file}: released ${m.released} but no matching released event (run pnpm events:backfill-releases)`);
+  }
+}
+for (const t of tools) {
+  if (!t.released) continue;
+  if (!releaseEventKeys.has(`${t.id}__${t.released}`)) {
+    fail(`tools/${t.file}: released ${t.released} but no matching released event (run pnpm events:backfill-releases)`);
+  }
+}
+
 if (errors > 0) {
   console.error(`\n${errors} reference error(s).`);
   process.exit(1);
