@@ -1,0 +1,72 @@
+name: ingest
+
+# Nightly ingest: pulls fresh data from authoritative + supplementary sources,
+# runs the merge layer, applies pricing/link/tag updates to existing entries
+# (skips new entries from supplementary — those still require human review via
+# the submissions/queue PR pattern), commits, and pushes.
+#
+# Manual trigger via workflow_dispatch supports --dry-run for safety.
+
+on:
+  schedule:
+    # 03:17 UTC daily — off-peak, off the hour to avoid contention.
+    - cron: "17 3 * * *"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Dry-run only (no commit)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Configure git identity
+        run: |
+          git config user.name "ai-tracker-bot"
+          git config user.email "bot@ai-tracker"
+
+      - name: Ingest dry-run (always, for the report)
+        run: pnpm run ingest:dry
+
+      - name: Apply updates to existing entries
+        if: ${{ inputs.dry_run != true }}
+        run: pnpm run ingest:apply:updates
+
+      - name: Verify references still resolve
+        if: ${{ inputs.dry_run != true }}
+        run: pnpm run verify:refs
+
+      - name: Commit + push if anything changed
+        if: ${{ inputs.dry_run != true }}
+        run: |
+          if git diff --quiet data/; then
+            echo "No data changes — nothing to commit."
+            exit 0
+          fi
+          git add data/
+          git commit -m "ingest($(date -u +%Y-%m-%d)): nightly updates" \
+            -m "Auto-applied updates from authoritative + supplementary sources." \
+            -m "New entries from supplementary sources skipped (review-required)."
+          git push
