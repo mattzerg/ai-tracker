@@ -1,0 +1,60 @@
+name: New model
+description: A model that isn't tracked yet — frontier or notable, with an authoritative source.
+title: "[new-model] <provider> · <model name>"
+labels: ["submission", "new-entity", "model"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this for a brand-new model entry. ai-tracker prefers depth over breadth — frontier models from
+        the 9 authoritative providers (Anthropic, Google, xAI, Mistral, OpenAI, DeepSeek, Meta, Alibaba,
+        Cohere) get auto-coverage via the nightly ingest. This template is for models the ingest missed,
+        models from other providers worth tracking, or models with non-standard metadata.
+  - type: input
+    id: provider
+    attributes:
+      label: Provider
+      placeholder: "anthropic"
+    validations:
+      required: true
+  - type: input
+    id: name
+    attributes:
+      label: Model name (display)
+      placeholder: "Claude Opus 4.7"
+    validations:
+      required: true
+  - type: input
+    id: api_id
+    attributes:
+      label: API id
+      placeholder: "claude-opus-4-7"
+    validations:
+      required: true
+  - type: input
+    id: released
+    attributes:
+      label: Release date (YYYY-MM-DD if known)
+      placeholder: "2026-04-15"
+  - type: textarea
+    id: pricing
+    attributes:
+      label: Pricing (USD per million tokens, if published)
+      placeholder: "input: 5, output: 25, cache_read: 0.5, cache_write: 6.25"
+  - type: input
+    id: context_window
+    attributes:
+      label: Context window (tokens)
+      placeholder: "200000"
+  - type: input
+    id: source
+    attributes:
+      label: Source URL (authoritative)
+      placeholder: "https://docs.anthropic.com/..."
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: Anything unusual the schema should capture
+      description: "Caveats, licensing wrinkles, regional availability, etc."

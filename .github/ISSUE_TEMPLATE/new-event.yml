@@ -1,0 +1,67 @@
+name: New event (release / price change / deprecation / etc.)
+description: An AI model, tool, or repo did something — flag it so the timeline catches up.
+title: "[event] <entity> · <type> · <date>"
+labels: ["submission", "event"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this for **changes to existing entities**: a model was released, a price dropped, a tool got a new capability, a repo was archived.
+        For a brand-new entity that isn't tracked yet, pick the "new model / tool / repo" template instead.
+
+        Source URL **must be authoritative** (provider docs, official blog/news, official API reference, official GitHub release).
+        Aggregators (OpenRouter, HuggingFace, etc.) are accepted but downweighted.
+  - type: input
+    id: entity
+    attributes:
+      label: Entity ID
+      description: "Format: `<provider>__<id>` for models/repos, `<slug>` for tools. Example: `anthropic__claude-opus-4-7`, `cursor`, `github__langchain-ai_langchain`."
+      placeholder: "anthropic__claude-opus-4-7"
+    validations:
+      required: true
+  - type: dropdown
+    id: type
+    attributes:
+      label: Event type
+      options:
+        - released
+        - price_change
+        - deprecated
+        - capability_added
+        - benchmark_update
+        - license_change
+        - model_swap
+        - shut_down
+        - rebrand
+        - acquired
+    validations:
+      required: true
+  - type: input
+    id: date
+    attributes:
+      label: Event date
+      description: "YYYY-MM-DD — the date the change actually happened, not today."
+      placeholder: "2026-05-11"
+    validations:
+      required: true
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: "≤ 280 characters. Lead with the fact, not the framing."
+      placeholder: "Input price dropped from $5/M to $3/M."
+    validations:
+      required: true
+  - type: input
+    id: source
+    attributes:
+      label: Source URL (authoritative)
+      placeholder: "https://www.anthropic.com/news/..."
+    validations:
+      required: true
+  - type: textarea
+    id: delta
+    attributes:
+      label: Delta (optional, recommended for price/license/capability)
+      description: 'Format: `{ "field": "pricing.input_per_mtok", "from": 5, "to": 3 }`'
+      render: json

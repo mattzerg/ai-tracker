@@ -1,0 +1,45 @@
+name: New repo
+description: A GitHub repo that should be tracked as first-class (agent framework, MCP server, RAG infra, etc.).
+title: "[new-repo] <owner>/<name>"
+labels: ["submission", "new-entity", "repo"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Repos are tracked when they're load-bearing infrastructure for someone building with AI —
+        not every project that uses an LLM. Categories: `agent-framework`, `mcp`, `rag`, `eval`,
+        `vector-db`, `coding-agent`, `browser-automation`, `workflow-automation`, `inference`,
+        `local-models`, `observability`, `data`, `ui`, `other`.
+
+        The nightly `github-repos` ingest auto-discovers candidates and parks them in
+        `data/repo-candidates/`. This template is for candidates worth promoting NOW, or repos
+        the discovery missed.
+  - type: input
+    id: full_name
+    attributes:
+      label: Repo full_name (owner/name)
+      placeholder: "langchain-ai/langchain"
+    validations:
+      required: true
+  - type: input
+    id: category
+    attributes:
+      label: Category
+      placeholder: "agent-framework"
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why this matters
+      description: "One sentence on what it does + why a builder would care. Lead with the fact."
+      placeholder: "Most-adopted Python framework for chaining LLM calls + retrieval — load-bearing for half the agent ecosystem."
+    validations:
+      required: true
+  - type: input
+    id: source
+    attributes:
+      label: Source URL (the repo itself)
+      placeholder: "https://github.com/langchain-ai/langchain"
+    validations:
+      required: true

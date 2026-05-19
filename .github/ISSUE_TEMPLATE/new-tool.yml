@@ -1,0 +1,78 @@
+name: New tool
+description: An AI tool (agent, IDE, framework, dev product) that isn't tracked yet.
+title: "[new-tool] <name>"
+labels: ["submission", "new-entity", "tool"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Tools are the layer above models: agents, IDE plugins, frameworks, dev products that use AI models.
+        Categories include `ide`, `agent`, `framework`, `cli`, `chat-product`, `vision`, `audio`, `voice`,
+        `research`, `coding-assistant`, `workflow-automation`. Pick the closest fit; new categories OK.
+  - type: input
+    id: name
+    attributes:
+      label: Tool name
+      placeholder: "Cursor"
+    validations:
+      required: true
+  - type: input
+    id: slug
+    attributes:
+      label: Slug (lowercase, hyphens — used in the URL)
+      placeholder: "cursor"
+    validations:
+      required: true
+  - type: input
+    id: vendor
+    attributes:
+      label: Vendor / maker
+      placeholder: "Anysphere"
+    validations:
+      required: true
+  - type: input
+    id: category
+    attributes:
+      label: Category
+      placeholder: "ide"
+    validations:
+      required: true
+  - type: input
+    id: released
+    attributes:
+      label: Release date (YYYY-MM-DD if known)
+      placeholder: "2023-03-15"
+  - type: input
+    id: homepage
+    attributes:
+      label: Homepage URL
+      placeholder: "https://cursor.sh"
+    validations:
+      required: true
+  - type: dropdown
+    id: oss
+    attributes:
+      label: Open-source?
+      options:
+        - "false"
+        - "true"
+  - type: dropdown
+    id: free_tier
+    attributes:
+      label: Free tier?
+      options:
+        - "false"
+        - "true"
+  - type: textarea
+    id: built_on_models
+    attributes:
+      label: Models this tool uses (entity ids, one per line, if known)
+      placeholder: |
+        anthropic__claude-opus-4-7
+        openai__gpt-5
+  - type: input
+    id: source
+    attributes:
+      label: Source URL (homepage / docs / pricing page)
+    validations:
+      required: true

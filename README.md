@@ -88,7 +88,7 @@ Full script reference in `package.json`.
 | `/repos/<id>.json`, `/repos/<id>.md` | Per-repo twins |
 | `/events/<slug>` | Per-event detail page (also linked from RSS) |
 | `/og/models/<id>.png`, `/og/tools/<id>.png` | 1200×630 share cards |
-| MCP server (`npm install -g ai-tracker-mcp`) | search_models, search_tools, get_entity, get_timeline, recent_events |
+| MCP server (`npm install -g ai-tracker-mcp`) | search_models, search_tools, search_repos, get_entity, get_timeline, recent_events |
 
 ## Submitting
 
