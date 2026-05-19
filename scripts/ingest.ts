@@ -1,21 +1,22 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
-import { loadEvents, loadModels, loadTools } from "../src/lib/data.ts";
-import { diffEvents, diffModels, diffTools } from "./ingest/diff.ts";
-import { mergeModel, mergeTool } from "./ingest/merge.ts";
-import { writeDiff } from "./ingest/writer.ts";
+import { loadEvents, loadModels, loadRepos, loadTools } from "../src/lib/data.ts";
+import { diffEvents, diffModels, diffRepos, diffTools } from "./ingest/diff.ts";
+import { mergeModel, mergeRepo, mergeTool } from "./ingest/merge.ts";
+import { writeDiff, writeRepoCandidateQueue } from "./ingest/writer.ts";
 import { alibabaQwenModels } from "./ingest/sources/alibaba-qwen-models.ts";
 import { anthropicChangelog } from "./ingest/sources/anthropic-changelog.ts";
 import { cohereModels } from "./ingest/sources/cohere-models.ts";
 import { deepseekModels } from "./ingest/sources/deepseek-models.ts";
 import { geminiChangelog } from "./ingest/sources/gemini-changelog.ts";
 import { githubTrending } from "./ingest/sources/github-trending.ts";
+import { githubRepos } from "./ingest/sources/github-repos.ts";
 import { metaLlamaModels } from "./ingest/sources/meta-llama-models.ts";
 import { mistralModels } from "./ingest/sources/mistral-models.ts";
 import { openaiModels } from "./ingest/sources/openai-models.ts";
 import { openrouter } from "./ingest/sources/openrouter.ts";
 import { xaiModels } from "./ingest/sources/xai-models.ts";
-import type { Event, Model, Tool } from "../schemas/index.ts";
+import type { Event, Model, Repo, Tool } from "../schemas/index.ts";
 import type { Source, SourceContext, SourceTrust } from "./ingest/types.ts";
 
 const ROOT = resolve(import.meta.dirname, "..");
@@ -34,6 +35,7 @@ const SOURCES: Source[] = [
   alibabaQwenModels,
   cohereModels,
   openrouter,
+  githubRepos,
   githubTrending,
 ];
 
@@ -43,36 +45,60 @@ function arg(name: string): boolean {
   return process.argv.includes(`--${name}`);
 }
 
+function argValue(name: string): string | undefined {
+  const prefix = `--${name}=`;
+  const inline = process.argv.find((a) => a.startsWith(prefix));
+  if (inline) return inline.slice(prefix.length);
+  const idx = process.argv.indexOf(`--${name}`);
+  return idx >= 0 ? process.argv[idx + 1] : undefined;
+}
+
 async function main() {
   const apply = arg("apply");
   const updatesOnly = arg("updates-only");
   const writeStaging = arg("write-staging") || (!apply && arg("dry-run"));
   const dryRun = !apply;
   const writeReport = true;
+  const onlySourceIds = (argValue("source") ?? process.env.INGEST_SOURCES ?? "")
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
+  const selectedSources = onlySourceIds.length
+    ? SOURCES.filter((s) => onlySourceIds.includes(s.id))
+    : SOURCES;
+  const missingSources = onlySourceIds.filter((id) => !SOURCES.some((s) => s.id === id));
+  if (missingSources.length) throw new Error(`unknown source(s): ${missingSources.join(", ")}`);
 
   const applyLabel = updatesOnly ? "APPLY (updates only — supplementary new entries skipped)" : "APPLY (writes data/)";
   const mode = apply ? applyLabel : writeStaging ? "staging (writes tmp/proposed/)" : "dry-run (report only)";
   const ctx: SourceContext = { now: new Date(), dryRun };
   console.log(`ai-tracker ingest — ${ctx.now.toISOString()} — ${mode}`);
-  console.log(`sources: ${SOURCES.map((s) => s.id).join(", ")}`);
+  console.log(`sources: ${selectedSources.map((s) => s.id).join(", ")}`);
   console.log(`cost cap: $${MAX_USD.toFixed(2)}\n`);
 
-  const proposed: { models: { entry: Model; trust: SourceTrust }[]; tools: { entry: Tool; trust: SourceTrust }[]; events: Event[] } = { models: [], tools: [], events: [] };
+  const proposed: {
+    models: { entry: Model; trust: SourceTrust }[];
+    tools: { entry: Tool; trust: SourceTrust }[];
+    repos: { entry: Repo; trust: SourceTrust }[];
+    events: Event[];
+  } = { models: [], tools: [], repos: [], events: [] };
   const allWarnings: { source: string; warning: string }[] = [];
   let totalCost = 0;
 
-  for (const src of SOURCES) {
+  for (const src of selectedSources) {
     const t0 = Date.now();
     const result = await src.run(ctx);
     const ms = Date.now() - t0;
     const m = result.models?.length ?? 0;
     const t = result.tools?.length ?? 0;
+    const r = result.repos?.length ?? 0;
     const e = result.events?.length ?? 0;
     const cost = result.estimatedCostUsd ?? 0;
     totalCost += cost;
-    console.log(`  ${src.id} [${src.trust}]: ${m} models, ${t} tools, ${e} events, $${cost.toFixed(4)} (${ms} ms)`);
+    console.log(`  ${src.id} [${src.trust}]: ${m} models, ${t} tools, ${r} repos, ${e} events, $${cost.toFixed(4)} (${ms} ms)`);
     if (result.models) for (const entry of result.models) proposed.models.push({ entry, trust: src.trust });
     if (result.tools) for (const entry of result.tools) proposed.tools.push({ entry, trust: src.trust });
+    if (result.repos) for (const entry of result.repos) proposed.repos.push({ entry, trust: src.trust });
     if (result.events) proposed.events.push(...result.events);
     if (result.warnings) for (const w of result.warnings) allWarnings.push({ source: src.id, warning: w });
     if (totalCost > MAX_USD) {
@@ -83,9 +109,11 @@ async function main() {
 
   const currentModels = loadModels();
   const currentTools = loadTools();
+  const currentRepos = loadRepos();
   const currentEvents = loadEvents();
   const currentModelById = new Map(currentModels.map((m) => [m.id, m]));
   const currentToolById = new Map(currentTools.map((t) => [t.id, t]));
+  const currentRepoById = new Map(currentRepos.map((r) => [r.id, r]));
 
   // Merge each proposed entry against existing (so phantom diffs from supplementary sources collapse).
   const mergedModels: Model[] = [];
@@ -104,9 +132,18 @@ async function main() {
     const existing = currentToolById.get(entry.id);
     mergedTools.push(existing ? mergeTool(existing, entry, { trust }) : entry);
   }
+  const mergedRepos: Repo[] = [];
+  const seenRepoIds = new Set<string>();
+  for (const { entry, trust } of proposed.repos) {
+    if (seenRepoIds.has(entry.id)) continue;
+    seenRepoIds.add(entry.id);
+    const existing = currentRepoById.get(entry.id);
+    mergedRepos.push(existing ? mergeRepo(existing, entry, { trust }) : entry);
+  }
 
   const modelDiff = diffModels(currentModels, mergedModels);
   const toolDiff = diffTools(currentTools, mergedTools);
+  const repoDiff = diffRepos(currentRepos, mergedRepos);
 
   // Synthesize price_change events from any updated model whose pricing
   // shifted by a non-noise amount. Filter mirrors generate-pricing-events.ts.
@@ -155,6 +192,7 @@ async function main() {
   console.log("\n--- diff summary ---");
   console.log(`Models   : +${modelDiff.added.length} new, ~${modelDiff.updated.length} updated, ${modelDiff.unchanged} unchanged`);
   console.log(`Tools    : +${toolDiff.added.length} new, ~${toolDiff.updated.length} updated, ${toolDiff.unchanged} unchanged`);
+  console.log(`Repos    : +${repoDiff.added.length} new, ~${repoDiff.updated.length} updated, ${repoDiff.unchanged} unchanged`);
   console.log(`Events   : +${eventDiff.added.length} new`);
   console.log(`Warnings : ${allWarnings.length}`);
   console.log(`Cost     : $${totalCost.toFixed(4)} of $${MAX_USD.toFixed(2)} cap`);
@@ -167,14 +205,16 @@ async function main() {
       JSON.stringify(
         {
           generated_at: ctx.now.toISOString(),
-          sources_run: SOURCES.map((s) => s.id),
+          sources_run: selectedSources.map((s) => s.id),
           totals: {
             models: { added: modelDiff.added.length, updated: modelDiff.updated.length, unchanged: modelDiff.unchanged },
             tools: { added: toolDiff.added.length, updated: toolDiff.updated.length, unchanged: toolDiff.unchanged },
+            repos: { added: repoDiff.added.length, updated: repoDiff.updated.length, unchanged: repoDiff.unchanged },
             events: { added: eventDiff.added.length },
           },
           model_diff: modelDiff,
           tool_diff: toolDiff,
+          repo_diff: repoDiff,
           event_diff: eventDiff,
           warnings: allWarnings,
           estimated_cost_usd: totalCost,
@@ -190,13 +230,17 @@ async function main() {
     const target = apply
       ? { dataRoot: join(ROOT, "data"), updatesOnly }
       : { dataRoot: join(TMP, "proposed"), fresh: true };
-    const result = writeDiff(modelDiff, toolDiff, eventDiff, mergedModels, mergedTools, target);
+    const result = writeDiff(modelDiff, toolDiff, repoDiff, eventDiff, mergedModels, mergedTools, mergedRepos, target);
     const skipped = apply && updatesOnly
-      ? ` (skipped ${modelDiff.added.length} new models, ${toolDiff.added.length} new tools — review-required)`
+      ? ` (skipped ${modelDiff.added.length} new models, ${toolDiff.added.length} new tools, ${repoDiff.added.length} new repos — review-required)`
       : "";
     console.log(
-      `\nwrote ${result.paths.length} files to ${target.dataRoot}: +${result.modelsAdded}/${result.toolsAdded}/${result.eventsAdded} new, ~${result.modelsUpdated}/${result.toolsUpdated} updated${skipped}`,
+      `\nwrote ${result.paths.length} files to ${target.dataRoot}: +${result.modelsAdded}/${result.toolsAdded}/${result.reposAdded}/${result.eventsAdded} new, ~${result.modelsUpdated}/${result.toolsUpdated}/${result.reposUpdated} updated${skipped}`,
     );
+    if (apply && updatesOnly && selectedSources.some((s) => s.id === "github-repos")) {
+      const path = writeRepoCandidateQueue(join(ROOT, "data"), "github-repos", ctx.now.toISOString(), repoDiff.added);
+      console.log(`repo candidate queue: ${path} (${repoDiff.added.length} candidates)`);
+    }
   }
 }
 

@@ -1,10 +1,10 @@
-import { mkdirSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import type { Event, Model, Tool } from "../../schemas/index.ts";
-import type { EventDiff, ModelDiff, ToolDiff } from "./diff.ts";
+import { repoCandidateQueueSchema, type Event, type Model, type Repo, type Tool } from "../../schemas/index.ts";
+import type { EventDiff, ModelDiff, RepoDiff, ToolDiff } from "./diff.ts";
 
 export interface WriteTarget {
-  /** Absolute path to the data root (with subdirs models/, tools/, events/). */
+  /** Absolute path to the data root (with subdirs models/, tools/, repos/, events/). */
   dataRoot: string;
   /** True = clear & rewrite; false = additive (added writes only, updated entries get overwritten in place). */
   fresh?: boolean;
@@ -18,6 +18,8 @@ export interface WriteResult {
   modelsUpdated: number;
   toolsAdded: number;
   toolsUpdated: number;
+  reposAdded: number;
+  reposUpdated: number;
   eventsAdded: number;
   paths: string[];
 }
@@ -34,9 +36,11 @@ function writeJson(path: string, body: unknown): void {
 export function writeDiff(
   modelDiff: ModelDiff,
   toolDiff: ToolDiff,
+  repoDiff: RepoDiff,
   eventDiff: EventDiff,
   mergedModels: Model[],
   mergedTools: Tool[],
+  mergedRepos: Repo[],
   target: WriteTarget,
 ): WriteResult {
   const root = target.dataRoot;
@@ -45,6 +49,7 @@ export function writeDiff(
   }
   mkdirSync(join(root, "models"), { recursive: true });
   mkdirSync(join(root, "tools"), { recursive: true });
+  mkdirSync(join(root, "repos"), { recursive: true });
   mkdirSync(join(root, "events"), { recursive: true });
 
   const paths: string[] = [];
@@ -81,6 +86,22 @@ export function writeDiff(
     paths.push(path);
   }
 
+  const mergedRepoById = new Map(mergedRepos.map((r) => [r.id, r]));
+  if (!target.updatesOnly) {
+    for (const r of repoDiff.added) {
+      const path = join(root, "repos", `${r.id}.json`);
+      writeJson(path, r);
+      paths.push(path);
+    }
+  }
+  for (const u of repoDiff.updated) {
+    const merged = mergedRepoById.get(u.id);
+    if (!merged) continue;
+    const path = join(root, "repos", `${u.id}.json`);
+    writeJson(path, merged);
+    paths.push(path);
+  }
+
   for (const e of eventDiff.added) {
     const path = join(root, "events", eventSlug(e));
     writeJson(path, e);
@@ -92,7 +113,30 @@ export function writeDiff(
     modelsUpdated: modelDiff.updated.length,
     toolsAdded: target.updatesOnly ? 0 : toolDiff.added.length,
     toolsUpdated: toolDiff.updated.length,
+    reposAdded: target.updatesOnly ? 0 : repoDiff.added.length,
+    reposUpdated: repoDiff.updated.length,
     eventsAdded: eventDiff.added.length,
     paths,
   };
+}
+
+export function writeRepoCandidateQueue(dataRoot: string, source: string, generatedAt: string, candidates: Repo[]): string {
+  const dir = join(dataRoot, "repo-candidates");
+  mkdirSync(dir, { recursive: true });
+  const path = join(dir, `${source}.json`);
+  const existing = existsSync(path)
+    ? repoCandidateQueueSchema.parse(JSON.parse(readFileSync(path, "utf8")) as unknown).candidates
+    : [];
+  const mergedCandidates = new Map(existing.map((candidate) => [candidate.id, candidate]));
+  for (const candidate of candidates) {
+    mergedCandidates.set(candidate.id, candidate);
+  }
+  const queue = repoCandidateQueueSchema.parse({
+    kind: "repo-candidate-queue",
+    source,
+    generated_at: generatedAt,
+    candidates: Array.from(mergedCandidates.values()).sort((a, b) => (b.stars ?? -1) - (a.stars ?? -1) || a.full_name.localeCompare(b.full_name)),
+  });
+  writeJson(path, queue);
+  return path;
 }

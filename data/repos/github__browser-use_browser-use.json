@@ -1,0 +1,47 @@
+{
+  "kind": "repo",
+  "id": "github__browser-use_browser-use",
+  "owner": "browser-use",
+  "name": "browser-use",
+  "full_name": "browser-use/browser-use",
+  "description": "Browser automation primitives for AI agents.",
+  "category": "browser-automation",
+  "language": "Python",
+  "license": "MIT License",
+  "stars": 93664,
+  "forks": 10600,
+  "topics": [
+    "browser-automation",
+    "agents",
+    "llm",
+    "ai-agents",
+    "ai-tools",
+    "browser-use",
+    "playwright",
+    "python"
+  ],
+  "homepage": "https://browser-use.com/",
+  "repo_url": "https://github.com/browser-use/browser-use",
+  "package_urls": [
+    "https://pypi.org/project/browser-use/"
+  ],
+  "created_at": "2024-10-31",
+  "pushed_at": "2026-05-11",
+  "archived": false,
+  "tags": [
+    "browser",
+    "automation",
+    "agents",
+    "browser-automation",
+    "python",
+    "ai-agents",
+    "ai-tools",
+    "browser-use",
+    "llm",
+    "playwright"
+  ],
+  "sources": [
+    "https://github.com/browser-use/browser-use"
+  ],
+  "open_issues": 229
+}

@@ -19,7 +19,7 @@ function loadJson(dir: string) {
 }
 
 const urls = new Map<string, string[]>();
-for (const dir of ["models", "tools", "events"]) {
+for (const dir of ["models", "tools", "repos", "events"]) {
   for (const { file, data } of loadJson(D(dir))) {
     for (const u of extractUrls(data)) {
       if (!urls.has(u)) urls.set(u, []);

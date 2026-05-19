@@ -1,4 +1,4 @@
-import type { Model, Tool } from "../../schemas/index.ts";
+import type { Model, Repo, Tool } from "../../schemas/index.ts";
 
 export type SourceTrust = "authoritative" | "supplementary";
 
@@ -72,5 +72,32 @@ export function mergeTool(existing: Tool, proposed: Tool, opts: MergeOpts): Tool
     sources: unionStrings(existing.sources, proposed.sources),
     status: auth ? proposed.status : existing.status,
     links: { ...proposed.links, ...existing.links },
+  };
+}
+
+export function mergeRepo(existing: Repo, proposed: Repo, opts: MergeOpts): Repo {
+  const auth = opts.trust === "authoritative";
+  return {
+    ...existing,
+    owner: existing.owner,
+    name: existing.name,
+    full_name: existing.full_name,
+    description: auth ? proposed.description ?? existing.description : existing.description ?? proposed.description,
+    category: auth ? proposed.category : existing.category,
+    language: proposed.language ?? existing.language,
+    license: proposed.license ?? existing.license,
+    // GitHub is the source of truth for live repo counters even when the reader is supplementary.
+    stars: proposed.stars ?? existing.stars,
+    forks: proposed.forks ?? existing.forks,
+    open_issues: proposed.open_issues ?? existing.open_issues,
+    topics: unionStrings(existing.topics, proposed.topics),
+    homepage: existing.homepage ?? proposed.homepage,
+    repo_url: existing.repo_url,
+    package_urls: unionStrings(existing.package_urls, proposed.package_urls),
+    created_at: existing.created_at ?? proposed.created_at,
+    pushed_at: proposed.pushed_at ?? existing.pushed_at,
+    archived: proposed.archived ?? existing.archived,
+    tags: unionStrings(existing.tags, proposed.tags),
+    sources: unionStrings(existing.sources, proposed.sources),
   };
 }

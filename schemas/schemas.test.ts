@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { eventSchema, modelSchema, toolSchema } from "./index.ts";
+import { eventSchema, modelSchema, repoCandidateQueueSchema, repoSchema, toolSchema } from "./index.ts";
 
 describe("modelSchema", () => {
   it("accepts a minimal valid model", () => {
@@ -80,11 +80,58 @@ describe("toolSchema", () => {
       vendor: "Anysphere",
       category: "ide",
       released: "2023-03-15",
-      homepage: "https://cursor.sh",
       oss: false,
       free_tier: true,
-      links: {},
+      links: { homepage: "https://cursor.sh" },
       sources: ["https://cursor.sh"],
+    });
+    expect(r.success).toBe(true);
+  });
+});
+
+describe("repoSchema", () => {
+  it("accepts a minimal valid repo", () => {
+    const r = repoSchema.safeParse({
+      kind: "repo",
+      id: "github__langchain-ai_langchain",
+      owner: "langchain-ai",
+      name: "langchain",
+      full_name: "langchain-ai/langchain",
+      description: "Build context-aware reasoning applications.",
+      category: "agent-framework",
+      language: "Python",
+      license: "MIT",
+      repo_url: "https://github.com/langchain-ai/langchain",
+      created_at: null,
+      pushed_at: null,
+      sources: ["https://github.com/langchain-ai/langchain"],
+    });
+    expect(r.success).toBe(true);
+  });
+});
+
+describe("repoCandidateQueueSchema", () => {
+  it("accepts a repo candidate queue", () => {
+    const candidate = {
+      kind: "repo",
+      id: "github__langchain-ai_langchain",
+      owner: "langchain-ai",
+      name: "langchain",
+      full_name: "langchain-ai/langchain",
+      description: "Build context-aware reasoning applications.",
+      category: "agent-framework",
+      language: "Python",
+      license: "MIT",
+      repo_url: "https://github.com/langchain-ai/langchain",
+      created_at: null,
+      pushed_at: null,
+      sources: ["https://github.com/langchain-ai/langchain"],
+    };
+    const r = repoCandidateQueueSchema.safeParse({
+      kind: "repo-candidate-queue",
+      source: "github-repos",
+      generated_at: "2026-05-13T00:00:00.000Z",
+      candidates: [candidate],
     });
     expect(r.success).toBe(true);
   });

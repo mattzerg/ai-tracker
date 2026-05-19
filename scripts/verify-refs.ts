@@ -1,6 +1,6 @@
 import { readdirSync, readFileSync } from "node:fs";
 import { join, resolve } from "node:path";
-import { eventSchema, modelSchema, toolSchema } from "../schemas/index.ts";
+import { eventSchema, modelSchema, repoCandidateQueueSchema, repoSchema, toolSchema } from "../schemas/index.ts";
 
 const ROOT = resolve(import.meta.dirname, "..");
 const D = (sub: string) => join(ROOT, "data", sub);
@@ -27,13 +27,25 @@ const tools = loadJson(D("tools")).map(({ file, data }) => {
   return { file, ...r.data };
 }).filter((x): x is NonNullable<typeof x> => x != null);
 
+const repos = loadJson(D("repos")).map(({ file, data }) => {
+  const r = repoSchema.safeParse(data);
+  if (!r.success) { fail(`repos/${file}: ${r.error.message}`); return null; }
+  return { file, ...r.data };
+}).filter((x): x is NonNullable<typeof x> => x != null);
+
+const repoCandidateQueues = loadJson(D("repo-candidates")).map(({ file, data }) => {
+  const r = repoCandidateQueueSchema.safeParse(data);
+  if (!r.success) { fail(`repo-candidates/${file}: ${r.error.message}`); return null; }
+  return { file, ...r.data };
+}).filter((x): x is NonNullable<typeof x> => x != null);
+
 const events = loadJson(D("events")).map(({ file, data }) => {
   const r = eventSchema.safeParse(data);
   if (!r.success) { fail(`events/${file}: ${r.error.message}`); return null; }
   return { file, ...r.data };
 }).filter((x): x is NonNullable<typeof x> => x != null);
 
-const ids = new Set<string>([...models.map((m) => m.id), ...tools.map((t) => t.id)]);
+const ids = new Set<string>([...models.map((m) => m.id), ...tools.map((t) => t.id), ...repos.map((r) => r.id)]);
 
 for (const e of events) {
   if (!ids.has(e.entity)) fail(`events/${e.file}: entity ${e.entity} not found`);
@@ -47,6 +59,23 @@ for (const m of models) {
 for (const t of tools) {
   if (seen.has(t.id)) fail(`tools/${t.file}: duplicate id ${t.id} (also in ${seen.get(t.id)})`);
   seen.set(t.id, t.file);
+}
+for (const r of repos) {
+  if (seen.has(r.id)) fail(`repos/${r.file}: duplicate id ${r.id} (also in ${seen.get(r.id)})`);
+  seen.set(r.id, r.file);
+}
+
+const seenCandidates = new Map<string, string>();
+for (const q of repoCandidateQueues) {
+  for (const candidate of q.candidates) {
+    if (seen.has(candidate.id)) {
+      fail(`repo-candidates/${q.file}: candidate ${candidate.id} is already tracked in ${seen.get(candidate.id)}; remove it from data/repo-candidates/${q.file}`);
+    }
+    if (seenCandidates.has(candidate.id)) {
+      fail(`repo-candidates/${q.file}: duplicate candidate id ${candidate.id} (also in ${seenCandidates.get(candidate.id)})`);
+    }
+    seenCandidates.set(candidate.id, q.file);
+  }
 }
 
 // Every entity with a release date must have a `released` event matching that
@@ -72,4 +101,5 @@ if (errors > 0) {
   console.error(`\n${errors} reference error(s).`);
   process.exit(1);
 }
-console.log(`✓ verify-refs: ${models.length} models, ${tools.length} tools, ${events.length} events, all references resolve.`);
+const repoCandidateCount = repoCandidateQueues.reduce((sum, q) => sum + q.candidates.length, 0);
+console.log(`✓ verify-refs: ${models.length} models, ${tools.length} tools, ${repos.length} repos, ${repoCandidateCount} repo candidates, ${events.length} events, all references resolve.`);

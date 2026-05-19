@@ -1,0 +1,44 @@
+{
+  "kind": "repo",
+  "id": "github__crewaiinc_crewai",
+  "owner": "crewAIInc",
+  "name": "crewAI",
+  "full_name": "crewAIInc/crewAI",
+  "description": "Framework for orchestrating role-based AI agents and workflows.",
+  "category": "agent-framework",
+  "language": "Python",
+  "license": "MIT License",
+  "stars": 51299,
+  "forks": 7097,
+  "topics": [
+    "agents",
+    "multi-agent",
+    "workflow",
+    "ai",
+    "ai-agents",
+    "aiagentframework",
+    "llms"
+  ],
+  "homepage": "https://www.crewai.com/",
+  "repo_url": "https://github.com/crewAIInc/crewAI",
+  "package_urls": [
+    "https://pypi.org/project/crewai/"
+  ],
+  "created_at": "2023-10-27",
+  "pushed_at": "2026-05-13",
+  "archived": false,
+  "tags": [
+    "agents",
+    "multi-agent",
+    "orchestration",
+    "ai",
+    "ai-agents",
+    "aiagentframework",
+    "llms",
+    "python"
+  ],
+  "sources": [
+    "https://github.com/crewAIInc/crewAI"
+  ],
+  "open_issues": 290
+}

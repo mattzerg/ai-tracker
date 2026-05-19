@@ -1,4 +1,4 @@
-import type { Event, Model, Tool } from "../../schemas/index.ts";
+import type { Event, Model, Repo, Tool } from "../../schemas/index.ts";
 
 export type SourceTrust = "authoritative" | "supplementary";
 
@@ -15,6 +15,8 @@ export interface SourceResult {
   models?: Model[];
   /** Discovered tool entries. */
   tools?: Tool[];
+  /** Discovered GitHub repo entries. */
+  repos?: Repo[];
   /** Discovered events (release / price-change / etc). */
   events?: Event[];
   /** Source-side warnings: rate-limited, partial data, parse anomalies. Surfaced in PR body, never fail the run. */

@@ -1,4 +1,4 @@
-import type { Event, Model, Tool } from "../../schemas/index.ts";
+import type { Event, Model, Repo, Tool } from "../../schemas/index.ts";
 
 export interface ModelDiff {
   added: Model[];
@@ -9,6 +9,12 @@ export interface ModelDiff {
 export interface ToolDiff {
   added: Tool[];
   updated: { id: string; from: Partial<Tool>; to: Partial<Tool>; fields: string[] }[];
+  unchanged: number;
+}
+
+export interface RepoDiff {
+  added: Repo[];
+  updated: { id: string; from: Partial<Repo>; to: Partial<Repo>; fields: string[] }[];
   unchanged: number;
 }
 
@@ -43,6 +49,28 @@ const TOOL_TRACKED_FIELDS = [
   "modalities",
   "status",
   "links",
+  "tags",
+  "sources",
+] as const;
+
+const REPO_TRACKED_FIELDS = [
+  "owner",
+  "name",
+  "full_name",
+  "description",
+  "category",
+  "language",
+  "license",
+  "stars",
+  "forks",
+  "open_issues",
+  "topics",
+  "homepage",
+  "repo_url",
+  "package_urls",
+  "created_at",
+  "pushed_at",
+  "archived",
   "tags",
   "sources",
 ] as const;
@@ -93,6 +121,33 @@ export function diffTools(current: Tool[], proposed: Tool[]): ToolDiff {
     const from: Partial<Tool> = {};
     const to: Partial<Tool> = {};
     for (const f of TOOL_TRACKED_FIELDS) {
+      if (!eq(cur[f], p[f])) {
+        fields.push(f);
+        (from as Record<string, unknown>)[f] = cur[f];
+        (to as Record<string, unknown>)[f] = p[f];
+      }
+    }
+    if (fields.length > 0) updated.push({ id: p.id, from, to, fields });
+    else unchanged++;
+  }
+  return { added, updated, unchanged };
+}
+
+export function diffRepos(current: Repo[], proposed: Repo[]): RepoDiff {
+  const byId = new Map(current.map((r) => [r.id, r]));
+  const added: Repo[] = [];
+  const updated: RepoDiff["updated"] = [];
+  let unchanged = 0;
+  for (const p of proposed) {
+    const cur = byId.get(p.id);
+    if (!cur) {
+      added.push(p);
+      continue;
+    }
+    const fields: string[] = [];
+    const from: Partial<Repo> = {};
+    const to: Partial<Repo> = {};
+    for (const f of REPO_TRACKED_FIELDS) {
       if (!eq(cur[f], p[f])) {
         fields.push(f);
         (from as Record<string, unknown>)[f] = cur[f];

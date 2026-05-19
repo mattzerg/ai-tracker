@@ -1,0 +1,5652 @@
+{
+  "kind": "repo-candidate-queue",
+  "source": "github-repos",
+  "generated_at": "2026-05-13T07:16:14.388Z",
+  "candidates": [
+    {
+      "kind": "repo",
+      "id": "github__n8n-io_n8n",
+      "owner": "n8n-io",
+      "name": "n8n",
+      "full_name": "n8n-io/n8n",
+      "description": "Fair-code workflow automation platform with native AI capabilities. Combine visual building with custom code, self-host or cloud, 400+ integrations.",
+      "category": "mcp",
+      "language": "TypeScript",
+      "license": "Other",
+      "stars": 187653,
+      "forks": null,
+      "topics": [
+        "mcp-server"
+      ],
+      "homepage": "https://n8n.io",
+      "repo_url": "https://github.com/n8n-io/n8n",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "mcp-server",
+        "typescript"
+      ],
+      "sources": [
+        "https://github.com/n8n-io/n8n"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__significant-gravitas_autogpt",
+      "owner": "Significant-Gravitas",
+      "name": "AutoGPT",
+      "full_name": "Significant-Gravitas/AutoGPT",
+      "description": "AutoGPT is the vision of accessible AI for everyone, to use and to build on. Our mission is to provide the tools, so that you can focus on what matters.",
+      "category": "agent-framework",
+      "language": "Python",
+      "license": "Other",
+      "stars": 184268,
+      "forks": null,
+      "topics": [
+        "agentic-ai"
+      ],
+      "homepage": "https://agpt.co",
+      "repo_url": "https://github.com/Significant-Gravitas/AutoGPT",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "agentic-ai",
+        "python"
+      ],
+      "sources": [
+        "https://github.com/Significant-Gravitas/AutoGPT"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__nousresearch_hermes-agent",
+      "owner": "NousResearch",
+      "name": "hermes-agent",
+      "full_name": "NousResearch/hermes-agent",
+      "description": "The agent that grows with you",
+      "category": "agent-framework",
+      "language": "Python",
+      "license": "MIT License",
+      "stars": 147486,
+      "forks": null,
+      "topics": [
+        "ai-agent"
+      ],
+      "homepage": "https://hermes-agent.nousresearch.com",
+      "repo_url": "https://github.com/NousResearch/hermes-agent",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "ai-agent",
+        "python"
+      ],
+      "sources": [
+        "https://github.com/NousResearch/hermes-agent"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__langgenius_dify",
+      "owner": "langgenius",
+      "name": "dify",
+      "full_name": "langgenius/dify",
+      "description": "Production-ready platform for agentic workflow development.",
+      "category": "agent-framework",
+      "language": "TypeScript",
+      "license": "Other",
+      "stars": 141184,
+      "forks": null,
+      "topics": [
+        "agentic-ai"
+      ],
+      "homepage": "https://dify.ai",
+      "repo_url": "https://github.com/langgenius/dify",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "agentic-ai",
+        "typescript"
+      ],
+      "sources": [
+        "https://github.com/langgenius/dify"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__open-webui_open-webui",
+      "owner": "open-webui",
+      "name": "open-webui",
+      "full_name": "open-webui/open-webui",
+      "description": "User-friendly AI Interface (Supports Ollama, OpenAI API, ...)",
+      "category": "rag",
+      "language": "Python",
+      "license": "Other",
+      "stars": 136846,
+      "forks": null,
+      "topics": [
+        "rag"
+      ],
+      "homepage": "https://openwebui.com",
+      "repo_url": "https://github.com/open-webui/open-webui",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "rag",
+        "python"
+      ],
+      "sources": [
+        "https://github.com/open-webui/open-webui"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__shubhamsaboo_awesome-llm-apps",
+      "owner": "Shubhamsaboo",
+      "name": "awesome-llm-apps",
+      "full_name": "Shubhamsaboo/awesome-llm-apps",
+      "description": "100+ AI Agent & RAG apps you can actually run — clone, customize, ship.",
+      "category": "rag",
+      "language": "Python",
+      "license": "Apache License 2.0",
+      "stars": 110026,
+      "forks": null,
+      "topics": [
+        "rag"
+      ],
+      "homepage": "https://www.theunwindai.com",
+      "repo_url": "https://github.com/Shubhamsaboo/awesome-llm-apps",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "rag",
+        "python"
+      ],
+      "sources": [
+        "https://github.com/Shubhamsaboo/awesome-llm-apps"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__google-gemini_gemini-cli",
+      "owner": "google-gemini",
+      "name": "gemini-cli",
+      "full_name": "google-gemini/gemini-cli",
+      "description": "An open-source AI agent that brings the power of Gemini directly into your terminal.",
+      "category": "mcp",
+      "language": "TypeScript",
+      "license": "Apache License 2.0",
+      "stars": 103830,
+      "forks": null,
+      "topics": [
+        "mcp-server"
+      ],
+      "homepage": "https://geminicli.com",
+      "repo_url": "https://github.com/google-gemini/gemini-cli",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "mcp-server",
+        "typescript"
+      ],
+      "sources": [
+        "https://github.com/google-gemini/gemini-cli"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__infiniflow_ragflow",
+      "owner": "infiniflow",
+      "name": "ragflow",
+      "full_name": "infiniflow/ragflow",
+      "description": "RAGFlow is a leading open-source Retrieval-Augmented Generation (RAG) engine that fuses cutting-edge RAG with Agent capabilities to create a superior context layer for LLMs",
+      "category": "agent-framework",
+      "language": "Python",
+      "license": "Apache License 2.0",
+      "stars": 80394,
+      "forks": null,
+      "topics": [
+        "agentic-ai"
+      ],
+      "homepage": "https://ragflow.io",
+      "repo_url": "https://github.com/infiniflow/ragflow",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "agentic-ai",
+        "python"
+      ],
+      "sources": [
+        "https://github.com/infiniflow/ragflow"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__paddlepaddle_paddleocr",
+      "owner": "PaddlePaddle",
+      "name": "PaddleOCR",
+      "full_name": "PaddlePaddle/PaddleOCR",
+      "description": "Turn any PDF or image document into structured data for your AI. A powerful, lightweight OCR toolkit that bridges the gap between images/PDFs and LLMs. Supports 100+ languages.",
+      "category": "rag",
+      "language": "Python",
+      "license": "Apache License 2.0",
+      "stars": 77737,
+      "forks": null,
+      "topics": [
+        "rag"
+      ],
+      "homepage": "https://www.paddleocr.com",
+      "repo_url": "https://github.com/PaddlePaddle/PaddleOCR",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "rag",
+        "python"
+      ],
+      "sources": [
+        "https://github.com/PaddlePaddle/PaddleOCR"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__thedotmack_claude-mem",
+      "owner": "thedotmack",
+      "name": "claude-mem",
+      "full_name": "thedotmack/claude-mem",
+      "description": "Persistent Context Across Sessions for Every Agent –  Captures everything your agent does during sessions, compresses it with AI, and injects relevant context back into future sessions. Works with Claude Code, OpenClaw, Codex, Gemini, Hermes, Copilot, OpenCode + More",
+      "category": "rag",
+      "language": "TypeScript",
+      "license": "Apache License 2.0",
+      "stars": 75315,
+      "forks": null,
+      "topics": [
+        "rag"
+      ],
+      "homepage": "https://claude-mem.ai",
+      "repo_url": "https://github.com/thedotmack/claude-mem",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "rag",
+        "typescript"
+      ],
+      "sources": [
+        "https://github.com/thedotmack/claude-mem"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__dair-ai_prompt-engineering-guide",
+      "owner": "dair-ai",
+      "name": "Prompt-Engineering-Guide",
+      "full_name": "dair-ai/Prompt-Engineering-Guide",
+      "description": "🐙 Guides, papers, lessons, notebooks and resources for prompt engineering, context engineering, RAG, and AI Agents.",
+      "category": "rag",
+      "language": "MDX",
+      "license": "MIT License",
+      "stars": 74511,
+      "forks": null,
+      "topics": [
+        "rag"
+      ],
+      "homepage": "https://www.promptingguide.ai/",
+      "repo_url": "https://github.com/dair-ai/Prompt-Engineering-Guide",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "rag",
+        "mdx"
+      ],
+      "sources": [
+        "https://github.com/dair-ai/Prompt-Engineering-Guide"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__daytonaio_daytona",
+      "owner": "daytonaio",
+      "name": "daytona",
+      "full_name": "daytonaio/daytona",
+      "description": "Daytona is a Secure and Elastic Infrastructure for Running AI-Generated Code",
+      "category": "coding-agent",
+      "language": "TypeScript",
+      "license": "GNU Affero General Public License v3.0",
+      "stars": 72414,
+      "forks": null,
+      "topics": [
+        "code-interpreter"
+      ],
+      "homepage": "https://daytona.io",
+      "repo_url": "https://github.com/daytonaio/daytona",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "code-interpreter",
+        "typescript"
+      ],
+      "sources": [
+        "https://github.com/daytonaio/daytona"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__microsoft_ai-agents-for-beginners",
+      "owner": "microsoft",
+      "name": "ai-agents-for-beginners",
+      "full_name": "microsoft/ai-agents-for-beginners",
+      "description": "12 Lessons to Get Started Building AI Agents",
+      "category": "agent-framework",
+      "language": "Jupyter Notebook",
+      "license": "MIT License",
+      "stars": 61314,
+      "forks": null,
+      "topics": [
+        "agentic-ai"
+      ],
+      "homepage": "https://aka.ms/ai-agents-beginners",
+      "repo_url": "https://github.com/microsoft/ai-agents-for-beginners",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "agentic-ai",
+        "jupyter notebook"
+      ],
+      "sources": [
+        "https://github.com/microsoft/ai-agents-for-beginners"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__shareai-lab_learn-claude-code",
+      "owner": "shareAI-lab",
+      "name": "learn-claude-code",
+      "full_name": "shareAI-lab/learn-claude-code",
+      "description": "Bash is all you need -  A nano claude code–like 「agent harness」, built from 0 to 1",
+      "category": "agent-framework",
+      "language": "TypeScript",
+      "license": "MIT License",
+      "stars": 60145,
+      "forks": null,
+      "topics": [
+        "ai-agent"
+      ],
+      "homepage": "https://learn.shareai.run",
+      "repo_url": "https://github.com/shareAI-lab/learn-claude-code",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "ai-agent",
+        "typescript"
+      ],
+      "sources": [
+        "https://github.com/shareAI-lab/learn-claude-code"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__mintplex-labs_anything-llm",
+      "owner": "Mintplex-Labs",
+      "name": "anything-llm",
+      "full_name": "Mintplex-Labs/anything-llm",
+      "description": "The all-in-one AI productivity accelerator. On device and privacy first with no annoying setup or configuration.",
+      "category": "rag",
+      "language": "JavaScript",
+      "license": "MIT License",
+      "stars": 59961,
+      "forks": null,
+      "topics": [
+        "rag"
+      ],
+      "homepage": "https://anythingllm.com",
+      "repo_url": "https://github.com/Mintplex-Labs/anything-llm",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "rag",
+        "javascript"
+      ],
+      "sources": [
+        "https://github.com/Mintplex-Labs/anything-llm"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__pathwaycom_llm-app",
+      "owner": "pathwaycom",
+      "name": "llm-app",
+      "full_name": "pathwaycom/llm-app",
+      "description": "Ready-to-run cloud templates for RAG, AI pipelines, and enterprise search with live data. 🐳Docker-friendly.⚡Always in sync with Sharepoint, Google Drive, S3, Kafka, PostgreSQL, real-time data APIs, and more.",
+      "category": "rag",
+      "language": "Jupyter Notebook",
+      "license": "MIT License",
+      "stars": 59748,
+      "forks": null,
+      "topics": [
+        "rag"
+      ],
+      "homepage": "https://pathway.com/developers/templates/",
+      "repo_url": "https://github.com/pathwaycom/llm-app",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "rag",
+        "jupyter notebook"
+      ],
+      "sources": [
+        "https://github.com/pathwaycom/llm-app"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__sansan0_trendradar",
+      "owner": "sansan0",
+      "name": "TrendRadar",
+      "full_name": "sansan0/TrendRadar",
+      "description": "⭐AI-driven public opinion & trend monitor with multi-platform aggregation, RSS, and smart alerts.🎯 告别信息过载，你的 AI 舆情监控助手与热点筛选工具！聚合多平台热点 +  RSS 订阅，支持关键词精准筛选。AI 智能筛选新闻 + AI 翻译 +  AI 分析简报直推手机，也支持接入 MCP 架构，赋能 AI 自然语言对话分析、情感洞察与趋势预测等。支持 Docker ，数据本地/云端自持。集成微信/飞书/钉钉/Telegram/邮件/ntfy/bark/slack 等渠道智能推送。",
+      "category": "mcp",
+      "language": "Python",
+      "license": "GNU General Public License v3.0",
+      "stars": 57442,
+      "forks": null,
+      "topics": [
+        "mcp-server"
+      ],
+      "homepage": "https://sansan0.github.io/TrendRadar/",
+      "repo_url": "https://github.com/sansan0/TrendRadar",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "mcp-server",
+        "python"
+      ],
+      "sources": [
+        "https://github.com/sansan0/TrendRadar"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__mem0ai_mem0",
+      "owner": "mem0ai",
+      "name": "mem0",
+      "full_name": "mem0ai/mem0",
+      "description": "Universal memory layer for AI Agents",
+      "category": "rag",
+      "language": "Python",
+      "license": "Apache License 2.0",
+      "stars": 55550,
+      "forks": null,
+      "topics": [
+        "rag"
+      ],
+      "homepage": "https://mem0.ai",
+      "repo_url": "https://github.com/mem0ai/mem0",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "rag",
+        "python"
+      ],
+      "sources": [
+        "https://github.com/mem0ai/mem0"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__upstash_context7",
+      "owner": "upstash",
+      "name": "context7",
+      "full_name": "upstash/context7",
+      "description": "Context7 Platform -- Up-to-date code documentation for LLMs and AI code editors",
+      "category": "mcp",
+      "language": "TypeScript",
+      "license": "MIT License",
+      "stars": 55175,
+      "forks": null,
+      "topics": [
+        "mcp-server"
+      ],
+      "homepage": "https://context7.com",
+      "repo_url": "https://github.com/upstash/context7",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "mcp-server",
+        "typescript"
+      ],
+      "sources": [
+        "https://github.com/upstash/context7"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__ruvnet_ruview",
+      "owner": "ruvnet",
+      "name": "RuView",
+      "full_name": "ruvnet/RuView",
+      "description": "π RuView turns commodity WiFi signals into real-time spatial intelligence, vital sign monitoring, and presence detection — all without a single pixel of video.",
+      "category": "agent-framework",
+      "language": "Rust",
+      "license": "MIT License",
+      "stars": 52822,
+      "forks": null,
+      "topics": [
+        "agentic-ai"
+      ],
+      "homepage": "https://Cognitum.One/RuView",
+      "repo_url": "https://github.com/ruvnet/RuView",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "agentic-ai",
+        "rust"
+      ],
+      "sources": [
+        "https://github.com/ruvnet/RuView"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__flowiseai_flowise",
+      "owner": "FlowiseAI",
+      "name": "Flowise",
+      "full_name": "FlowiseAI/Flowise",
+      "description": "Build AI Agents, Visually",
+      "category": "agent-framework",
+      "language": "TypeScript",
+      "license": "Other",
+      "stars": 52781,
+      "forks": null,
+      "topics": [
+        "agentic-ai"
+      ],
+      "homepage": "https://flowiseai.com",
+      "repo_url": "https://github.com/FlowiseAI/Flowise",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "agentic-ai",
+        "typescript"
+      ],
+      "sources": [
+        "https://github.com/FlowiseAI/Flowise"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__shanraisshan_claude-code-best-practice",
+      "owner": "shanraisshan",
+      "name": "claude-code-best-practice",
+      "full_name": "shanraisshan/claude-code-best-practice",
+      "description": "from vibe coding to agentic engineering - practice makes claude perfect",
+      "category": "agent-framework",
+      "language": "HTML",
+      "license": "MIT License",
+      "stars": 52726,
+      "forks": null,
+      "topics": [
+        "agentic-ai"
+      ],
+      "homepage": "https://linkedin.com/in/shanraisshan",
+      "repo_url": "https://github.com/shanraisshan/claude-code-best-practice",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "agentic-ai",
+        "html"
+      ],
+      "sources": [
+        "https://github.com/shanraisshan/claude-code-best-practice"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__ruvnet_ruflo",
+      "owner": "ruvnet",
+      "name": "ruflo",
+      "full_name": "ruvnet/ruflo",
+      "description": "🌊 The leading agent orchestration platform for Claude. Deploy intelligent multi-agent swarms, coordinate autonomous workflows, and build conversational AI systems. Features    enterprise-grade architecture, self-learning swarm intelligence, RAG integration, and native Claude Code / Codex Integration",
+      "category": "agent-framework",
+      "language": "TypeScript",
+      "license": "MIT License",
+      "stars": 49909,
+      "forks": null,
+      "topics": [
+        "ai-agent"
+      ],
+      "homepage": "https://Cognitum.One",
+      "repo_url": "https://github.com/ruvnet/ruflo",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "ai-agent",
+        "typescript"
+      ],
+      "sources": [
+        "https://github.com/ruvnet/ruflo"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__d4vinci_scrapling",
+      "owner": "D4Vinci",
+      "name": "Scrapling",
+      "full_name": "D4Vinci/Scrapling",
+      "description": "🕷️ An adaptive Web Scraping framework that handles everything from a single request to a full-scale crawl!",
+      "category": "mcp",
+      "language": "Python",
+      "license": "BSD 3-Clause \"New\" or \"Revised\" License",
+      "stars": 49189,
+      "forks": null,
+      "topics": [
+        "mcp-server"
+      ],
+      "homepage": "https://scrapling.readthedocs.io/en/latest/",
+      "repo_url": "https://github.com/D4Vinci/Scrapling",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "mcp-server",
+        "python"
+      ],
+      "sources": [
+        "https://github.com/D4Vinci/Scrapling"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__datawhalechina_hello-agents",
+      "owner": "datawhalechina",
+      "name": "hello-agents",
+      "full_name": "datawhalechina/hello-agents",
+      "description": "📚 《从零开始构建智能体》——从零开始的智能体原理与实践教程",
+      "category": "rag",
+      "language": "Python",
+      "license": "Other",
+      "stars": 48612,
+      "forks": null,
+      "topics": [
+        "rag"
+      ],
+      "homepage": "https://hello-agents.datawhale.cc",
+      "repo_url": "https://github.com/datawhalechina/hello-agents",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "rag",
+        "python"
+      ],
+      "sources": [
+        "https://github.com/datawhalechina/hello-agents"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__safishamsi_graphify",
+      "owner": "safishamsi",
+      "name": "graphify",
+      "full_name": "safishamsi/graphify",
+      "description": "AI coding assistant skill (Claude Code, Codex, OpenCode, Cursor, Gemini CLI, and more). Turn any folder of code, SQL schemas, R scripts, shell scripts, docs, papers, images, or videos into a queryable knowledge graph. App code + database schema + infrastructure in one graph.",
+      "category": "rag",
+      "language": "Python",
+      "license": "MIT License",
+      "stars": 47368,
+      "forks": null,
+      "topics": [
+        "rag"
+      ],
+      "homepage": "https://graphifylabs.ai/",
+      "repo_url": "https://github.com/safishamsi/graphify",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "rag",
+        "python"
+      ],
+      "sources": [
+        "https://github.com/safishamsi/graphify"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__jeecgboot_jeecgboot",
+      "owner": "jeecgboot",
+      "name": "JeecgBoot",
+      "full_name": "jeecgboot/JeecgBoot",
+      "description": "AI低代码平台，支持「低代码 + 零代码」双模式：零代码 5 分钟搭建业务系统，低代码模式一键生成前后端代码。 内置AI 应用，支持AI聊天、知识库、流程编排、MCP与插件，支持各种模型。Skills能力实现：一句话画流程图、设计表单、生成系统。 引领 AI生成→在线配置→代码生成→手工合并的开发模式，解决Java项目80%的重复工作，快速提高效率，又不失灵活性。",
+      "category": "rag",
+      "language": "Java",
+      "license": "Apache License 2.0",
+      "stars": 46212,
+      "forks": null,
+      "topics": [
+        "rag"
+      ],
+      "homepage": "https://jeecg.com",
+      "repo_url": "https://github.com/jeecgboot/JeecgBoot",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "rag",
+        "java"
+      ],
+      "sources": [
+        "https://github.com/jeecgboot/JeecgBoot"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__cherryhq_cherry-studio",
+      "owner": "CherryHQ",
+      "name": "cherry-studio",
+      "full_name": "CherryHQ/cherry-studio",
+      "description": "AI productivity studio with smart chat, autonomous agents, and 300+ assistants. Unified access to frontier LLMs",
+      "category": "agent-framework",
+      "language": "TypeScript",
+      "license": "GNU Affero General Public License v3.0",
+      "stars": 45554,
+      "forks": null,
+      "topics": [
+        "ai-agent"
+      ],
+      "homepage": "https://cherry-ai.com",
+      "repo_url": "https://github.com/CherryHQ/cherry-studio",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "ai-agent",
+        "typescript"
+      ],
+      "sources": [
+        "https://github.com/CherryHQ/cherry-studio"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__zhayujie_cowagent",
+      "owner": "zhayujie",
+      "name": "CowAgent",
+      "full_name": "zhayujie/CowAgent",
+      "description": "CowAgent (chatgpt-on-wechat) 是基于大模型的超级AI助理，能主动思考和任务规划、访问操作系统和外部资源、创造和执行Skills、通过长期记忆和知识库不断成长，比OpenClaw更轻量和便捷。同时支持微信、飞书、钉钉、企微、QQ、公众号、网页等接入，可选择DeepSeek/OpenAI/Claude/Gemini/ MiniMax/Qwen/GLM/LinkAI，能处理文本、语音、图片和文件，可快速搭建个人AI助理和企业数字员工。",
+      "category": "agent-framework",
+      "language": "Python",
+      "license": "MIT License",
+      "stars": 44390,
+      "forks": null,
+      "topics": [
+        "ai-agent"
+      ],
+      "homepage": "https://cowagent.ai",
+      "repo_url": "https://github.com/zhayujie/CowAgent",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "ai-agent",
+        "python"
+      ],
+      "sources": [
+        "https://github.com/zhayujie/CowAgent"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__santifer_career-ops",
+      "owner": "santifer",
+      "name": "career-ops",
+      "full_name": "santifer/career-ops",
+      "description": "AI-powered job search system built on Claude Code. 14 skill modes, Go dashboard, PDF generation, batch processing.",
+      "category": "agent-framework",
+      "language": "JavaScript",
+      "license": "MIT License",
+      "stars": 44324,
+      "forks": null,
+      "topics": [
+        "ai-agent"
+      ],
+      "homepage": "https://career-ops.org",
+      "repo_url": "https://github.com/santifer/career-ops",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "ai-agent",
+        "javascript"
+      ],
+      "sources": [
+        "https://github.com/santifer/career-ops"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__milvus-io_milvus",
+      "owner": "milvus-io",
+      "name": "milvus",
+      "full_name": "milvus-io/milvus",
+      "description": "Milvus is a high-performance, cloud-native vector database built for scalable vector ANN search",
+      "category": "rag",
+      "language": "Go",
+      "license": "Apache License 2.0",
+      "stars": 44266,
+      "forks": null,
+      "topics": [
+        "rag"
+      ],
+      "homepage": "https://milvus.io",
+      "repo_url": "https://github.com/milvus-io/milvus",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "rag",
+        "go"
+      ],
+      "sources": [
+        "https://github.com/milvus-io/milvus"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__hkuds_nanobot",
+      "owner": "HKUDS",
+      "name": "nanobot",
+      "full_name": "HKUDS/nanobot",
+      "description": "\"🐈 nanobot: The Ultra-Lightweight Personal AI Agent\"",
+      "category": "agent-framework",
+      "language": "Python",
+      "license": "MIT License",
+      "stars": 42311,
+      "forks": null,
+      "topics": [
+        "ai-agent"
+      ],
+      "homepage": "https://nanobot.wiki",
+      "repo_url": "https://github.com/HKUDS/nanobot",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "ai-agent",
+        "python"
+      ],
+      "sources": [
+        "https://github.com/HKUDS/nanobot"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__chromedevtools_chrome-devtools-mcp",
+      "owner": "ChromeDevTools",
+      "name": "chrome-devtools-mcp",
+      "full_name": "ChromeDevTools/chrome-devtools-mcp",
+      "description": "Chrome DevTools for coding agents",
+      "category": "mcp",
+      "language": "TypeScript",
+      "license": "Apache License 2.0",
+      "stars": 39410,
+      "forks": null,
+      "topics": [
+        "mcp-server"
+      ],
+      "homepage": "https://npmjs.org/package/chrome-devtools-mcp",
+      "repo_url": "https://github.com/ChromeDevTools/chrome-devtools-mcp",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "mcp-server",
+        "typescript"
+      ],
+      "sources": [
+        "https://github.com/ChromeDevTools/chrome-devtools-mcp"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__mindsdb_mindsdb",
+      "owner": "mindsdb",
+      "name": "mindsdb",
+      "full_name": "mindsdb/mindsdb",
+      "description": "AI Data Vault - A query engine for AI Agents to securely query data from any datasource",
+      "category": "rag",
+      "language": "Python",
+      "license": "Other",
+      "stars": 39163,
+      "forks": null,
+      "topics": [
+        "rag"
+      ],
+      "homepage": "https://mindsdb.com",
+      "repo_url": "https://github.com/mindsdb/mindsdb",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "rag",
+        "python"
+      ],
+      "sources": [
+        "https://github.com/mindsdb/mindsdb"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__quivrhq_quivr",
+      "owner": "QuivrHQ",
+      "name": "quivr",
+      "full_name": "QuivrHQ/quivr",
+      "description": "Opiniated RAG for integrating GenAI in your apps 🧠   Focus on your product rather than the RAG. Easy integration in existing products with customisation!  Any LLM: GPT4, Groq, Llama. Any Vectorstore: PGVector, Faiss. Any Files. Anyway you want.",
+      "category": "rag",
+      "language": "Python",
+      "license": "Other",
+      "stars": 39149,
+      "forks": null,
+      "topics": [
+        "rag"
+      ],
+      "homepage": "https://core.quivr.com",
+      "repo_url": "https://github.com/QuivrHQ/quivr",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "rag",
+        "python"
+      ],
+      "sources": [
+        "https://github.com/QuivrHQ/quivr"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__chatchat-space_langchain-chatchat",
+      "owner": "chatchat-space",
+      "name": "Langchain-Chatchat",
+      "full_name": "chatchat-space/Langchain-Chatchat",
+      "description": "Langchain-Chatchat（原Langchain-ChatGLM）基于 Langchain 与 ChatGLM, Qwen 与 Llama 等语言模型的 RAG 与 Agent 应用 | Langchain-Chatchat (formerly langchain-ChatGLM), local knowledge based LLM (like ChatGLM, Qwen and Llama) RAG and Agent app with langchain",
+      "category": "rag",
+      "language": "Python",
+      "license": "Apache License 2.0",
+      "stars": 38013,
+      "forks": null,
+      "topics": [
+        "rag"
+      ],
+      "repo_url": "https://github.com/chatchat-space/Langchain-Chatchat",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "rag",
+        "python"
+      ],
+      "sources": [
+        "https://github.com/chatchat-space/Langchain-Chatchat"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__zhulinsen_daily_stock_analysis",
+      "owner": "ZhuLinsen",
+      "name": "daily_stock_analysis",
+      "full_name": "ZhuLinsen/daily_stock_analysis",
+      "description": "LLM驱动的 A/H/美股智能分析：多数据源行情 + 实时新闻 + LLM决策仪表盘 + 多渠道推送，零成本定时运行，纯白嫖. LLM-powered stock analysis system for A/H/US markets.",
+      "category": "agent-framework",
+      "language": "Python",
+      "license": "MIT License",
+      "stars": 35662,
+      "forks": null,
+      "topics": [
+        "ai-agent"
+      ],
+      "homepage": "https://dsa.zhulinsen.tech",
+      "repo_url": "https://github.com/ZhuLinsen/daily_stock_analysis",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "ai-agent",
+        "python"
+      ],
+      "sources": [
+        "https://github.com/ZhuLinsen/daily_stock_analysis"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__hkuds_lightrag",
+      "owner": "HKUDS",
+      "name": "LightRAG",
+      "full_name": "HKUDS/LightRAG",
+      "description": "[EMNLP2025] \"LightRAG: Simple and Fast Retrieval-Augmented Generation\"",
+      "category": "rag",
+      "language": "Python",
+      "license": "MIT License",
+      "stars": 35123,
+      "forks": null,
+      "topics": [
+        "rag"
+      ],
+      "homepage": "https://arxiv.org/abs/2410.05779",
+      "repo_url": "https://github.com/HKUDS/LightRAG",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "rag",
+        "python"
+      ],
+      "sources": [
+        "https://github.com/HKUDS/LightRAG"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__patchy631_ai-engineering-hub",
+      "owner": "patchy631",
+      "name": "ai-engineering-hub",
+      "full_name": "patchy631/ai-engineering-hub",
+      "description": "In-depth tutorials on LLMs, RAGs and real-world AI agent applications.",
+      "category": "rag",
+      "language": "Jupyter Notebook",
+      "license": "MIT License",
+      "stars": 34953,
+      "forks": null,
+      "topics": [
+        "rag"
+      ],
+      "homepage": "https://join.dailydoseofds.com",
+      "repo_url": "https://github.com/patchy631/ai-engineering-hub",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "rag",
+        "jupyter notebook"
+      ],
+      "sources": [
+        "https://github.com/patchy631/ai-engineering-hub"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__khoj-ai_khoj",
+      "owner": "khoj-ai",
+      "name": "khoj",
+      "full_name": "khoj-ai/khoj",
+      "description": "Your AI second brain. Self-hostable. Get answers from the web or your docs. Build custom agents, schedule automations, do deep research. Turn any online or local LLM into your personal, autonomous AI (gpt, claude, gemini, llama, qwen, mistral). Get started - free.",
+      "category": "rag",
+      "language": "Python",
+      "license": "GNU Affero General Public License v3.0",
+      "stars": 34530,
+      "forks": null,
+      "topics": [
+        "rag"
+      ],
+      "homepage": "https://khoj.dev",
+      "repo_url": "https://github.com/khoj-ai/khoj",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "rag",
+        "python"
+      ],
+      "sources": [
+        "https://github.com/khoj-ai/khoj"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__itzcrazykns_vane",
+      "owner": "ItzCrazyKns",
+      "name": "Vane",
+      "full_name": "ItzCrazyKns/Vane",
+      "description": "Vane is an AI-powered answering engine.",
+      "category": "rag",
+      "language": "TypeScript",
+      "license": "MIT License",
+      "stars": 34356,
+      "forks": null,
+      "topics": [
+        "rag"
+      ],
+      "repo_url": "https://github.com/ItzCrazyKns/Vane",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "rag",
+        "typescript"
+      ],
+      "sources": [
+        "https://github.com/ItzCrazyKns/Vane"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__bytedance_ui-tars-desktop",
+      "owner": "bytedance",
+      "name": "UI-TARS-desktop",
+      "full_name": "bytedance/UI-TARS-desktop",
+      "description": "The Open-Source Multimodal AI Agent Stack: Connecting Cutting-Edge AI Models and Agent Infra",
+      "category": "mcp",
+      "language": "TypeScript",
+      "license": "Apache License 2.0",
+      "stars": 33596,
+      "forks": null,
+      "topics": [
+        "mcp-server"
+      ],
+      "homepage": "https://agent-tars.com",
+      "repo_url": "https://github.com/bytedance/UI-TARS-desktop",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "mcp-server",
+        "typescript"
+      ],
+      "sources": [
+        "https://github.com/bytedance/UI-TARS-desktop"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__microsoft_graphrag",
+      "owner": "microsoft",
+      "name": "graphrag",
+      "full_name": "microsoft/graphrag",
+      "description": "A modular graph-based Retrieval-Augmented Generation (RAG) system",
+      "category": "rag",
+      "language": "Python",
+      "license": "MIT License",
+      "stars": 32946,
+      "forks": null,
+      "topics": [
+        "rag"
+      ],
+      "homepage": "https://microsoft.github.io/graphrag/",
+      "repo_url": "https://github.com/microsoft/graphrag",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "rag",
+        "python"
+      ],
+      "sources": [
+        "https://github.com/microsoft/graphrag"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__langchain-ai_langgraph",
+      "owner": "langchain-ai",
+      "name": "langgraph",
+      "full_name": "langchain-ai/langgraph",
+      "description": "Build resilient agents.",
+      "category": "rag",
+      "language": "Python",
+      "license": "MIT License",
+      "stars": 31919,
+      "forks": null,
+      "topics": [
+        "rag"
+      ],
+      "homepage": "https://docs.langchain.com/oss/python/langgraph/",
+      "repo_url": "https://github.com/langchain-ai/langgraph",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "rag",
+        "python"
+      ],
+      "sources": [
+        "https://github.com/langchain-ai/langgraph"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__copilotkit_copilotkit",
+      "owner": "CopilotKit",
+      "name": "CopilotKit",
+      "full_name": "CopilotKit/CopilotKit",
+      "description": "The Frontend Stack for Agents & Generative UI. React + Angular.  Makers of the AG-UI Protocol",
+      "category": "agent-framework",
+      "language": "TypeScript",
+      "license": "MIT License",
+      "stars": 31301,
+      "forks": null,
+      "topics": [
+        "ai-agent"
+      ],
+      "homepage": "https://docs.copilotkit.ai",
+      "repo_url": "https://github.com/CopilotKit/CopilotKit",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "ai-agent",
+        "typescript"
+      ],
+      "sources": [
+        "https://github.com/CopilotKit/CopilotKit"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__vectifyai_pageindex",
+      "owner": "VectifyAI",
+      "name": "PageIndex",
+      "full_name": "VectifyAI/PageIndex",
+      "description": "📑 PageIndex: Document Index for Vectorless, Reasoning-based RAG",
+      "category": "agent-framework",
+      "language": "Python",
+      "license": "MIT License",
+      "stars": 30923,
+      "forks": null,
+      "topics": [
+        "agentic-ai"
+      ],
+      "homepage": "https://pageindex.ai",
+      "repo_url": "https://github.com/VectifyAI/PageIndex",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "agentic-ai",
+        "python"
+      ],
+      "sources": [
+        "https://github.com/VectifyAI/PageIndex"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__lightpanda-io_browser",
+      "owner": "lightpanda-io",
+      "name": "browser",
+      "full_name": "lightpanda-io/browser",
+      "description": "Lightpanda: the headless browser designed for AI and automation",
+      "category": "browser-automation",
+      "language": "Zig",
+      "license": "GNU Affero General Public License v3.0",
+      "stars": 30274,
+      "forks": null,
+      "topics": [
+        "browser-automation"
+      ],
+      "homepage": "https://lightpanda.io",
+      "repo_url": "https://github.com/lightpanda-io/browser",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "browser-automation",
+        "zig"
+      ],
+      "sources": [
+        "https://github.com/lightpanda-io/browser"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__datawhalechina_happy-llm",
+      "owner": "datawhalechina",
+      "name": "happy-llm",
+      "full_name": "datawhalechina/happy-llm",
+      "description": "📚 从零开始构建大模型",
+      "category": "rag",
+      "language": "Jupyter Notebook",
+      "license": "Other",
+      "stars": 30229,
+      "forks": null,
+      "topics": [
+        "rag"
+      ],
+      "homepage": "https://datawhalechina.github.io/happy-llm/",
+      "repo_url": "https://github.com/datawhalechina/happy-llm",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "rag",
+        "jupyter notebook"
+      ],
+      "sources": [
+        "https://github.com/datawhalechina/happy-llm"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__github_github-mcp-server",
+      "owner": "github",
+      "name": "github-mcp-server",
+      "full_name": "github/github-mcp-server",
+      "description": "GitHub's official MCP Server",
+      "category": "mcp",
+      "language": "Go",
+      "license": "MIT License",
+      "stars": 29777,
+      "forks": null,
+      "topics": [
+        "mcp-server"
+      ],
+      "repo_url": "https://github.com/github/github-mcp-server",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "mcp-server",
+        "go"
+      ],
+      "sources": [
+        "https://github.com/github/github-mcp-server"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__onyx-dot-app_onyx",
+      "owner": "onyx-dot-app",
+      "name": "onyx",
+      "full_name": "onyx-dot-app/onyx",
+      "description": "Open Source AI Platform - AI Chat with advanced features that works with every LLM",
+      "category": "rag",
+      "language": "Python",
+      "license": "Other",
+      "stars": 29341,
+      "forks": null,
+      "topics": [
+        "rag"
+      ],
+      "homepage": "https://onyx.app",
+      "repo_url": "https://github.com/onyx-dot-app/onyx",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "rag",
+        "python"
+      ],
+      "sources": [
+        "https://github.com/onyx-dot-app/onyx"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__huggingface_agents-course",
+      "owner": "huggingface",
+      "name": "agents-course",
+      "full_name": "huggingface/agents-course",
+      "description": "This repository contains the Hugging Face Agents Course.",
+      "category": "agent-framework",
+      "language": "MDX",
+      "license": "Apache License 2.0",
+      "stars": 28589,
+      "forks": null,
+      "topics": [
+        "agentic-ai"
+      ],
+      "repo_url": "https://github.com/huggingface/agents-course",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "agentic-ai",
+        "mdx"
+      ],
+      "sources": [
+        "https://github.com/huggingface/agents-course"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__simstudioai_sim",
+      "owner": "simstudioai",
+      "name": "sim",
+      "full_name": "simstudioai/sim",
+      "description": "Build, deploy, and orchestrate AI agents. Sim is the central intelligence layer for your AI workforce.",
+      "category": "rag",
+      "language": "TypeScript",
+      "license": "Apache License 2.0",
+      "stars": 28484,
+      "forks": null,
+      "topics": [
+        "rag"
+      ],
+      "homepage": "https://www.sim.ai",
+      "repo_url": "https://github.com/simstudioai/sim",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "rag",
+        "typescript"
+      ],
+      "sources": [
+        "https://github.com/simstudioai/sim"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__composiohq_composio",
+      "owner": "ComposioHQ",
+      "name": "composio",
+      "full_name": "ComposioHQ/composio",
+      "description": "Composio powers 1000+ toolkits, tool search, context management, authentication, and a sandboxed workbench to help you build AI agents that turn intent into action.",
+      "category": "agent-framework",
+      "language": "TypeScript",
+      "license": "MIT License",
+      "stars": 28196,
+      "forks": null,
+      "topics": [
+        "agentic-ai"
+      ],
+      "homepage": "https://docs.composio.dev",
+      "repo_url": "https://github.com/ComposioHQ/composio",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "agentic-ai",
+        "typescript"
+      ],
+      "sources": [
+        "https://github.com/ComposioHQ/composio"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__labring_fastgpt",
+      "owner": "labring",
+      "name": "FastGPT",
+      "full_name": "labring/FastGPT",
+      "description": "FastGPT is a knowledge-based platform built on the LLMs, offers a comprehensive suite of out-of-the-box capabilities such as data processing, RAG retrieval, and visual AI workflow orchestration, letting you easily develop and deploy complex question-answering systems without the need for extensive setup or configuration.",
+      "category": "rag",
+      "language": "TypeScript",
+      "license": "Other",
+      "stars": 28021,
+      "forks": null,
+      "topics": [
+        "rag"
+      ],
+      "homepage": "https://fastgpt.io",
+      "repo_url": "https://github.com/labring/FastGPT",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "rag",
+        "typescript"
+      ],
+      "sources": [
+        "https://github.com/labring/FastGPT"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__nirdiamant_rag_techniques",
+      "owner": "NirDiamant",
+      "name": "RAG_Techniques",
+      "full_name": "NirDiamant/RAG_Techniques",
+      "description": "This repository showcases various advanced techniques for Retrieval-Augmented Generation (RAG) systems. Each technique has a detailed notebook tutorial.",
+      "category": "rag",
+      "language": "Jupyter Notebook",
+      "license": "Other",
+      "stars": 27292,
+      "forks": null,
+      "topics": [
+        "rag"
+      ],
+      "homepage": "https://amzn.to/4cvxqSw",
+      "repo_url": "https://github.com/NirDiamant/RAG_Techniques",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "rag",
+        "jupyter notebook"
+      ],
+      "sources": [
+        "https://github.com/NirDiamant/RAG_Techniques"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__assafelovic_gpt-researcher",
+      "owner": "assafelovic",
+      "name": "gpt-researcher",
+      "full_name": "assafelovic/gpt-researcher",
+      "description": "An autonomous agent that conducts deep research on any data using any LLM providers",
+      "category": "mcp",
+      "language": "Python",
+      "license": "Apache License 2.0",
+      "stars": 27020,
+      "forks": null,
+      "topics": [
+        "mcp-server"
+      ],
+      "homepage": "https://gptr.dev",
+      "repo_url": "https://github.com/assafelovic/gpt-researcher",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "mcp-server",
+        "python"
+      ],
+      "sources": [
+        "https://github.com/assafelovic/gpt-researcher"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__gitlawb_openclaude",
+      "owner": "Gitlawb",
+      "name": "openclaude",
+      "full_name": "Gitlawb/openclaude",
+      "description": "runs anywhere. uses anything",
+      "category": "agent-framework",
+      "language": "TypeScript",
+      "license": "Other",
+      "stars": 26461,
+      "forks": null,
+      "topics": [
+        "ai-agent"
+      ],
+      "homepage": "https://openclaude.gitlawb.com",
+      "repo_url": "https://github.com/Gitlawb/openclaude",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "ai-agent",
+        "typescript"
+      ],
+      "sources": [
+        "https://github.com/Gitlawb/openclaude"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__fosowl_agenticseek",
+      "owner": "Fosowl",
+      "name": "agenticSeek",
+      "full_name": "Fosowl/agenticSeek",
+      "description": "Fully Local Manus AI. No APIs, No $200 monthly bills. Enjoy an autonomous agent that thinks, browses the web, and code for the sole cost of electricity. 🔔 Official updates only via twitter @Martin993886460 (Beware of fake account)",
+      "category": "agent-framework",
+      "language": "Python",
+      "license": "GNU General Public License v3.0",
+      "stars": 26281,
+      "forks": null,
+      "topics": [
+        "agentic-ai"
+      ],
+      "homepage": "http://agenticseek.tech",
+      "repo_url": "https://github.com/Fosowl/agenticSeek",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "agentic-ai",
+        "python"
+      ],
+      "sources": [
+        "https://github.com/Fosowl/agenticSeek"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__googleworkspace_cli",
+      "owner": "googleworkspace",
+      "name": "cli",
+      "full_name": "googleworkspace/cli",
+      "description": "Google Workspace CLI — one command-line tool for Drive, Gmail, Calendar, Sheets, Docs, Chat, Admin, and more. Dynamically built from Google Discovery Service. Includes AI agent skills.",
+      "category": "agent-framework",
+      "language": "Rust",
+      "license": "Apache License 2.0",
+      "stars": 26135,
+      "forks": null,
+      "topics": [
+        "ai-agent"
+      ],
+      "homepage": "https://developers.google.com/workspace",
+      "repo_url": "https://github.com/googleworkspace/cli",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "ai-agent",
+        "rust"
+      ],
+      "sources": [
+        "https://github.com/googleworkspace/cli"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__getzep_graphiti",
+      "owner": "getzep",
+      "name": "graphiti",
+      "full_name": "getzep/graphiti",
+      "description": "Build Real-Time Knowledge Graphs for AI Agents",
+      "category": "rag",
+      "language": "Python",
+      "license": "Apache License 2.0",
+      "stars": 26005,
+      "forks": null,
+      "topics": [
+        "rag"
+      ],
+      "homepage": "https://help.getzep.com/graphiti",
+      "repo_url": "https://github.com/getzep/graphiti",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "rag",
+        "python"
+      ],
+      "sources": [
+        "https://github.com/getzep/graphiti"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__cinnamon_kotaemon",
+      "owner": "Cinnamon",
+      "name": "kotaemon",
+      "full_name": "Cinnamon/kotaemon",
+      "description": "An open-source RAG-based tool for chatting with your documents.",
+      "category": "rag",
+      "language": "Python",
+      "license": "Apache License 2.0",
+      "stars": 25376,
+      "forks": null,
+      "topics": [
+        "rag"
+      ],
+      "homepage": "https://cinnamon.github.io/kotaemon/",
+      "repo_url": "https://github.com/Cinnamon/kotaemon",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "rag",
+        "python"
+      ],
+      "sources": [
+        "https://github.com/Cinnamon/kotaemon"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__deepset-ai_haystack",
+      "owner": "deepset-ai",
+      "name": "haystack",
+      "full_name": "deepset-ai/haystack",
+      "description": "Open-source AI orchestration framework for building context-engineered, production-ready LLM applications. Design modular pipelines and agent workflows with explicit control over retrieval, routing, memory, and generation. Built for scalable agents, RAG, multimodal applications, semantic search, and conversational systems.",
+      "category": "rag",
+      "language": "MDX",
+      "license": "Apache License 2.0",
+      "stars": 25210,
+      "forks": null,
+      "topics": [
+        "rag"
+      ],
+      "homepage": "https://haystack.deepset.ai",
+      "repo_url": "https://github.com/deepset-ai/haystack",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "rag",
+        "mdx"
+      ],
+      "sources": [
+        "https://github.com/deepset-ai/haystack"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__prefecthq_fastmcp",
+      "owner": "PrefectHQ",
+      "name": "fastmcp",
+      "full_name": "PrefectHQ/fastmcp",
+      "description": "🚀 The fast, Pythonic way to build MCP servers and clients.",
+      "category": "mcp",
+      "language": "Python",
+      "license": "Apache License 2.0",
+      "stars": 25138,
+      "forks": null,
+      "topics": [
+        "model-context-protocol"
+      ],
+      "homepage": "https://gofastmcp.com",
+      "repo_url": "https://github.com/PrefectHQ/fastmcp",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "model-context-protocol",
+        "python"
+      ],
+      "sources": [
+        "https://github.com/PrefectHQ/fastmcp"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__iofficeai_aionui",
+      "owner": "iOfficeAI",
+      "name": "AionUi",
+      "full_name": "iOfficeAI/AionUi",
+      "description": "Free, local, open-source 24/7 Cowork app for OpenClaw, Hermes Agent, Claude Code, Codex, OpenCode, Gemini CLI and 20+ more CLI | Customize your assistants | Star if you like it!",
+      "category": "agent-framework",
+      "language": "TypeScript",
+      "license": "Apache License 2.0",
+      "stars": 24937,
+      "forks": null,
+      "topics": [
+        "ai-agent"
+      ],
+      "homepage": "https://www.aionui.com",
+      "repo_url": "https://github.com/iOfficeAI/AionUi",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "ai-agent",
+        "typescript"
+      ],
+      "sources": [
+        "https://github.com/iOfficeAI/AionUi"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__charmbracelet_crush",
+      "owner": "charmbracelet",
+      "name": "crush",
+      "full_name": "charmbracelet/crush",
+      "description": "Glamourous agentic coding for all 💘",
+      "category": "agent-framework",
+      "language": "Go",
+      "license": "Other",
+      "stars": 24224,
+      "forks": null,
+      "topics": [
+        "agentic-ai"
+      ],
+      "repo_url": "https://github.com/charmbracelet/crush",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "agentic-ai",
+        "go"
+      ],
+      "sources": [
+        "https://github.com/charmbracelet/crush"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__oraios_serena",
+      "owner": "oraios",
+      "name": "serena",
+      "full_name": "oraios/serena",
+      "description": "A powerful MCP toolkit for coding, providing semantic retrieval and editing capabilities  - the IDE for your agent",
+      "category": "mcp",
+      "language": "Python",
+      "license": "MIT License",
+      "stars": 24137,
+      "forks": null,
+      "topics": [
+        "mcp-server"
+      ],
+      "homepage": "https://oraios.github.io/serena",
+      "repo_url": "https://github.com/oraios/serena",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "mcp-server",
+        "python"
+      ],
+      "sources": [
+        "https://github.com/oraios/serena"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__nocobase_nocobase",
+      "owner": "nocobase",
+      "name": "nocobase",
+      "full_name": "nocobase/nocobase",
+      "description": "NocoBase is an open-source AI + no-code platform for building business systems fast. Instead of generating everything from scratch, AI works on top of production-proven infrastructure and a WYSIWYG no-code interface, so you get both speed and reliability.",
+      "category": "agent-framework",
+      "language": "TypeScript",
+      "license": "Other",
+      "stars": 22370,
+      "forks": null,
+      "topics": [
+        "ai-agent"
+      ],
+      "homepage": "https://www.nocobase.com",
+      "repo_url": "https://github.com/nocobase/nocobase",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "ai-agent",
+        "typescript"
+      ],
+      "sources": [
+        "https://github.com/nocobase/nocobase"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__activepieces_activepieces",
+      "owner": "activepieces",
+      "name": "activepieces",
+      "full_name": "activepieces/activepieces",
+      "description": "AI Agents & MCPs & AI Workflow Automation • (~400 MCP servers for AI agents) • AI Automation / AI Agent with MCPs • AI Workflows & AI Agents • MCPs for AI Agents",
+      "category": "agent-framework",
+      "language": "TypeScript",
+      "license": "Other",
+      "stars": 22163,
+      "forks": null,
+      "topics": [
+        "ai-agent"
+      ],
+      "homepage": "https://www.activepieces.com",
+      "repo_url": "https://github.com/activepieces/activepieces",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "ai-agent",
+        "typescript"
+      ],
+      "sources": [
+        "https://github.com/activepieces/activepieces"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__skyvern-ai_skyvern",
+      "owner": "Skyvern-AI",
+      "name": "skyvern",
+      "full_name": "Skyvern-AI/skyvern",
+      "description": "Automate browser based workflows with AI",
+      "category": "browser-automation",
+      "language": "Python",
+      "license": "GNU Affero General Public License v3.0",
+      "stars": 21594,
+      "forks": null,
+      "topics": [
+        "browser-automation"
+      ],
+      "homepage": "https://www.skyvern.com",
+      "repo_url": "https://github.com/Skyvern-AI/skyvern",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "browser-automation",
+        "python"
+      ],
+      "sources": [
+        "https://github.com/Skyvern-AI/skyvern"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__automaapp_automa",
+      "owner": "AutomaApp",
+      "name": "automa",
+      "full_name": "AutomaApp/automa",
+      "description": "A browser extension for automating your browser by connecting blocks",
+      "category": "browser-automation",
+      "language": "Vue",
+      "license": "Other",
+      "stars": 21281,
+      "forks": null,
+      "topics": [
+        "browser-automation"
+      ],
+      "homepage": "https://extension.automa.site",
+      "repo_url": "https://github.com/AutomaApp/automa",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "browser-automation",
+        "vue"
+      ],
+      "sources": [
+        "https://github.com/AutomaApp/automa"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__1panel-dev_maxkb",
+      "owner": "1Panel-dev",
+      "name": "MaxKB",
+      "full_name": "1Panel-dev/MaxKB",
+      "description": "🔥 MaxKB is an open-source platform for building enterprise-grade agents.  强大易用的开源企业级智能体平台。",
+      "category": "agent-framework",
+      "language": "Python",
+      "license": "GNU General Public License v3.0",
+      "stars": 20954,
+      "forks": null,
+      "topics": [
+        "agentic-ai"
+      ],
+      "homepage": "https://maxkb.cn",
+      "repo_url": "https://github.com/1Panel-dev/MaxKB",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "agentic-ai",
+        "python"
+      ],
+      "sources": [
+        "https://github.com/1Panel-dev/MaxKB"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__czlonkowski_n8n-mcp",
+      "owner": "czlonkowski",
+      "name": "n8n-mcp",
+      "full_name": "czlonkowski/n8n-mcp",
+      "description": "A MCP for Claude Desktop / Claude Code / Windsurf / Cursor to build n8n workflows for you",
+      "category": "mcp",
+      "language": "TypeScript",
+      "license": "MIT License",
+      "stars": 20629,
+      "forks": null,
+      "topics": [
+        "mcp-server"
+      ],
+      "homepage": "https://www.n8n-mcp.com/",
+      "repo_url": "https://github.com/czlonkowski/n8n-mcp",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "mcp-server",
+        "typescript"
+      ],
+      "sources": [
+        "https://github.com/czlonkowski/n8n-mcp"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__jackwener_opencli",
+      "owner": "jackwener",
+      "name": "OpenCLI",
+      "full_name": "jackwener/OpenCLI",
+      "description": "Make Any Website & Tool Your CLI. A universal CLI Hub and AI-native runtime. Transform any website, Electron app, or local binary into a standardized command-line interface. Built for AI Agents to discover, learn, and execute tools seamlessly via a unified AGENT.md integration.",
+      "category": "agent-framework",
+      "language": "JavaScript",
+      "license": "Apache License 2.0",
+      "stars": 20364,
+      "forks": null,
+      "topics": [
+        "ai-agent"
+      ],
+      "homepage": "https://opencli.info/",
+      "repo_url": "https://github.com/jackwener/OpenCLI",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "ai-agent",
+        "javascript"
+      ],
+      "sources": [
+        "https://github.com/jackwener/OpenCLI"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__google_adk-python",
+      "owner": "google",
+      "name": "adk-python",
+      "full_name": "google/adk-python",
+      "description": "An open-source, code-first Python toolkit for building, evaluating, and deploying sophisticated AI agents with flexibility and control.",
+      "category": "agent-framework",
+      "language": "Python",
+      "license": "Apache License 2.0",
+      "stars": 19616,
+      "forks": null,
+      "topics": [
+        "agentic-ai"
+      ],
+      "homepage": "https://google.github.io/adk-docs/",
+      "repo_url": "https://github.com/google/adk-python",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "agentic-ai",
+        "python"
+      ],
+      "sources": [
+        "https://github.com/google/adk-python"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__panniantong_agent-reach",
+      "owner": "Panniantong",
+      "name": "Agent-Reach",
+      "full_name": "Panniantong/Agent-Reach",
+      "description": "Give your AI agent eyes to see the entire internet. Read & search Twitter, Reddit, YouTube, GitHub, Bilibili, XiaoHongShu — one CLI, zero API fees.",
+      "category": "agent-framework",
+      "language": "Python",
+      "license": "MIT License",
+      "stars": 19374,
+      "forks": null,
+      "topics": [
+        "ai-agent"
+      ],
+      "repo_url": "https://github.com/Panniantong/Agent-Reach",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "ai-agent",
+        "python"
+      ],
+      "sources": [
+        "https://github.com/Panniantong/Agent-Reach"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__alibaba_page-agent",
+      "owner": "alibaba",
+      "name": "page-agent",
+      "full_name": "alibaba/page-agent",
+      "description": "JavaScript in-page GUI agent. Control web interfaces with natural language.",
+      "category": "browser-automation",
+      "language": "TypeScript",
+      "license": "MIT License",
+      "stars": 17763,
+      "forks": null,
+      "topics": [
+        "browser-automation"
+      ],
+      "homepage": "https://alibaba.github.io/page-agent/",
+      "repo_url": "https://github.com/alibaba/page-agent",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "browser-automation",
+        "typescript"
+      ],
+      "sources": [
+        "https://github.com/alibaba/page-agent"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__nukeop_nuclear",
+      "owner": "nukeop",
+      "name": "nuclear",
+      "full_name": "nukeop/nuclear",
+      "description": "Streaming music player that finds free music for you",
+      "category": "mcp",
+      "language": "TypeScript",
+      "license": "GNU Affero General Public License v3.0",
+      "stars": 17597,
+      "forks": null,
+      "topics": [
+        "mcp-server"
+      ],
+      "homepage": "https://nuclearplayer.com",
+      "repo_url": "https://github.com/nukeop/nuclear",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "mcp-server",
+        "typescript"
+      ],
+      "sources": [
+        "https://github.com/nukeop/nuclear"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__keploy_keploy",
+      "owner": "keploy",
+      "name": "keploy",
+      "full_name": "keploy/keploy",
+      "description": "Open-source platform for creating safe, isolated production sandboxes for API, integration, and E2E testing.",
+      "category": "agent-framework",
+      "language": "Go",
+      "license": "Apache License 2.0",
+      "stars": 17226,
+      "forks": null,
+      "topics": [
+        "agentic-ai"
+      ],
+      "homepage": "https://keploy.io",
+      "repo_url": "https://github.com/keploy/keploy",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "agentic-ai",
+        "go"
+      ],
+      "sources": [
+        "https://github.com/keploy/keploy"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__leon-ai_leon",
+      "owner": "leon-ai",
+      "name": "leon",
+      "full_name": "leon-ai/leon",
+      "description": "🧠 Leon is your open-source personal assistant.",
+      "category": "agent-framework",
+      "language": "TypeScript",
+      "license": "MIT License",
+      "stars": 17223,
+      "forks": null,
+      "topics": [
+        "ai-agent"
+      ],
+      "homepage": "https://getleon.ai",
+      "repo_url": "https://github.com/leon-ai/leon",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "ai-agent",
+        "typescript"
+      ],
+      "sources": [
+        "https://github.com/leon-ai/leon"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__microsoft_agent-lightning",
+      "owner": "microsoft",
+      "name": "agent-lightning",
+      "full_name": "microsoft/agent-lightning",
+      "description": "The absolute trainer to light up AI agents.",
+      "category": "agent-framework",
+      "language": "Python",
+      "license": "MIT License",
+      "stars": 17172,
+      "forks": null,
+      "topics": [
+        "agentic-ai"
+      ],
+      "homepage": "https://microsoft.github.io/agent-lightning/",
+      "repo_url": "https://github.com/microsoft/agent-lightning",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "agentic-ai",
+        "python"
+      ],
+      "sources": [
+        "https://github.com/microsoft/agent-lightning"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__trycua_cua",
+      "owner": "trycua",
+      "name": "cua",
+      "full_name": "trycua/cua",
+      "description": "Open-source infrastructure for Computer-Use Agents. Sandboxes, SDKs, and benchmarks to train and evaluate AI agents that can control full desktops (macOS, Linux, Windows).",
+      "category": "agent-framework",
+      "language": "HTML",
+      "license": "MIT License",
+      "stars": 16322,
+      "forks": null,
+      "topics": [
+        "ai-agent"
+      ],
+      "homepage": "https://cua.ai",
+      "repo_url": "https://github.com/trycua/cua",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "ai-agent",
+        "html"
+      ],
+      "sources": [
+        "https://github.com/trycua/cua"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__raga-ai-hub_ragaai-catalyst",
+      "owner": "raga-ai-hub",
+      "name": "RagaAI-Catalyst",
+      "full_name": "raga-ai-hub/RagaAI-Catalyst",
+      "description": "Python SDK for Agent AI Observability, Monitoring and Evaluation Framework. Includes features like agent, llm and tools tracing, debugging multi-agentic system, self-hosted dashboard and advanced analytics with timeline and execution graph view",
+      "category": "agent-framework",
+      "language": "Python",
+      "license": "Apache License 2.0",
+      "stars": 16157,
+      "forks": null,
+      "topics": [
+        "agentic-ai"
+      ],
+      "homepage": "https://catalyst.raga.ai/",
+      "repo_url": "https://github.com/raga-ai-hub/RagaAI-Catalyst",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "agentic-ai",
+        "python"
+      ],
+      "sources": [
+        "https://github.com/raga-ai-hub/RagaAI-Catalyst"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__microsoft_mcp-for-beginners",
+      "owner": "microsoft",
+      "name": "mcp-for-beginners",
+      "full_name": "microsoft/mcp-for-beginners",
+      "description": "This open-source curriculum introduces the fundamentals of Model Context Protocol (MCP) through real-world, cross-language examples in .NET, Java, TypeScript, JavaScript, Rust and Python. Designed for developers, it focuses on practical techniques for building modular, scalable, and secure AI workflows from session setup to service orchestration.",
+      "category": "mcp",
+      "language": "Jupyter Notebook",
+      "license": "MIT License",
+      "stars": 16089,
+      "forks": null,
+      "topics": [
+        "mcp-server"
+      ],
+      "repo_url": "https://github.com/microsoft/mcp-for-beginners",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "mcp-server",
+        "jupyter notebook"
+      ],
+      "sources": [
+        "https://github.com/microsoft/mcp-for-beginners"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__getmaxun_maxun",
+      "owner": "getmaxun",
+      "name": "maxun",
+      "full_name": "getmaxun/maxun",
+      "description": "🔥 The open-source no-code platform for web scraping, crawling, search and AI data extraction • Turn websites into structured APIs in minutes 🔥",
+      "category": "browser-automation",
+      "language": "TypeScript",
+      "license": "GNU Affero General Public License v3.0",
+      "stars": 15566,
+      "forks": null,
+      "topics": [
+        "browser-automation"
+      ],
+      "homepage": "https://www.maxun.dev",
+      "repo_url": "https://github.com/getmaxun/maxun",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "browser-automation",
+        "typescript"
+      ],
+      "sources": [
+        "https://github.com/getmaxun/maxun"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__hugohe3_ppt-master",
+      "owner": "hugohe3",
+      "name": "ppt-master",
+      "full_name": "hugohe3/ppt-master",
+      "description": "AI generates natively editable PPTX from any document — real PowerPoint shapes with native animations, not images · by Hugo He",
+      "category": "agent-framework",
+      "language": "Python",
+      "license": "MIT License",
+      "stars": 15519,
+      "forks": null,
+      "topics": [
+        "ai-agent"
+      ],
+      "homepage": "https://hugohe3.github.io/ppt-master/",
+      "repo_url": "https://github.com/hugohe3/ppt-master",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "ai-agent",
+        "python"
+      ],
+      "sources": [
+        "https://github.com/hugohe3/ppt-master"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__triggerdotdev_trigger.dev",
+      "owner": "triggerdotdev",
+      "name": "trigger.dev",
+      "full_name": "triggerdotdev/trigger.dev",
+      "description": "Trigger.dev – build and deploy fully‑managed AI agents and workflows",
+      "category": "mcp",
+      "language": "TypeScript",
+      "license": "Apache License 2.0",
+      "stars": 14902,
+      "forks": null,
+      "topics": [
+        "mcp-server"
+      ],
+      "homepage": "https://trigger.dev/changelog",
+      "repo_url": "https://github.com/triggerdotdev/trigger.dev",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "mcp-server",
+        "typescript"
+      ],
+      "sources": [
+        "https://github.com/triggerdotdev/trigger.dev"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__alirezarezvani_claude-skills",
+      "owner": "alirezarezvani",
+      "name": "claude-skills",
+      "full_name": "alirezarezvani/claude-skills",
+      "description": "245+ Claude Code skills & agent plugins for Claude Code, Codex, Gemini CLI, Cursor, and 8 more coding agents — engineering, marketing, product, compliance, C-level advisory.",
+      "category": "agent-framework",
+      "language": "Python",
+      "license": "MIT License",
+      "stars": 14601,
+      "forks": null,
+      "topics": [
+        "agentic-ai"
+      ],
+      "homepage": "https://alirezarezvani.medium.com/",
+      "repo_url": "https://github.com/alirezarezvani/claude-skills",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "agentic-ai",
+        "python"
+      ],
+      "sources": [
+        "https://github.com/alirezarezvani/claude-skills"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__mksglu_context-mode",
+      "owner": "mksglu",
+      "name": "context-mode",
+      "full_name": "mksglu/context-mode",
+      "description": "Context window optimization for AI coding agents. Sandboxes tool output, 98% reduction. 15 platforms",
+      "category": "mcp",
+      "language": "TypeScript",
+      "license": "Other",
+      "stars": 14559,
+      "forks": null,
+      "topics": [
+        "mcp-server"
+      ],
+      "homepage": "https://context-mode.com",
+      "repo_url": "https://github.com/mksglu/context-mode",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "mcp-server",
+        "typescript"
+      ],
+      "sources": [
+        "https://github.com/mksglu/context-mode"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__eigent-ai_eigent",
+      "owner": "eigent-ai",
+      "name": "eigent",
+      "full_name": "eigent-ai/eigent",
+      "description": "Eigent: The Open Source Cowork Desktop to Unlock Your Exceptional Productivity. Local and Free Alternative to Claude Cowork.",
+      "category": "agent-framework",
+      "language": "TypeScript",
+      "license": "Apache License 2.0",
+      "stars": 13988,
+      "forks": null,
+      "topics": [
+        "agentic-ai"
+      ],
+      "homepage": "https://www.eigent.ai",
+      "repo_url": "https://github.com/eigent-ai/eigent",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "agentic-ai",
+        "typescript"
+      ],
+      "sources": [
+        "https://github.com/eigent-ai/eigent"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__open-metadata_openmetadata",
+      "owner": "open-metadata",
+      "name": "OpenMetadata",
+      "full_name": "open-metadata/OpenMetadata",
+      "description": "OpenMetadata is a unified metadata platform for data discovery, data observability, and data governance powered by a central metadata repository, in-depth column level lineage, and seamless team collaboration.",
+      "category": "mcp",
+      "language": "TypeScript",
+      "license": "Apache License 2.0",
+      "stars": 13899,
+      "forks": null,
+      "topics": [
+        "mcp-server"
+      ],
+      "homepage": "https://open-metadata.org",
+      "repo_url": "https://github.com/open-metadata/OpenMetadata",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "mcp-server",
+        "typescript"
+      ],
+      "sources": [
+        "https://github.com/open-metadata/OpenMetadata"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__casdoor_casdoor",
+      "owner": "casdoor",
+      "name": "casdoor",
+      "full_name": "casdoor/casdoor",
+      "description": "An open-source Agent-first Identity and Access Management (IAM) /LLM MCP & agent gateway and auth server with web UI supporting OpenClaw, MCP, OAuth, OIDC, SAML, CAS, LDAP, SCIM, WebAuthn, TOTP, MFA, Face ID, Google Workspace, Azure AD",
+      "category": "agent-framework",
+      "language": "Go",
+      "license": "Apache License 2.0",
+      "stars": 13598,
+      "forks": null,
+      "topics": [
+        "agentic-ai"
+      ],
+      "homepage": "https://casdoor.ai",
+      "repo_url": "https://github.com/casdoor/casdoor",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "agentic-ai",
+        "go"
+      ],
+      "sources": [
+        "https://github.com/casdoor/casdoor"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__xpzouying_xiaohongshu-mcp",
+      "owner": "xpzouying",
+      "name": "xiaohongshu-mcp",
+      "full_name": "xpzouying/xiaohongshu-mcp",
+      "description": "MCP for xiaohongshu.com",
+      "category": "mcp",
+      "language": "Go",
+      "license": null,
+      "stars": 13558,
+      "forks": null,
+      "topics": [
+        "mcp-server"
+      ],
+      "homepage": "https://www.haha.ai/xiaohongshu-mcp",
+      "repo_url": "https://github.com/xpzouying/xiaohongshu-mcp",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "mcp-server",
+        "go"
+      ],
+      "sources": [
+        "https://github.com/xpzouying/xiaohongshu-mcp"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__yusufkaraaslan_skill_seekers",
+      "owner": "yusufkaraaslan",
+      "name": "Skill_Seekers",
+      "full_name": "yusufkaraaslan/Skill_Seekers",
+      "description": "Convert documentation websites, GitHub repositories, and PDFs into Claude AI skills with automatic conflict detection",
+      "category": "mcp",
+      "language": "Python",
+      "license": "MIT License",
+      "stars": 13470,
+      "forks": null,
+      "topics": [
+        "mcp-server"
+      ],
+      "homepage": "https://skillseekersweb.com/",
+      "repo_url": "https://github.com/yusufkaraaslan/Skill_Seekers",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "mcp-server",
+        "python"
+      ],
+      "sources": [
+        "https://github.com/yusufkaraaslan/Skill_Seekers"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__vectorize-io_hindsight",
+      "owner": "vectorize-io",
+      "name": "hindsight",
+      "full_name": "vectorize-io/hindsight",
+      "description": "Hindsight: Agent Memory That  Learns",
+      "category": "agent-framework",
+      "language": "Python",
+      "license": "MIT License",
+      "stars": 13178,
+      "forks": null,
+      "topics": [
+        "agentic-ai"
+      ],
+      "homepage": "https://hindsight.vectorize.io/",
+      "repo_url": "https://github.com/vectorize-io/hindsight",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "agentic-ai",
+        "python"
+      ],
+      "sources": [
+        "https://github.com/vectorize-io/hindsight"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__nanobrowser_nanobrowser",
+      "owner": "nanobrowser",
+      "name": "nanobrowser",
+      "full_name": "nanobrowser/nanobrowser",
+      "description": "Open-Source Chrome extension for AI-powered web automation. Run multi-agent workflows using your own LLM API key. Alternative to OpenAI Operator.",
+      "category": "browser-automation",
+      "language": "TypeScript",
+      "license": "Apache License 2.0",
+      "stars": 12971,
+      "forks": null,
+      "topics": [
+        "browser-automation"
+      ],
+      "homepage": "https://nanobrowser.ai",
+      "repo_url": "https://github.com/nanobrowser/nanobrowser",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "browser-automation",
+        "typescript"
+      ],
+      "sources": [
+        "https://github.com/nanobrowser/nanobrowser"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__waooai_waoowaoo",
+      "owner": "waooAI",
+      "name": "waoowaoo",
+      "full_name": "waooAI/waoowaoo",
+      "description": "首家工业级全流程 AI 影视生产平台。Industry-first professional AI Agent platform for controllable film & video production. From shorts to live-action with Hollywood-standard workflows.",
+      "category": "agent-framework",
+      "language": "TypeScript",
+      "license": "Other",
+      "stars": 12163,
+      "forks": null,
+      "topics": [
+        "ai-agent"
+      ],
+      "homepage": "https://www.waoowaoo.com/",
+      "repo_url": "https://github.com/waooAI/waoowaoo",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "ai-agent",
+        "typescript"
+      ],
+      "sources": [
+        "https://github.com/waooAI/waoowaoo"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__tadata-org_fastapi_mcp",
+      "owner": "tadata-org",
+      "name": "fastapi_mcp",
+      "full_name": "tadata-org/fastapi_mcp",
+      "description": "Expose your FastAPI endpoints as Model Context Protocol (MCP) tools, with Auth!",
+      "category": "mcp",
+      "language": "Python",
+      "license": "MIT License",
+      "stars": 11861,
+      "forks": null,
+      "topics": [
+        "mcp-server"
+      ],
+      "homepage": "https://fastapi-mcp.tadata.com/",
+      "repo_url": "https://github.com/tadata-org/fastapi_mcp",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "mcp-server",
+        "python"
+      ],
+      "sources": [
+        "https://github.com/tadata-org/fastapi_mcp"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__joeanamier_xhs-downloader",
+      "owner": "JoeanAmier",
+      "name": "XHS-Downloader",
+      "full_name": "JoeanAmier/XHS-Downloader",
+      "description": "小红书（XiaoHongShu、RedNote）链接提取/作品采集工具：提取账号发布、收藏、点赞、专辑作品链接；提取搜索结果作品、用户链接；采集小红书作品信息；提取小红书作品下载地址；下载小红书作品文件",
+      "category": "mcp",
+      "language": "Python",
+      "license": "GNU General Public License v3.0",
+      "stars": 11143,
+      "forks": null,
+      "topics": [
+        "mcp-server"
+      ],
+      "homepage": "https://discord.com/invite/ZYtmgKud9Y",
+      "repo_url": "https://github.com/JoeanAmier/XHS-Downloader",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "mcp-server",
+        "python"
+      ],
+      "sources": [
+        "https://github.com/JoeanAmier/XHS-Downloader"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__0xjacky_nginx-ui",
+      "owner": "0xJacky",
+      "name": "nginx-ui",
+      "full_name": "0xJacky/nginx-ui",
+      "description": "Yet another WebUI for Nginx",
+      "category": "mcp",
+      "language": "Go",
+      "license": "GNU Affero General Public License v3.0",
+      "stars": 11137,
+      "forks": null,
+      "topics": [
+        "mcp-server"
+      ],
+      "homepage": "https://nginxui.com",
+      "repo_url": "https://github.com/0xJacky/nginx-ui",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "mcp-server",
+        "go"
+      ],
+      "sources": [
+        "https://github.com/0xJacky/nginx-ui"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__lsdefine_genericagent",
+      "owner": "lsdefine",
+      "name": "GenericAgent",
+      "full_name": "lsdefine/GenericAgent",
+      "description": "Self-evolving agent: grows skill tree from 3.3K-line seed, achieving full system control with 6x less token consumption",
+      "category": "agent-framework",
+      "language": "Python",
+      "license": "MIT License",
+      "stars": 11126,
+      "forks": null,
+      "topics": [
+        "ai-agent"
+      ],
+      "homepage": "https://github.com/lsdefine/GenericAgent",
+      "repo_url": "https://github.com/lsdefine/GenericAgent",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "ai-agent",
+        "python"
+      ],
+      "sources": [
+        "https://github.com/lsdefine/GenericAgent"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__valuecell-ai_valuecell",
+      "owner": "ValueCell-ai",
+      "name": "valuecell",
+      "full_name": "ValueCell-ai/valuecell",
+      "description": "ValueCell is a community-driven, multi-agent platform for financial applications.",
+      "category": "agent-framework",
+      "language": "Python",
+      "license": "Apache License 2.0",
+      "stars": 10621,
+      "forks": null,
+      "topics": [
+        "agentic-ai"
+      ],
+      "homepage": "https://valuecell.ai",
+      "repo_url": "https://github.com/ValueCell-ai/valuecell",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "agentic-ai",
+        "python"
+      ],
+      "sources": [
+        "https://github.com/ValueCell-ai/valuecell"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__superset-sh_superset",
+      "owner": "superset-sh",
+      "name": "superset",
+      "full_name": "superset-sh/superset",
+      "description": "Code Editor for the AI Agents Era - Run an army of Claude Code, Codex, etc. on your machine",
+      "category": "agent-framework",
+      "language": "TypeScript",
+      "license": "Other",
+      "stars": 10620,
+      "forks": null,
+      "topics": [
+        "agentic-ai"
+      ],
+      "homepage": "https://superset.sh",
+      "repo_url": "https://github.com/superset-sh/superset",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "agentic-ai",
+        "typescript"
+      ],
+      "sources": [
+        "https://github.com/superset-sh/superset"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__the-pocket_pocketflow",
+      "owner": "The-Pocket",
+      "name": "PocketFlow",
+      "full_name": "The-Pocket/PocketFlow",
+      "description": "Pocket Flow: 100-line LLM framework. Let Agents build Agents!",
+      "category": "agent-framework",
+      "language": "Python",
+      "license": "MIT License",
+      "stars": 10614,
+      "forks": null,
+      "topics": [
+        "agentic-ai"
+      ],
+      "homepage": "https://the-pocket.github.io/PocketFlow/",
+      "repo_url": "https://github.com/The-Pocket/PocketFlow",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "agentic-ai",
+        "python"
+      ],
+      "sources": [
+        "https://github.com/The-Pocket/PocketFlow"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__alibaba_opensandbox",
+      "owner": "alibaba",
+      "name": "OpenSandbox",
+      "full_name": "alibaba/OpenSandbox",
+      "description": "Secure, Fast, and Extensible Sandbox runtime for AI agents.",
+      "category": "agent-framework",
+      "language": "Python",
+      "license": "Apache License 2.0",
+      "stars": 10598,
+      "forks": null,
+      "topics": [
+        "ai-agent"
+      ],
+      "homepage": "https://open-sandbox.ai",
+      "repo_url": "https://github.com/alibaba/OpenSandbox",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "ai-agent",
+        "python"
+      ],
+      "sources": [
+        "https://github.com/alibaba/OpenSandbox"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__microsoft_agent-framework",
+      "owner": "microsoft",
+      "name": "agent-framework",
+      "full_name": "microsoft/agent-framework",
+      "description": "A framework for building, orchestrating and deploying AI agents and multi-agent workflows with support for Python and .NET.",
+      "category": "agent-framework",
+      "language": "Python",
+      "license": "MIT License",
+      "stars": 10391,
+      "forks": null,
+      "topics": [
+        "agentic-ai"
+      ],
+      "homepage": "https://aka.ms/agent-framework",
+      "repo_url": "https://github.com/microsoft/agent-framework",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "agentic-ai",
+        "python"
+      ],
+      "sources": [
+        "https://github.com/microsoft/agent-framework"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__mcp-use_mcp-use",
+      "owner": "mcp-use",
+      "name": "mcp-use",
+      "full_name": "mcp-use/mcp-use",
+      "description": "The fullstack MCP framework to develop MCP Apps for ChatGPT / Claude & MCP Servers for AI Agents.",
+      "category": "mcp",
+      "language": "TypeScript",
+      "license": "MIT License",
+      "stars": 9942,
+      "forks": null,
+      "topics": [
+        "mcp-server"
+      ],
+      "homepage": "https://manufact.com",
+      "repo_url": "https://github.com/mcp-use/mcp-use",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "mcp-server",
+        "typescript"
+      ],
+      "sources": [
+        "https://github.com/mcp-use/mcp-use"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__yzhao062_pyod",
+      "owner": "yzhao062",
+      "name": "pyod",
+      "full_name": "yzhao062/pyod",
+      "description": "A Python library for anomaly detection across tabular, time series, graph, text, and image data. 60+ detectors, benchmark-backed ADEngine orchestration, and an agentic workflow for AI agents.",
+      "category": "agent-framework",
+      "language": "Python",
+      "license": "BSD 2-Clause \"Simplified\" License",
+      "stars": 9842,
+      "forks": null,
+      "topics": [
+        "agentic-ai"
+      ],
+      "homepage": "http://pyod.readthedocs.io",
+      "repo_url": "https://github.com/yzhao062/pyod",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "agentic-ai",
+        "python"
+      ],
+      "sources": [
+        "https://github.com/yzhao062/pyod"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__coplaydev_unity-mcp",
+      "owner": "CoplayDev",
+      "name": "unity-mcp",
+      "full_name": "CoplayDev/unity-mcp",
+      "description": "Unity MCP acts as a bridge, allowing AI assistants (like Claude, Cursor) to interact directly with your Unity Editor via a local MCP (Model Context Protocol) Client. Give your LLM tools to manage assets, control scenes, edit scripts, and automate tasks within Unity.",
+      "category": "mcp",
+      "language": "C#",
+      "license": "MIT License",
+      "stars": 9531,
+      "forks": null,
+      "topics": [
+        "model-context-protocol"
+      ],
+      "homepage": "https://www.coplay.dev",
+      "repo_url": "https://github.com/CoplayDev/unity-mcp",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "model-context-protocol",
+        "c#"
+      ],
+      "sources": [
+        "https://github.com/CoplayDev/unity-mcp"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__xinnan-tech_xiaozhi-esp32-server",
+      "owner": "xinnan-tech",
+      "name": "xiaozhi-esp32-server",
+      "full_name": "xinnan-tech/xiaozhi-esp32-server",
+      "description": "本项目为xiaozhi-esp32提供后端服务，帮助您快速搭建ESP32设备控制服务器。Backend service for xiaozhi-esp32, helps you quickly build an ESP32 device control server.",
+      "category": "mcp",
+      "language": "JavaScript",
+      "license": "MIT License",
+      "stars": 9522,
+      "forks": null,
+      "topics": [
+        "mcp-server"
+      ],
+      "homepage": "http://xiaozhi.biz",
+      "repo_url": "https://github.com/xinnan-tech/xiaozhi-esp32-server",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "mcp-server",
+        "javascript"
+      ],
+      "sources": [
+        "https://github.com/xinnan-tech/xiaozhi-esp32-server"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__openpipe_art",
+      "owner": "OpenPipe",
+      "name": "ART",
+      "full_name": "OpenPipe/ART",
+      "description": "Agent Reinforcement Trainer: train multi-step agents for real-world tasks using GRPO. Give your agents on-the-job training. Reinforcement learning for Qwen3.6, GPT-OSS, Llama, and more!",
+      "category": "agent-framework",
+      "language": "Python",
+      "license": "Apache License 2.0",
+      "stars": 9455,
+      "forks": null,
+      "topics": [
+        "agentic-ai"
+      ],
+      "homepage": "https://art.openpipe.ai",
+      "repo_url": "https://github.com/OpenPipe/ART",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "agentic-ai",
+        "python"
+      ],
+      "sources": [
+        "https://github.com/OpenPipe/ART"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__frankbria_ralph-claude-code",
+      "owner": "frankbria",
+      "name": "ralph-claude-code",
+      "full_name": "frankbria/ralph-claude-code",
+      "description": "Autonomous AI development loop for Claude Code with intelligent exit detection",
+      "category": "agent-framework",
+      "language": "Shell",
+      "license": "MIT License",
+      "stars": 9104,
+      "forks": null,
+      "topics": [
+        "ai-agent"
+      ],
+      "repo_url": "https://github.com/frankbria/ralph-claude-code",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "ai-agent",
+        "shell"
+      ],
+      "sources": [
+        "https://github.com/frankbria/ralph-claude-code"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__wanshuiyin_auto-claude-code-research-in-sleep",
+      "owner": "wanshuiyin",
+      "name": "Auto-claude-code-research-in-sleep",
+      "full_name": "wanshuiyin/Auto-claude-code-research-in-sleep",
+      "description": "ARIS ⚔️ (Auto-Research-In-Sleep) — Lightweight Markdown-only skills for autonomous ML research: cross-model review loops, idea discovery, and experiment automation. No framework, no lock-in — works with Claude Code, Codex, OpenClaw, or any LLM agent.",
+      "category": "mcp",
+      "language": "Python",
+      "license": "MIT License",
+      "stars": 9081,
+      "forks": null,
+      "topics": [
+        "mcp-server"
+      ],
+      "repo_url": "https://github.com/wanshuiyin/Auto-claude-code-research-in-sleep",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "mcp-server",
+        "python"
+      ],
+      "sources": [
+        "https://github.com/wanshuiyin/Auto-claude-code-research-in-sleep"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__memtensor_memos",
+      "owner": "MemTensor",
+      "name": "MemOS",
+      "full_name": "MemTensor/MemOS",
+      "description": "Self-evolving memory OS for LLM & AI Agents: ultra-persistent memory, hybrid-retrieval, and cross-task skill reuse, with 35.24% token savings",
+      "category": "agent-framework",
+      "language": "TypeScript",
+      "license": "Apache License 2.0",
+      "stars": 9055,
+      "forks": null,
+      "topics": [
+        "agentic-ai"
+      ],
+      "homepage": "https://memos.openmem.net",
+      "repo_url": "https://github.com/MemTensor/MemOS",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "agentic-ai",
+        "typescript"
+      ],
+      "sources": [
+        "https://github.com/MemTensor/MemOS"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__awslabs_mcp",
+      "owner": "awslabs",
+      "name": "mcp",
+      "full_name": "awslabs/mcp",
+      "description": "Open source MCP Servers for AWS",
+      "category": "mcp",
+      "language": "Python",
+      "license": "Apache License 2.0",
+      "stars": 9032,
+      "forks": null,
+      "topics": [
+        "mcp-server"
+      ],
+      "homepage": "https://awslabs.github.io/mcp/",
+      "repo_url": "https://github.com/awslabs/mcp",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "mcp-server",
+        "python"
+      ],
+      "sources": [
+        "https://github.com/awslabs/mcp"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__pinchtab_pinchtab",
+      "owner": "pinchtab",
+      "name": "pinchtab",
+      "full_name": "pinchtab/pinchtab",
+      "description": "High-performance browser automation bridge and multi-instance orchestrator with advanced stealth injection and real-time dashboard.",
+      "category": "browser-automation",
+      "language": "Go",
+      "license": "MIT License",
+      "stars": 9028,
+      "forks": null,
+      "topics": [
+        "browser-automation"
+      ],
+      "repo_url": "https://github.com/pinchtab/pinchtab",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "browser-automation",
+        "go"
+      ],
+      "sources": [
+        "https://github.com/pinchtab/pinchtab"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__0x4m4_hexstrike-ai",
+      "owner": "0x4m4",
+      "name": "hexstrike-ai",
+      "full_name": "0x4m4/hexstrike-ai",
+      "description": "HexStrike AI MCP Agents is an advanced MCP server that lets AI agents (Claude, GPT, Copilot, etc.) autonomously run 150+ cybersecurity tools for automated pentesting, vulnerability discovery, bug bounty automation, and security research. Seamlessly bridge LLMs with real-world offensive security capabilities.",
+      "category": "mcp",
+      "language": "Python",
+      "license": "MIT License",
+      "stars": 8703,
+      "forks": null,
+      "topics": [
+        "mcp-server"
+      ],
+      "homepage": "https://www.hexstrike.com/",
+      "repo_url": "https://github.com/0x4m4/hexstrike-ai",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "mcp-server",
+        "python"
+      ],
+      "sources": [
+        "https://github.com/0x4m4/hexstrike-ai"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__cloakhq_cloakbrowser",
+      "owner": "CloakHQ",
+      "name": "CloakBrowser",
+      "full_name": "CloakHQ/CloakBrowser",
+      "description": "Stealth Chromium that passes every bot detection test. Drop-in Playwright replacement with source-level fingerprint patches. 30/30 tests passed.",
+      "category": "browser-automation",
+      "language": "Python",
+      "license": "MIT License",
+      "stars": 8452,
+      "forks": null,
+      "topics": [
+        "browser-automation"
+      ],
+      "homepage": "https://cloakbrowser.dev/",
+      "repo_url": "https://github.com/CloakHQ/CloakBrowser",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "browser-automation",
+        "python"
+      ],
+      "sources": [
+        "https://github.com/CloakHQ/CloakBrowser"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__mrexodia_ida-pro-mcp",
+      "owner": "mrexodia",
+      "name": "ida-pro-mcp",
+      "full_name": "mrexodia/ida-pro-mcp",
+      "description": "AI-powered reverse engineering assistant that bridges IDA Pro with language models through MCP.",
+      "category": "mcp",
+      "language": "Python",
+      "license": "MIT License",
+      "stars": 8451,
+      "forks": null,
+      "topics": [
+        "mcp-server"
+      ],
+      "homepage": "https://plugins.hex-rays.com/mrexodia/ida-pro-mcp",
+      "repo_url": "https://github.com/mrexodia/ida-pro-mcp",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "mcp-server",
+        "python"
+      ],
+      "sources": [
+        "https://github.com/mrexodia/ida-pro-mcp"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__lastmile-ai_mcp-agent",
+      "owner": "lastmile-ai",
+      "name": "mcp-agent",
+      "full_name": "lastmile-ai/mcp-agent",
+      "description": "Build effective agents using Model Context Protocol and simple workflow patterns",
+      "category": "mcp",
+      "language": "Python",
+      "license": "Apache License 2.0",
+      "stars": 8319,
+      "forks": null,
+      "topics": [
+        "model-context-protocol"
+      ],
+      "repo_url": "https://github.com/lastmile-ai/mcp-agent",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "model-context-protocol",
+        "python"
+      ],
+      "sources": [
+        "https://github.com/lastmile-ai/mcp-agent"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__ykdojo_claude-code-tips",
+      "owner": "ykdojo",
+      "name": "claude-code-tips",
+      "full_name": "ykdojo/claude-code-tips",
+      "description": "45 tips for getting the most out of Claude Code, from basics to advanced - includes a custom status line script, cutting the system prompt in half, using Gemini CLI as Claude Code's minion, and Claude Code running itself in a container. Also includes the dx plugin.",
+      "category": "agent-framework",
+      "language": "JavaScript",
+      "license": "Other",
+      "stars": 8229,
+      "forks": null,
+      "topics": [
+        "agentic-ai"
+      ],
+      "repo_url": "https://github.com/ykdojo/claude-code-tips",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "agentic-ai",
+        "javascript"
+      ],
+      "sources": [
+        "https://github.com/ykdojo/claude-code-tips"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__idosal_git-mcp",
+      "owner": "idosal",
+      "name": "git-mcp",
+      "full_name": "idosal/git-mcp",
+      "description": "Put an end to code hallucinations! GitMCP is a free, open-source, remote MCP server for any GitHub project",
+      "category": "agent-framework",
+      "language": "TypeScript",
+      "license": "Apache License 2.0",
+      "stars": 8075,
+      "forks": null,
+      "topics": [
+        "agentic-ai"
+      ],
+      "homepage": "https://gitmcp.io",
+      "repo_url": "https://github.com/idosal/git-mcp",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "agentic-ai",
+        "typescript"
+      ],
+      "sources": [
+        "https://github.com/idosal/git-mcp"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__upsonic_upsonic",
+      "owner": "Upsonic",
+      "name": "Upsonic",
+      "full_name": "Upsonic/Upsonic",
+      "description": "Build autonomous AI agents in Python.",
+      "category": "mcp",
+      "language": "Python",
+      "license": "MIT License",
+      "stars": 7848,
+      "forks": null,
+      "topics": [
+        "model-context-protocol"
+      ],
+      "homepage": "https://docs.upsonic.ai",
+      "repo_url": "https://github.com/Upsonic/Upsonic",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "model-context-protocol",
+        "python"
+      ],
+      "sources": [
+        "https://github.com/Upsonic/Upsonic"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__getstream_vision-agents",
+      "owner": "GetStream",
+      "name": "Vision-Agents",
+      "full_name": "GetStream/Vision-Agents",
+      "description": "Open Vision Agents by Stream. Build voice and vision agents quickly with any model or video provider. Uses Stream's edge network for ultra-low latency.",
+      "category": "agent-framework",
+      "language": "Python",
+      "license": "Apache License 2.0",
+      "stars": 7803,
+      "forks": null,
+      "topics": [
+        "agentic-ai"
+      ],
+      "homepage": "https://visionagents.ai",
+      "repo_url": "https://github.com/GetStream/Vision-Agents",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "agentic-ai",
+        "python"
+      ],
+      "sources": [
+        "https://github.com/GetStream/Vision-Agents"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__firerpa_lamda",
+      "owner": "firerpa",
+      "name": "lamda",
+      "full_name": "firerpa/lamda",
+      "description": "The most powerful Android RPA agent framework, next generation mobile automation.",
+      "category": "mcp",
+      "language": "Python",
+      "license": "MIT License",
+      "stars": 7785,
+      "forks": null,
+      "topics": [
+        "mcp-server"
+      ],
+      "homepage": "https://device-farm.com/",
+      "repo_url": "https://github.com/firerpa/lamda",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "mcp-server",
+        "python"
+      ],
+      "sources": [
+        "https://github.com/firerpa/lamda"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__2fastlabs_agent-squad",
+      "owner": "2FastLabs",
+      "name": "agent-squad",
+      "full_name": "2FastLabs/agent-squad",
+      "description": "Flexible and powerful framework for managing multiple AI agents and handling complex conversations",
+      "category": "agent-framework",
+      "language": "Python",
+      "license": "Apache License 2.0",
+      "stars": 7625,
+      "forks": null,
+      "topics": [
+        "agentic-ai"
+      ],
+      "homepage": "https://2fastlabs.github.io/agent-squad/",
+      "repo_url": "https://github.com/2FastLabs/agent-squad",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "agentic-ai",
+        "python"
+      ],
+      "sources": [
+        "https://github.com/2FastLabs/agent-squad"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__evomap_evolver",
+      "owner": "EvoMap",
+      "name": "evolver",
+      "full_name": "EvoMap/evolver",
+      "description": "The GEP-powered self-evolving engine for AI agents. Auditable evolution with Genes, Capsules, and Events. | evomap.ai",
+      "category": "agent-framework",
+      "language": "JavaScript",
+      "license": "GNU General Public License v3.0",
+      "stars": 7398,
+      "forks": null,
+      "topics": [
+        "ai-agent"
+      ],
+      "homepage": "https://evomap.ai",
+      "repo_url": "https://github.com/EvoMap/evolver",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "ai-agent",
+        "javascript"
+      ],
+      "sources": [
+        "https://github.com/EvoMap/evolver"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__agentdeskai_browser-tools-mcp",
+      "owner": "AgentDeskAI",
+      "name": "browser-tools-mcp",
+      "full_name": "AgentDeskAI/browser-tools-mcp",
+      "description": "Monitor browser logs directly from Cursor and other MCP compatible IDEs.",
+      "category": "mcp",
+      "language": "JavaScript",
+      "license": "MIT License",
+      "stars": 7212,
+      "forks": null,
+      "topics": [
+        "mcp-server"
+      ],
+      "homepage": "https://agentdesk.ai/",
+      "repo_url": "https://github.com/AgentDeskAI/browser-tools-mcp",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "mcp-server",
+        "javascript"
+      ],
+      "sources": [
+        "https://github.com/AgentDeskAI/browser-tools-mcp"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__hkuds_vibe-trading",
+      "owner": "HKUDS",
+      "name": "Vibe-Trading",
+      "full_name": "HKUDS/Vibe-Trading",
+      "description": "\"Vibe-Trading: Your Personal Trading Agent\"",
+      "category": "agent-framework",
+      "language": "Python",
+      "license": "MIT License",
+      "stars": 7175,
+      "forks": null,
+      "topics": [
+        "ai-agent"
+      ],
+      "homepage": "https://pypi.org/project/vibe-trading-ai/",
+      "repo_url": "https://github.com/HKUDS/Vibe-Trading",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "ai-agent",
+        "python"
+      ],
+      "sources": [
+        "https://github.com/HKUDS/Vibe-Trading"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__yzfly_awesome-mcp-zh",
+      "owner": "yzfly",
+      "name": "Awesome-MCP-ZH",
+      "full_name": "yzfly/Awesome-MCP-ZH",
+      "description": "MCP 资源精选， MCP指南，Claude MCP，MCP Servers, MCP Clients",
+      "category": "mcp",
+      "language": null,
+      "license": "MIT License",
+      "stars": 7056,
+      "forks": null,
+      "topics": [
+        "mcp-server"
+      ],
+      "repo_url": "https://github.com/yzfly/Awesome-MCP-ZH",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "mcp-server"
+      ],
+      "sources": [
+        "https://github.com/yzfly/Awesome-MCP-ZH"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__steel-dev_steel-browser",
+      "owner": "steel-dev",
+      "name": "steel-browser",
+      "full_name": "steel-dev/steel-browser",
+      "description": "🔥 Open Source Browser API for AI Agents & Apps. Steel Browser is a batteries-included browser sandbox that lets you automate the web without worrying about infrastructure.",
+      "category": "browser-automation",
+      "language": "TypeScript",
+      "license": "Apache License 2.0",
+      "stars": 7015,
+      "forks": null,
+      "topics": [
+        "browser-automation"
+      ],
+      "homepage": "https://steel.dev",
+      "repo_url": "https://github.com/steel-dev/steel-browser",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "browser-automation",
+        "typescript"
+      ],
+      "sources": [
+        "https://github.com/steel-dev/steel-browser"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__autoscrape-labs_pydoll",
+      "owner": "autoscrape-labs",
+      "name": "pydoll",
+      "full_name": "autoscrape-labs/pydoll",
+      "description": "Pydoll is a library for automating chromium-based browsers without a WebDriver, offering realistic interactions.",
+      "category": "browser-automation",
+      "language": "Python",
+      "license": "MIT License",
+      "stars": 6840,
+      "forks": null,
+      "topics": [
+        "browser-automation"
+      ],
+      "homepage": "https://pydoll.tech/",
+      "repo_url": "https://github.com/autoscrape-labs/pydoll",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "browser-automation",
+        "python"
+      ],
+      "sources": [
+        "https://github.com/autoscrape-labs/pydoll"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__grab_cursor-talk-to-figma-mcp",
+      "owner": "grab",
+      "name": "cursor-talk-to-figma-mcp",
+      "full_name": "grab/cursor-talk-to-figma-mcp",
+      "description": "TalkToFigma: MCP integration between AI Agent (Cursor, Claude Code) and Figma, allowing Agentic AI to communicate with Figma for reading designs and modifying them programmatically.",
+      "category": "mcp",
+      "language": "JavaScript",
+      "license": "MIT License",
+      "stars": 6749,
+      "forks": null,
+      "topics": [
+        "model-context-protocol"
+      ],
+      "homepage": "https://www.figma.com/community/plugin/1485687494525374295/cursor-talk-to-figma-mcp-plugin",
+      "repo_url": "https://github.com/grab/cursor-talk-to-figma-mcp",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "model-context-protocol",
+        "javascript"
+      ],
+      "sources": [
+        "https://github.com/grab/cursor-talk-to-figma-mcp"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__crestalnetwork_intentkit",
+      "owner": "crestalnetwork",
+      "name": "intentkit",
+      "full_name": "crestalnetwork/intentkit",
+      "description": "IntentKit is an open-source, self-hosted cloud agent cluster that manages a collaborative team of AI agents for you.",
+      "category": "agent-framework",
+      "language": "Python",
+      "license": "MIT License",
+      "stars": 6502,
+      "forks": null,
+      "topics": [
+        "ai-agent"
+      ],
+      "homepage": "https://intentcat.com/docs",
+      "repo_url": "https://github.com/crestalnetwork/intentkit",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "ai-agent",
+        "python"
+      ],
+      "sources": [
+        "https://github.com/crestalnetwork/intentkit"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__browsermcp_mcp",
+      "owner": "BrowserMCP",
+      "name": "mcp",
+      "full_name": "BrowserMCP/mcp",
+      "description": "Browser MCP is a Model Context Provider (MCP) server that allows AI applications to control your browser",
+      "category": "mcp",
+      "language": "TypeScript",
+      "license": "Apache License 2.0",
+      "stars": 6495,
+      "forks": null,
+      "topics": [
+        "mcp-server"
+      ],
+      "homepage": "https://browsermcp.io",
+      "repo_url": "https://github.com/BrowserMCP/mcp",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "mcp-server",
+        "typescript"
+      ],
+      "sources": [
+        "https://github.com/BrowserMCP/mcp"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__mishushakov_llm-scraper",
+      "owner": "mishushakov",
+      "name": "llm-scraper",
+      "full_name": "mishushakov/llm-scraper",
+      "description": "Turn any webpage into structured data using LLMs",
+      "category": "browser-automation",
+      "language": "TypeScript",
+      "license": "MIT License",
+      "stars": 6376,
+      "forks": null,
+      "topics": [
+        "browser-automation"
+      ],
+      "repo_url": "https://github.com/mishushakov/llm-scraper",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "browser-automation",
+        "typescript"
+      ],
+      "sources": [
+        "https://github.com/mishushakov/llm-scraper"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__chatlab_chatlab",
+      "owner": "ChatLab",
+      "name": "ChatLab",
+      "full_name": "ChatLab/ChatLab",
+      "description": "Local-first chat history analyzer with AI. | 本地优先的 AI 聊天记录分析工具",
+      "category": "agent-framework",
+      "language": "TypeScript",
+      "license": "GNU Affero General Public License v3.0",
+      "stars": 6325,
+      "forks": null,
+      "topics": [
+        "ai-agent"
+      ],
+      "homepage": "https://chatlab.fun",
+      "repo_url": "https://github.com/ChatLab/ChatLab",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "ai-agent",
+        "typescript"
+      ],
+      "sources": [
+        "https://github.com/ChatLab/ChatLab"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__firecrawl_firecrawl-mcp-server",
+      "owner": "firecrawl",
+      "name": "firecrawl-mcp-server",
+      "full_name": "firecrawl/firecrawl-mcp-server",
+      "description": "🔥 Official Firecrawl MCP Server - Adds powerful web scraping and search to Cursor, Claude and any other LLM clients.",
+      "category": "mcp",
+      "language": "JavaScript",
+      "license": "MIT License",
+      "stars": 6297,
+      "forks": null,
+      "topics": [
+        "mcp-server"
+      ],
+      "homepage": "https://firecrawl.dev",
+      "repo_url": "https://github.com/firecrawl/firecrawl-mcp-server",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "mcp-server",
+        "javascript"
+      ],
+      "sources": [
+        "https://github.com/firecrawl/firecrawl-mcp-server"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__e2b-dev_fragments",
+      "owner": "e2b-dev",
+      "name": "fragments",
+      "full_name": "e2b-dev/fragments",
+      "description": "Open-source Next.js template for building apps that are fully generated by AI. By E2B.",
+      "category": "coding-agent",
+      "language": "TypeScript",
+      "license": "Apache License 2.0",
+      "stars": 6283,
+      "forks": null,
+      "topics": [
+        "code-interpreter"
+      ],
+      "homepage": "https://fragments.e2b.dev",
+      "repo_url": "https://github.com/e2b-dev/fragments",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "code-interpreter",
+        "typescript"
+      ],
+      "sources": [
+        "https://github.com/e2b-dev/fragments"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__narcooo_inkos",
+      "owner": "Narcooo",
+      "name": "inkos",
+      "full_name": "Narcooo/inkos",
+      "description": "Autonomous novel writing AI Agent — agents write, audit, and revise novels with human review gates",
+      "category": "agent-framework",
+      "language": "TypeScript",
+      "license": "GNU Affero General Public License v3.0",
+      "stars": 6071,
+      "forks": null,
+      "topics": [
+        "ai-agent"
+      ],
+      "repo_url": "https://github.com/Narcooo/inkos",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "ai-agent",
+        "typescript"
+      ],
+      "sources": [
+        "https://github.com/Narcooo/inkos"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__ufomiao_zcf",
+      "owner": "UfoMiao",
+      "name": "zcf",
+      "full_name": "UfoMiao/zcf",
+      "description": "Zero-Config Code Flow for Claude code & Codex",
+      "category": "agent-framework",
+      "language": "TypeScript",
+      "license": "MIT License",
+      "stars": 5981,
+      "forks": null,
+      "topics": [
+        "ai-agent"
+      ],
+      "homepage": "http://zcf.ufomiao.com/",
+      "repo_url": "https://github.com/UfoMiao/zcf",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "ai-agent",
+        "typescript"
+      ],
+      "sources": [
+        "https://github.com/UfoMiao/zcf"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__holaboss-ai_holaos",
+      "owner": "holaboss-ai",
+      "name": "holaOS",
+      "full_name": "holaboss-ai/holaOS",
+      "description": "Turn repeat work into running AI work-streams.",
+      "category": "agent-framework",
+      "language": "TypeScript",
+      "license": "Other",
+      "stars": 5620,
+      "forks": null,
+      "topics": [
+        "ai-agent"
+      ],
+      "homepage": "https://holaos.ai",
+      "repo_url": "https://github.com/holaboss-ai/holaOS",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "ai-agent",
+        "typescript"
+      ],
+      "sources": [
+        "https://github.com/holaboss-ai/holaOS"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__appcypher_awesome-mcp-servers",
+      "owner": "appcypher",
+      "name": "awesome-mcp-servers",
+      "full_name": "appcypher/awesome-mcp-servers",
+      "description": "Awesome MCP Servers - A curated list of Model Context Protocol servers",
+      "category": "mcp",
+      "language": null,
+      "license": null,
+      "stars": 5533,
+      "forks": null,
+      "topics": [
+        "model-context-protocol"
+      ],
+      "repo_url": "https://github.com/appcypher/awesome-mcp-servers",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "model-context-protocol"
+      ],
+      "sources": [
+        "https://github.com/appcypher/awesome-mcp-servers"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__getsentry_xcodebuildmcp",
+      "owner": "getsentry",
+      "name": "XcodeBuildMCP",
+      "full_name": "getsentry/XcodeBuildMCP",
+      "description": "A Model Context Protocol (MCP) server and CLI that provides tools for agent use when working on iOS and macOS projects.",
+      "category": "mcp",
+      "language": "TypeScript",
+      "license": "MIT License",
+      "stars": 5508,
+      "forks": null,
+      "topics": [
+        "model-context-protocol"
+      ],
+      "homepage": "https://www.xcodebuildmcp.com",
+      "repo_url": "https://github.com/getsentry/XcodeBuildMCP",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "model-context-protocol",
+        "typescript"
+      ],
+      "sources": [
+        "https://github.com/getsentry/XcodeBuildMCP"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__getbindu_bindu",
+      "owner": "GetBindu",
+      "name": "Bindu",
+      "full_name": "GetBindu/Bindu",
+      "description": "Bindu: Turn any AI agent into a living microservice -  interoperable, observable, composable.",
+      "category": "agent-framework",
+      "language": "Python",
+      "license": "Other",
+      "stars": 5440,
+      "forks": null,
+      "topics": [
+        "ai-agent"
+      ],
+      "homepage": "https://docs.getbindu.com",
+      "repo_url": "https://github.com/GetBindu/Bindu",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "ai-agent",
+        "python"
+      ],
+      "sources": [
+        "https://github.com/GetBindu/Bindu"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__nanbingxyz_5ire",
+      "owner": "nanbingxyz",
+      "name": "5ire",
+      "full_name": "nanbingxyz/5ire",
+      "description": "5ire is a cross-platform desktop AI assistant, MCP client. It compatible with major service providers,  supports local knowledge base and  tools via model context protocol servers .",
+      "category": "mcp",
+      "language": "TypeScript",
+      "license": "Other",
+      "stars": 5215,
+      "forks": null,
+      "topics": [
+        "model-context-protocol"
+      ],
+      "homepage": "https://5ire.app",
+      "repo_url": "https://github.com/nanbingxyz/5ire",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "model-context-protocol",
+        "typescript"
+      ],
+      "sources": [
+        "https://github.com/nanbingxyz/5ire"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__mahseema_awesome-ai-tools",
+      "owner": "mahseema",
+      "name": "awesome-ai-tools",
+      "full_name": "mahseema/awesome-ai-tools",
+      "description": "A curated list of Artificial Intelligence Top Tools",
+      "category": "agent-framework",
+      "language": null,
+      "license": "MIT License",
+      "stars": 5178,
+      "forks": null,
+      "topics": [
+        "ai-agent"
+      ],
+      "repo_url": "https://github.com/mahseema/awesome-ai-tools",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "ai-agent"
+      ],
+      "sources": [
+        "https://github.com/mahseema/awesome-ai-tools"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__presenton_presenton",
+      "owner": "presenton",
+      "name": "presenton",
+      "full_name": "presenton/presenton",
+      "description": "Open-Source AI Presentation Generator and API (Gamma, Beautiful AI, Decktopus Alternative)",
+      "category": "agent-framework",
+      "language": "JavaScript",
+      "license": "Apache License 2.0",
+      "stars": 4969,
+      "forks": null,
+      "topics": [
+        "ai-agent"
+      ],
+      "homepage": "https://presenton.ai",
+      "repo_url": "https://github.com/presenton/presenton",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "ai-agent",
+        "javascript"
+      ],
+      "sources": [
+        "https://github.com/presenton/presenton"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__fellouai_eko",
+      "owner": "FellouAI",
+      "name": "eko",
+      "full_name": "FellouAI/eko",
+      "description": "Eko (Eko Keeps Operating) - Build Production-ready Agentic Workflow with Natural Language - eko.fellou.ai",
+      "category": "browser-automation",
+      "language": "TypeScript",
+      "license": "MIT License",
+      "stars": 4919,
+      "forks": null,
+      "topics": [
+        "browser-automation"
+      ],
+      "homepage": "https://fellou.ai/eko",
+      "repo_url": "https://github.com/FellouAI/eko",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "browser-automation",
+        "typescript"
+      ],
+      "sources": [
+        "https://github.com/FellouAI/eko"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__jo-inc_camofox-browser",
+      "owner": "jo-inc",
+      "name": "camofox-browser",
+      "full_name": "jo-inc/camofox-browser",
+      "description": "Stealth headless browser for AI agents — bypass Cloudflare, bot detection, and anti-scraping. Drop-in Puppeteer/Playwright replacement.",
+      "category": "agent-framework",
+      "language": "JavaScript",
+      "license": "MIT License",
+      "stars": 4854,
+      "forks": null,
+      "topics": [
+        "ai-agent"
+      ],
+      "homepage": "https://github.com/jo-inc/camofox-browser#readme",
+      "repo_url": "https://github.com/jo-inc/camofox-browser",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "ai-agent",
+        "javascript"
+      ],
+      "sources": [
+        "https://github.com/jo-inc/camofox-browser"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__the-open-agent_openagent",
+      "owner": "the-open-agent",
+      "name": "openagent",
+      "full_name": "the-open-agent/openagent",
+      "description": "⚡️next-generation personal AI assistant powered by LLM, RAG and agent loops, supporting computer-use, browser-use and coding agent, demo: https://demo.openagentai.org",
+      "category": "mcp",
+      "language": "Go",
+      "license": "Apache License 2.0",
+      "stars": 4683,
+      "forks": null,
+      "topics": [
+        "model-context-protocol"
+      ],
+      "homepage": "https://www.openagentai.org/",
+      "repo_url": "https://github.com/the-open-agent/openagent",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "model-context-protocol",
+        "go"
+      ],
+      "sources": [
+        "https://github.com/the-open-agent/openagent"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__exa-labs_exa-mcp-server",
+      "owner": "exa-labs",
+      "name": "exa-mcp-server",
+      "full_name": "exa-labs/exa-mcp-server",
+      "description": "Exa MCP for web search and web crawling!",
+      "category": "mcp",
+      "language": "TypeScript",
+      "license": "MIT License",
+      "stars": 4418,
+      "forks": null,
+      "topics": [
+        "model-context-protocol"
+      ],
+      "homepage": "https://exa.ai/docs/reference/exa-mcp",
+      "repo_url": "https://github.com/exa-labs/exa-mcp-server",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "model-context-protocol",
+        "typescript"
+      ],
+      "sources": [
+        "https://github.com/exa-labs/exa-mcp-server"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__shroominic_codeinterpreter-api",
+      "owner": "shroominic",
+      "name": "codeinterpreter-api",
+      "full_name": "shroominic/codeinterpreter-api",
+      "description": "👾 Open source implementation of the ChatGPT Code Interpreter",
+      "category": "coding-agent",
+      "language": "Python",
+      "license": "MIT License",
+      "stars": 3850,
+      "forks": null,
+      "topics": [
+        "code-interpreter"
+      ],
+      "homepage": "https://discord.gg/Vaq25XJvvW",
+      "repo_url": "https://github.com/shroominic/codeinterpreter-api",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "code-interpreter",
+        "python"
+      ],
+      "sources": [
+        "https://github.com/shroominic/codeinterpreter-api"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__ibm_mcp-context-forge",
+      "owner": "IBM",
+      "name": "mcp-context-forge",
+      "full_name": "IBM/mcp-context-forge",
+      "description": "An AI Gateway, registry, and proxy that sits in front of any MCP, A2A, or REST/gRPC APIs, exposing a unified endpoint with centralized discovery, guardrails and management. Optimizes Agent & Tool calling, and supports plugins.",
+      "category": "mcp",
+      "language": "Python",
+      "license": "Apache License 2.0",
+      "stars": 3687,
+      "forks": null,
+      "topics": [
+        "model-context-protocol"
+      ],
+      "homepage": "https://ibm.github.io/mcp-context-forge/",
+      "repo_url": "https://github.com/IBM/mcp-context-forge",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "model-context-protocol",
+        "python"
+      ],
+      "sources": [
+        "https://github.com/IBM/mcp-context-forge"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__playwright-community_playwright-go",
+      "owner": "playwright-community",
+      "name": "playwright-go",
+      "full_name": "playwright-community/playwright-go",
+      "description": "Playwright for Go a browser automation library to control Chromium, Firefox and WebKit with a single API.",
+      "category": "browser-automation",
+      "language": "Go",
+      "license": "MIT License",
+      "stars": 3339,
+      "forks": null,
+      "topics": [
+        "browser-automation"
+      ],
+      "homepage": "https://playwright-community.github.io/playwright-go/",
+      "repo_url": "https://github.com/playwright-community/playwright-go",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "browser-automation",
+        "go"
+      ],
+      "sources": [
+        "https://github.com/playwright-community/playwright-go"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__ivanmurzak_unity-mcp",
+      "owner": "IvanMurzak",
+      "name": "Unity-MCP",
+      "full_name": "IvanMurzak/Unity-MCP",
+      "description": "AI Skills, MCP Tools, and CLI for Unity Engine. Full AI develop and test loop. Use cli for quick setup. Efficient token usage, advanced tools. Any C# method may be turned into a tool by a single line. Works with Claude Code, Gemini, Copilot, Cursor and any other absolutely for free.",
+      "category": "mcp",
+      "language": "C#",
+      "license": "Apache License 2.0",
+      "stars": 2716,
+      "forks": null,
+      "topics": [
+        "model-context-protocol"
+      ],
+      "homepage": "https://ai-game.dev",
+      "repo_url": "https://github.com/IvanMurzak/Unity-MCP",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "model-context-protocol",
+        "c#"
+      ],
+      "sources": [
+        "https://github.com/IvanMurzak/Unity-MCP"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__blazickjp_arxiv-mcp-server",
+      "owner": "blazickjp",
+      "name": "arxiv-mcp-server",
+      "full_name": "blazickjp/arxiv-mcp-server",
+      "description": "A Model Context Protocol server for searching and analyzing arXiv papers",
+      "category": "mcp",
+      "language": "Python",
+      "license": "Apache License 2.0",
+      "stars": 2695,
+      "forks": null,
+      "topics": [
+        "model-context-protocol"
+      ],
+      "repo_url": "https://github.com/blazickjp/arxiv-mcp-server",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "model-context-protocol",
+        "python"
+      ],
+      "sources": [
+        "https://github.com/blazickjp/arxiv-mcp-server"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__zcaceres_markdownify-mcp",
+      "owner": "zcaceres",
+      "name": "markdownify-mcp",
+      "full_name": "zcaceres/markdownify-mcp",
+      "description": "A Model Context Protocol server for converting almost anything to Markdown",
+      "category": "mcp",
+      "language": "TypeScript",
+      "license": "MIT License",
+      "stars": 2678,
+      "forks": null,
+      "topics": [
+        "model-context-protocol"
+      ],
+      "repo_url": "https://github.com/zcaceres/markdownify-mcp",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "model-context-protocol",
+        "typescript"
+      ],
+      "sources": [
+        "https://github.com/zcaceres/markdownify-mcp"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__lackeyjb_playwright-skill",
+      "owner": "lackeyjb",
+      "name": "playwright-skill",
+      "full_name": "lackeyjb/playwright-skill",
+      "description": "Claude Code Skill for browser automation with Playwright. Model-invoked - Claude autonomously writes and executes custom automation for testing and validation.",
+      "category": "browser-automation",
+      "language": "JavaScript",
+      "license": "MIT License",
+      "stars": 2615,
+      "forks": null,
+      "topics": [
+        "browser-automation"
+      ],
+      "repo_url": "https://github.com/lackeyjb/playwright-skill",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "browser-automation",
+        "javascript"
+      ],
+      "sources": [
+        "https://github.com/lackeyjb/playwright-skill"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__taylorwilsdon_google_workspace_mcp",
+      "owner": "taylorwilsdon",
+      "name": "google_workspace_mcp",
+      "full_name": "taylorwilsdon/google_workspace_mcp",
+      "description": "Control Gmail, Google Calendar, Docs, Sheets, Slides, Chat, Forms, Tasks, Search & Drive with AI - Comprehensive Google Workspace / G Suite MCP Server & CLI Tool",
+      "category": "mcp",
+      "language": "Python",
+      "license": "MIT License",
+      "stars": 2389,
+      "forks": null,
+      "topics": [
+        "model-context-protocol"
+      ],
+      "homepage": "https://workspacemcp.com",
+      "repo_url": "https://github.com/taylorwilsdon/google_workspace_mcp",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "model-context-protocol",
+        "python"
+      ],
+      "sources": [
+        "https://github.com/taylorwilsdon/google_workspace_mcp"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__brightdata_brightdata-mcp",
+      "owner": "brightdata",
+      "name": "brightdata-mcp",
+      "full_name": "brightdata/brightdata-mcp",
+      "description": "A powerful Model Context Protocol (MCP) server that provides an all-in-one solution for public web access.",
+      "category": "browser-automation",
+      "language": "JavaScript",
+      "license": "MIT License",
+      "stars": 2361,
+      "forks": null,
+      "topics": [
+        "browser-automation"
+      ],
+      "homepage": "https://brightdata.com/",
+      "repo_url": "https://github.com/brightdata/brightdata-mcp",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "browser-automation",
+        "javascript"
+      ],
+      "sources": [
+        "https://github.com/brightdata/brightdata-mcp"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__metatool-ai_metamcp",
+      "owner": "metatool-ai",
+      "name": "metamcp",
+      "full_name": "metatool-ai/metamcp",
+      "description": "MCP Aggregator, Orchestrator, Middleware, Gateway in one docker",
+      "category": "mcp",
+      "language": "TypeScript",
+      "license": "MIT License",
+      "stars": 2319,
+      "forks": null,
+      "topics": [
+        "model-context-protocol"
+      ],
+      "homepage": "https://docs.metamcp.com",
+      "repo_url": "https://github.com/metatool-ai/metamcp",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "model-context-protocol",
+        "typescript"
+      ],
+      "sources": [
+        "https://github.com/metatool-ai/metamcp"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__e2b-dev_code-interpreter",
+      "owner": "e2b-dev",
+      "name": "code-interpreter",
+      "full_name": "e2b-dev/code-interpreter",
+      "description": "Python & JS/TS SDK for running AI-generated code/code interpreting in your AI app",
+      "category": "coding-agent",
+      "language": "Python",
+      "license": "Apache License 2.0",
+      "stars": 2312,
+      "forks": null,
+      "topics": [
+        "code-interpreter"
+      ],
+      "homepage": "https://e2b.dev",
+      "repo_url": "https://github.com/e2b-dev/code-interpreter",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "code-interpreter",
+        "python"
+      ],
+      "sources": [
+        "https://github.com/e2b-dev/code-interpreter"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__deusdata_codebase-memory-mcp",
+      "owner": "DeusData",
+      "name": "codebase-memory-mcp",
+      "full_name": "DeusData/codebase-memory-mcp",
+      "description": "High-performance code intelligence MCP server. Indexes codebases into a persistent knowledge graph — average repo in milliseconds. 155 languages, sub-ms queries, 99% fewer tokens. Single static binary, zero dependencies.",
+      "category": "mcp",
+      "language": "C",
+      "license": "MIT License",
+      "stars": 2290,
+      "forks": null,
+      "topics": [
+        "model-context-protocol"
+      ],
+      "homepage": "https://deusdata.github.io/codebase-memory-mcp/",
+      "repo_url": "https://github.com/DeusData/codebase-memory-mcp",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "model-context-protocol",
+        "c"
+      ],
+      "sources": [
+        "https://github.com/DeusData/codebase-memory-mcp"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__genieincodebottle_generative-ai",
+      "owner": "genieincodebottle",
+      "name": "generative-ai",
+      "full_name": "genieincodebottle/generative-ai",
+      "description": "Comprehensive resources on Generative AI, including a detailed roadmap, projects, use cases, interview preparation, and coding preparation.",
+      "category": "mcp",
+      "language": "Jupyter Notebook",
+      "license": "MIT License",
+      "stars": 2271,
+      "forks": null,
+      "topics": [
+        "model-context-protocol"
+      ],
+      "homepage": "https://aimlcompanion.ai/",
+      "repo_url": "https://github.com/genieincodebottle/generative-ai",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "model-context-protocol",
+        "jupyter notebook"
+      ],
+      "sources": [
+        "https://github.com/genieincodebottle/generative-ai"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__jamubc_gemini-mcp-tool",
+      "owner": "jamubc",
+      "name": "gemini-mcp-tool",
+      "full_name": "jamubc/gemini-mcp-tool",
+      "description": "MCP server that enables AI assistants to interact with Google Gemini CLI, leveraging Gemini's massive token window for large file analysis and codebase understanding",
+      "category": "mcp",
+      "language": "TypeScript",
+      "license": "Other",
+      "stars": 2207,
+      "forks": null,
+      "topics": [
+        "model-context-protocol"
+      ],
+      "homepage": "https://jamubc.github.io/gemini-mcp-tool/",
+      "repo_url": "https://github.com/jamubc/gemini-mcp-tool",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "model-context-protocol",
+        "typescript"
+      ],
+      "sources": [
+        "https://github.com/jamubc/gemini-mcp-tool"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__zinja-coder_jadx-ai-mcp",
+      "owner": "zinja-coder",
+      "name": "jadx-ai-mcp",
+      "full_name": "zinja-coder/jadx-ai-mcp",
+      "description": "Plugin for JADX to integrate MCP server",
+      "category": "mcp",
+      "language": "Java",
+      "license": "Apache License 2.0",
+      "stars": 1997,
+      "forks": null,
+      "topics": [
+        "model-context-protocol"
+      ],
+      "repo_url": "https://github.com/zinja-coder/jadx-ai-mcp",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "model-context-protocol",
+        "java"
+      ],
+      "sources": [
+        "https://github.com/zinja-coder/jadx-ai-mcp"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__saifyxpro_headlessx",
+      "owner": "saifyxpro",
+      "name": "HeadlessX",
+      "full_name": "saifyxpro/HeadlessX",
+      "description": "The undetected self-hosted browser automation platform. Powered by Camoufox (Firefox) for 0% detection rates. Built for speed, privacy, and scalability.",
+      "category": "browser-automation",
+      "language": "TypeScript",
+      "license": "MIT License",
+      "stars": 1928,
+      "forks": null,
+      "topics": [
+        "browser-automation"
+      ],
+      "homepage": "https://headlessx.saify.me",
+      "repo_url": "https://github.com/saifyxpro/HeadlessX",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "browser-automation",
+        "typescript"
+      ],
+      "sources": [
+        "https://github.com/saifyxpro/HeadlessX"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__a9t9_rpa",
+      "owner": "A9T9",
+      "name": "RPA",
+      "full_name": "A9T9/RPA",
+      "description": "Ui.Vision Open-Source RPA Software  with Computer Vision, OCR, Anthropic Computer Use/LLM. Selenium IDE  import/export.",
+      "category": "browser-automation",
+      "language": "JavaScript",
+      "license": "Other",
+      "stars": 1903,
+      "forks": null,
+      "topics": [
+        "browser-automation"
+      ],
+      "homepage": "https://ui.vision/",
+      "repo_url": "https://github.com/A9T9/RPA",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "browser-automation",
+        "javascript"
+      ],
+      "sources": [
+        "https://github.com/A9T9/RPA"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__stickerdaniel_linkedin-mcp-server",
+      "owner": "stickerdaniel",
+      "name": "linkedin-mcp-server",
+      "full_name": "stickerdaniel/linkedin-mcp-server",
+      "description": "Open-source MCP server for LinkedIn. Give Claude and any MCP-compatible AI assistant access to profiles, companies, jobs, and messages.",
+      "category": "mcp",
+      "language": "Python",
+      "license": "Apache License 2.0",
+      "stars": 1869,
+      "forks": null,
+      "topics": [
+        "model-context-protocol"
+      ],
+      "repo_url": "https://github.com/stickerdaniel/linkedin-mcp-server",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "model-context-protocol",
+        "python"
+      ],
+      "sources": [
+        "https://github.com/stickerdaniel/linkedin-mcp-server"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__kav-k_gptdiscord",
+      "owner": "Kav-K",
+      "name": "GPTDiscord",
+      "full_name": "Kav-K/GPTDiscord",
+      "description": "A robust, all-in-one GPT interface for Discord. ChatGPT-style conversations, image generation, AI-moderation, custom indexes/knowledgebase, youtube summarizer, and more!",
+      "category": "coding-agent",
+      "language": "Python",
+      "license": "MIT License",
+      "stars": 1855,
+      "forks": null,
+      "topics": [
+        "code-interpreter"
+      ],
+      "repo_url": "https://github.com/Kav-K/GPTDiscord",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "code-interpreter",
+        "python"
+      ],
+      "sources": [
+        "https://github.com/Kav-K/GPTDiscord"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__doobidoo_mcp-memory-service",
+      "owner": "doobidoo",
+      "name": "mcp-memory-service",
+      "full_name": "doobidoo/mcp-memory-service",
+      "description": "Open-source persistent memory for AI agent pipelines (LangGraph, CrewAI, AutoGen) and Claude. REST API + knowledge graph + autonomous consolidation.",
+      "category": "mcp",
+      "language": "Python",
+      "license": "Apache License 2.0",
+      "stars": 1835,
+      "forks": null,
+      "topics": [
+        "model-context-protocol"
+      ],
+      "repo_url": "https://github.com/doobidoo/mcp-memory-service",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "model-context-protocol",
+        "python"
+      ],
+      "sources": [
+        "https://github.com/doobidoo/mcp-memory-service"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__microlinkhq_browserless",
+      "owner": "microlinkhq",
+      "name": "browserless",
+      "full_name": "microlinkhq/browserless",
+      "description": "The headless Chrome/Chromium driver on top of Puppeteer. Take screenshots, generate PDFs, extract text and HTML with a production-ready API.",
+      "category": "browser-automation",
+      "language": "JavaScript",
+      "license": "MIT License",
+      "stars": 1804,
+      "forks": null,
+      "topics": [
+        "browser-automation"
+      ],
+      "homepage": "https://browserless.js.org",
+      "repo_url": "https://github.com/microlinkhq/browserless",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "browser-automation",
+        "javascript"
+      ],
+      "sources": [
+        "https://github.com/microlinkhq/browserless"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__stacklok_toolhive",
+      "owner": "stacklok",
+      "name": "toolhive",
+      "full_name": "stacklok/toolhive",
+      "description": "ToolHive is an enterprise-grade platform for running and managing Model Context Protocol (MCP) servers.",
+      "category": "mcp",
+      "language": "Go",
+      "license": "Apache License 2.0",
+      "stars": 1790,
+      "forks": null,
+      "topics": [
+        "model-context-protocol"
+      ],
+      "homepage": "https://stacklok.com/download/",
+      "repo_url": "https://github.com/stacklok/toolhive",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "model-context-protocol",
+        "go"
+      ],
+      "sources": [
+        "https://github.com/stacklok/toolhive"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__ravitemer_mcphub.nvim",
+      "owner": "ravitemer",
+      "name": "mcphub.nvim",
+      "full_name": "ravitemer/mcphub.nvim",
+      "description": "An MCP client for Neovim that seamlessly integrates MCP servers into your editing workflow with an intuitive interface for managing, testing, and using MCP servers with your favorite chat plugins.",
+      "category": "mcp",
+      "language": "Lua",
+      "license": "MIT License",
+      "stars": 1766,
+      "forks": null,
+      "topics": [
+        "model-context-protocol"
+      ],
+      "homepage": "https://ravitemer.github.io/mcphub.nvim/",
+      "repo_url": "https://github.com/ravitemer/mcphub.nvim",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "model-context-protocol",
+        "lua"
+      ],
+      "sources": [
+        "https://github.com/ravitemer/mcphub.nvim"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__chrisryugj_korean-law-mcp",
+      "owner": "chrisryugj",
+      "name": "korean-law-mcp",
+      "full_name": "chrisryugj/korean-law-mcp",
+      "description": "국가법령정보MCP v4.0 | 법제처 41개 API → 17개 MCP 도구. 법령·판례·조례 검색 + LLM 환각 방지 인용검증 + 조문 영향 그래프(impact_map) + 시점 비교 자동 diff(time_travel) + 시민 5단계 실행 가이드(action_plan) | 41 Korean legal APIs → 17 MCP tools",
+      "category": "mcp",
+      "language": "TypeScript",
+      "license": "MIT License",
+      "stars": 1714,
+      "forks": null,
+      "topics": [
+        "model-context-protocol"
+      ],
+      "homepage": "https://www.npmjs.com/package/korean-law-mcp",
+      "repo_url": "https://github.com/chrisryugj/korean-law-mcp",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "model-context-protocol",
+        "typescript"
+      ],
+      "sources": [
+        "https://github.com/chrisryugj/korean-law-mcp"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__maxritter_pilot-shell",
+      "owner": "maxritter",
+      "name": "pilot-shell",
+      "full_name": "maxritter/pilot-shell",
+      "description": "How real engineers run Claude Code: spec-driven planning, enforced TDD, persistent memory, and quality enforcement on all levels. Make Claude Code production-ready.",
+      "category": "mcp",
+      "language": "TypeScript",
+      "license": "Other",
+      "stars": 1711,
+      "forks": null,
+      "topics": [
+        "model-context-protocol"
+      ],
+      "homepage": "https://pilot-shell.com",
+      "repo_url": "https://github.com/maxritter/pilot-shell",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "model-context-protocol",
+        "typescript"
+      ],
+      "sources": [
+        "https://github.com/maxritter/pilot-shell"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__thegp_untidetect-tools",
+      "owner": "TheGP",
+      "name": "untidetect-tools",
+      "full_name": "TheGP/untidetect-tools",
+      "description": "List of anti-detect and humanizing tools and browsers, including captcha solvers and sms-activation.",
+      "category": "browser-automation",
+      "language": null,
+      "license": null,
+      "stars": 1693,
+      "forks": null,
+      "topics": [
+        "browser-automation"
+      ],
+      "repo_url": "https://github.com/TheGP/untidetect-tools",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "browser-automation"
+      ],
+      "sources": [
+        "https://github.com/TheGP/untidetect-tools"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__codergamester_mcp-unity",
+      "owner": "CoderGamester",
+      "name": "mcp-unity",
+      "full_name": "CoderGamester/mcp-unity",
+      "description": "Model Context Protocol (MCP) plugin to connect with Unity Editor — designed for Cursor, Claude Code, Codex, Windsurf and other IDEs",
+      "category": "mcp",
+      "language": "C#",
+      "license": "MIT License",
+      "stars": 1686,
+      "forks": null,
+      "topics": [
+        "model-context-protocol"
+      ],
+      "repo_url": "https://github.com/CoderGamester/mcp-unity",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "model-context-protocol",
+        "c#"
+      ],
+      "sources": [
+        "https://github.com/CoderGamester/mcp-unity"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__minkphp_mink",
+      "owner": "minkphp",
+      "name": "Mink",
+      "full_name": "minkphp/Mink",
+      "description": "PHP web browser emulator abstraction",
+      "category": "browser-automation",
+      "language": "PHP",
+      "license": "MIT License",
+      "stars": 1612,
+      "forks": null,
+      "topics": [
+        "browser-automation"
+      ],
+      "homepage": "https://mink.behat.org/",
+      "repo_url": "https://github.com/minkphp/Mink",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "browser-automation",
+        "php"
+      ],
+      "sources": [
+        "https://github.com/minkphp/Mink"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__actionbook_actionbook",
+      "owner": "actionbook",
+      "name": "actionbook",
+      "full_name": "actionbook/actionbook",
+      "description": "Let your AI agent use your browser. Actionbook makes it actually work.",
+      "category": "browser-automation",
+      "language": "Rust",
+      "license": "Apache License 2.0",
+      "stars": 1528,
+      "forks": null,
+      "topics": [
+        "browser-automation"
+      ],
+      "homepage": "https://actionbook.dev",
+      "repo_url": "https://github.com/actionbook/actionbook",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "browser-automation",
+        "rust"
+      ],
+      "sources": [
+        "https://github.com/actionbook/actionbook"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__isaacphi_mcp-language-server",
+      "owner": "isaacphi",
+      "name": "mcp-language-server",
+      "full_name": "isaacphi/mcp-language-server",
+      "description": "mcp-language-server gives MCP enabled clients access semantic tools like get definition, references, rename, and diagnostics.",
+      "category": "mcp",
+      "language": "Go",
+      "license": "BSD 3-Clause \"New\" or \"Revised\" License",
+      "stars": 1527,
+      "forks": null,
+      "topics": [
+        "model-context-protocol"
+      ],
+      "repo_url": "https://github.com/isaacphi/mcp-language-server",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "model-context-protocol",
+        "go"
+      ],
+      "sources": [
+        "https://github.com/isaacphi/mcp-language-server"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__skernelx_tavily-key-generator",
+      "owner": "skernelx",
+      "name": "tavily-key-generator",
+      "full_name": "skernelx/tavily-key-generator",
+      "description": "Multi-service toolkit for Tavily and Firecrawl signup automation, key validation, and isolated proxy pools.",
+      "category": "browser-automation",
+      "language": "Python",
+      "license": null,
+      "stars": 1487,
+      "forks": null,
+      "topics": [
+        "browser-automation"
+      ],
+      "repo_url": "https://github.com/skernelx/tavily-key-generator",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "browser-automation",
+        "python"
+      ],
+      "sources": [
+        "https://github.com/skernelx/tavily-key-generator"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__vmoranv_jshookmcp",
+      "owner": "vmoranv",
+      "name": "jshookmcp",
+      "full_name": "vmoranv/jshookmcp",
+      "description": "js hook toolkit that all you need",
+      "category": "browser-automation",
+      "language": "TypeScript",
+      "license": "GNU Affero General Public License v3.0",
+      "stars": 1471,
+      "forks": null,
+      "topics": [
+        "browser-automation"
+      ],
+      "homepage": "https://vmoranv.github.io/jshookmcp/",
+      "repo_url": "https://github.com/vmoranv/jshookmcp",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "browser-automation",
+        "typescript"
+      ],
+      "sources": [
+        "https://github.com/vmoranv/jshookmcp"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__mxschmitt_awesome-playwright",
+      "owner": "mxschmitt",
+      "name": "awesome-playwright",
+      "full_name": "mxschmitt/awesome-playwright",
+      "description": "A curated list of awesome tools, utils and projects using Playwright",
+      "category": "browser-automation",
+      "language": null,
+      "license": "Creative Commons Zero v1.0 Universal",
+      "stars": 1456,
+      "forks": null,
+      "topics": [
+        "browser-automation"
+      ],
+      "homepage": "https://mxschmitt.github.io/awesome-playwright/",
+      "repo_url": "https://github.com/mxschmitt/awesome-playwright",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "browser-automation"
+      ],
+      "sources": [
+        "https://github.com/mxschmitt/awesome-playwright"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__universal-tool-calling-protocol_code-mode",
+      "owner": "universal-tool-calling-protocol",
+      "name": "code-mode",
+      "full_name": "universal-tool-calling-protocol/code-mode",
+      "description": "🔌 Plug-and-play library to enable agents to call MCP and UTCP tools via code execution.",
+      "category": "mcp",
+      "language": "Python",
+      "license": "Mozilla Public License 2.0",
+      "stars": 1452,
+      "forks": null,
+      "topics": [
+        "model-context-protocol"
+      ],
+      "repo_url": "https://github.com/universal-tool-calling-protocol/code-mode",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "model-context-protocol",
+        "python"
+      ],
+      "sources": [
+        "https://github.com/universal-tool-calling-protocol/code-mode"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__steel-dev_awesome-web-agents",
+      "owner": "steel-dev",
+      "name": "awesome-web-agents",
+      "full_name": "steel-dev/awesome-web-agents",
+      "description": "🔥 A list of tools, frameworks, and resources for building AI web agents",
+      "category": "browser-automation",
+      "language": "Python",
+      "license": "Other",
+      "stars": 1429,
+      "forks": null,
+      "topics": [
+        "browser-automation"
+      ],
+      "repo_url": "https://github.com/steel-dev/awesome-web-agents",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "browser-automation",
+        "python"
+      ],
+      "sources": [
+        "https://github.com/steel-dev/awesome-web-agents"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__e2b-dev_e2b-cookbook",
+      "owner": "e2b-dev",
+      "name": "e2b-cookbook",
+      "full_name": "e2b-dev/e2b-cookbook",
+      "description": "Examples of using E2B",
+      "category": "coding-agent",
+      "language": "TypeScript",
+      "license": null,
+      "stars": 1338,
+      "forks": null,
+      "topics": [
+        "code-interpreter"
+      ],
+      "homepage": "https://e2b.dev/docs",
+      "repo_url": "https://github.com/e2b-dev/e2b-cookbook",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "code-interpreter",
+        "typescript"
+      ],
+      "sources": [
+        "https://github.com/e2b-dev/e2b-cookbook"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__cdpdriver_zendriver",
+      "owner": "cdpdriver",
+      "name": "zendriver",
+      "full_name": "cdpdriver/zendriver",
+      "description": "A blazing fast, async-first, undetectable webscraping/web automation framework based on ultrafunkamsterdam/nodriver. Now with Docker support!",
+      "category": "browser-automation",
+      "language": "Python",
+      "license": "GNU Affero General Public License v3.0",
+      "stars": 1271,
+      "forks": null,
+      "topics": [
+        "browser-automation"
+      ],
+      "homepage": "https://zendriver.dev",
+      "repo_url": "https://github.com/cdpdriver/zendriver",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "browser-automation",
+        "python"
+      ],
+      "sources": [
+        "https://github.com/cdpdriver/zendriver"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__browserable_browserable",
+      "owner": "browserable",
+      "name": "browserable",
+      "full_name": "browserable/browserable",
+      "description": "Open source and self-hostable browser automation library for AI agents",
+      "category": "browser-automation",
+      "language": "JavaScript",
+      "license": "MIT License",
+      "stars": 1190,
+      "forks": null,
+      "topics": [
+        "browser-automation"
+      ],
+      "homepage": "https://browserable.ai",
+      "repo_url": "https://github.com/browserable/browserable",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "browser-automation",
+        "javascript"
+      ],
+      "sources": [
+        "https://github.com/browserable/browserable"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__aipexstudio_aipex",
+      "owner": "AIPexStudio",
+      "name": "AIPex",
+      "full_name": "AIPexStudio/AIPex",
+      "description": "AIPex: AI browser automation assistant, no migration and privacy first. Alternative to Manus Browser Operator、 Claude Chrome and Agent Browser",
+      "category": "browser-automation",
+      "language": "TypeScript",
+      "license": "MIT License",
+      "stars": 1187,
+      "forks": null,
+      "topics": [
+        "browser-automation"
+      ],
+      "homepage": "https://claudechrome.com",
+      "repo_url": "https://github.com/AIPexStudio/AIPex",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "browser-automation",
+        "typescript"
+      ],
+      "sources": [
+        "https://github.com/AIPexStudio/AIPex"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__oxylabs_browser-agent-py",
+      "owner": "oxylabs",
+      "name": "browser-agent-py",
+      "full_name": "oxylabs/browser-agent-py",
+      "description": "AI Browser Agent is an advanced Browser AI tool developed by Oxylabs AI Studio that automates real user browsing tasks using natural language instructions.",
+      "category": "browser-automation",
+      "language": null,
+      "license": null,
+      "stars": 1183,
+      "forks": null,
+      "topics": [
+        "browser-automation"
+      ],
+      "homepage": "https://aistudio.oxylabs.io/apps/browser_agent?utm_source=877&utm_medium=affiliate&utm_campaign=ai_studio&utm_content=browser-agent-py&groupid=877&transaction_id=102f49063ab94276ae8f116d224b67",
+      "repo_url": "https://github.com/oxylabs/browser-agent-py",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "browser-automation"
+      ],
+      "sources": [
+        "https://github.com/oxylabs/browser-agent-py"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__intoli_user-agents",
+      "owner": "intoli",
+      "name": "user-agents",
+      "full_name": "intoli/user-agents",
+      "description": "A JavaScript library for generating random user agents with data that's updated daily.",
+      "category": "browser-automation",
+      "language": "TypeScript",
+      "license": "Other",
+      "stars": 1160,
+      "forks": null,
+      "topics": [
+        "browser-automation"
+      ],
+      "repo_url": "https://github.com/intoli/user-agents",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "browser-automation",
+        "typescript"
+      ],
+      "sources": [
+        "https://github.com/intoli/user-agents"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__e2b-dev_infra",
+      "owner": "e2b-dev",
+      "name": "infra",
+      "full_name": "e2b-dev/infra",
+      "description": "Infrastructure that's powering E2B Cloud.",
+      "category": "coding-agent",
+      "language": "Go",
+      "license": "Apache License 2.0",
+      "stars": 1099,
+      "forks": null,
+      "topics": [
+        "code-interpreter"
+      ],
+      "homepage": "https://e2b.dev",
+      "repo_url": "https://github.com/e2b-dev/infra",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "code-interpreter",
+        "go"
+      ],
+      "sources": [
+        "https://github.com/e2b-dev/infra"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__vndee_llm-sandbox",
+      "owner": "vndee",
+      "name": "llm-sandbox",
+      "full_name": "vndee/llm-sandbox",
+      "description": "Lightweight and portable LLM sandbox runtime (code interpreter) Python library.",
+      "category": "coding-agent",
+      "language": "Python",
+      "license": "MIT License",
+      "stars": 1059,
+      "forks": null,
+      "topics": [
+        "code-interpreter"
+      ],
+      "homepage": "https://vndee.github.io/llm-sandbox/",
+      "repo_url": "https://github.com/vndee/llm-sandbox",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "code-interpreter",
+        "python"
+      ],
+      "sources": [
+        "https://github.com/vndee/llm-sandbox"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__cloudflare_sandbox-sdk",
+      "owner": "cloudflare",
+      "name": "sandbox-sdk",
+      "full_name": "cloudflare/sandbox-sdk",
+      "description": "Run sandboxed code environments on Cloudflare's edge network",
+      "category": "coding-agent",
+      "language": "TypeScript",
+      "license": "Other",
+      "stars": 1020,
+      "forks": null,
+      "topics": [
+        "code-interpreter"
+      ],
+      "homepage": "https://sandbox.cloudflare.com/",
+      "repo_url": "https://github.com/cloudflare/sandbox-sdk",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "code-interpreter",
+        "typescript"
+      ],
+      "sources": [
+        "https://github.com/cloudflare/sandbox-sdk"
+      ]
+    },
+    {
+      "kind": "repo",
+      "id": "github__skalskip_awesome-chatgpt-code-interpreter-experiments",
+      "owner": "SkalskiP",
+      "name": "awesome-chatgpt-code-interpreter-experiments",
+      "full_name": "SkalskiP/awesome-chatgpt-code-interpreter-experiments",
+      "description": "Awesome things you can do with ChatGPT + Code Interpreter combo 🔥",
+      "category": "coding-agent",
+      "language": null,
+      "license": null,
+      "stars": 1014,
+      "forks": null,
+      "topics": [
+        "code-interpreter"
+      ],
+      "repo_url": "https://github.com/SkalskiP/awesome-chatgpt-code-interpreter-experiments",
+      "package_urls": [],
+      "created_at": null,
+      "pushed_at": null,
+      "archived": false,
+      "tags": [
+        "code-interpreter"
+      ],
+      "sources": [
+        "https://github.com/SkalskiP/awesome-chatgpt-code-interpreter-experiments"
+      ]
+    }
+  ]
+}
