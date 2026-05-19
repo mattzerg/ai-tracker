@@ -1,0 +1,249 @@
+---
+import Base from "../../layouts/Base.astro";
+import { loadRepos } from "../../lib/data.ts";
+
+const repos = loadRepos();
+const categories = Array.from(new Set(repos.map((r) => r.category))).sort();
+const languages = Array.from(new Set(repos.map((r) => r.language).filter((x): x is string => Boolean(x)))).sort();
+const licenses = Array.from(new Set(repos.map((r) => r.license).filter((x): x is string => Boolean(x)))).sort();
+const packageCount = repos.filter((r) => r.package_urls.length > 0).length;
+const tagCounts = new Map<string, number>();
+for (const r of repos) for (const tag of [...r.tags, ...r.topics]) tagCounts.set(tag, (tagCounts.get(tag) ?? 0) + 1);
+const tags = Array.from(tagCounts.entries()).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+
+function compactNumber(n: number | null): string {
+  if (n == null) return "n/a";
+  return Intl.NumberFormat("en", { notation: "compact", maximumFractionDigits: 1 }).format(n);
+}
+
+function packageLabels(urls: string[]): string[] {
+  const labels: string[] = [];
+  for (const u of urls) {
+    if (u.includes("pypi.org")) labels.push("PyPI");
+    else if (u.includes("npmjs.com")) labels.push("npm");
+    else labels.push("package");
+  }
+  return Array.from(new Set(labels));
+}
+---
+<Base title="AI GitHub repos — ai-tracker" description="Tracked open-source AI repositories, frameworks, MCP projects, and developer infrastructure.">
+  <section class="repo-hero">
+    <div>
+      <p class="eyebrow">Developer surface</p>
+      <h1>AI GitHub repos</h1>
+      <p class="lede">
+        Open-source projects worth tracking alongside models and tools: agent frameworks, MCP servers,
+        RAG infrastructure, sandboxes, and browser automation.
+      </p>
+    </div>
+    <div class="repo-summary panel">
+      <dl>
+        <div><dt>Repos</dt><dd>{repos.length}</dd></div>
+        <div><dt>Categories</dt><dd>{categories.length}</dd></div>
+        <div><dt>Languages</dt><dd>{languages.length}</dd></div>
+        <div><dt>Packages</dt><dd>{packageCount}</dd></div>
+      </dl>
+      <div class="summary-links">
+        <a href="/api/search.json">Search API</a>
+        <a href="/dump/all.json">Full dump</a>
+        <a href="/repos/candidates">Candidates</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="filters">
+    <label class="search-label">
+      Search
+      <input type="search" id="filter-query" placeholder="mcp, rag, browser, agents..." />
+    </label>
+    <label>
+      Category
+      <select id="filter-category">
+        <option value="">all</option>
+        {categories.map((c) => <option value={c}>{c}</option>)}
+      </select>
+    </label>
+    <label>
+      Language
+      <select id="filter-language">
+        <option value="">all</option>
+        {languages.map((l) => <option value={l}>{l}</option>)}
+      </select>
+    </label>
+    <label>
+      License
+      <select id="filter-license">
+        <option value="">all</option>
+        {licenses.map((l) => <option value={l}>{l}</option>)}
+      </select>
+    </label>
+    <label>
+      Tag
+      <select id="filter-tag">
+        <option value="">all</option>
+        {tags.map(([t, n]) => <option value={t}>{t} ({n})</option>)}
+      </select>
+    </label>
+    <label>
+      <input type="checkbox" id="filter-active" /> Active only
+    </label>
+    <label>
+      Sort
+      <select id="sort-mode">
+        <option value="curated">curated</option>
+        <option value="stars-desc">stars</option>
+        <option value="pushed-desc">recent push</option>
+        <option value="name-asc">name</option>
+      </select>
+    </label>
+    <span id="visible-count" class="count">{repos.length} visible</span>
+  </div>
+
+  <p id="empty-state" hidden><em>No repos match those filters. <a href="#" id="clear-filters">Clear filters</a>.</em></p>
+
+  <div id="repo-grid" class="repo-grid">
+    {repos.map((r) => (
+      <article
+        class="repo-card"
+        data-category={r.category}
+        data-language={r.language ?? ""}
+        data-license={r.license ?? ""}
+        data-name={r.full_name.toLowerCase()}
+        data-description={(r.description ?? "").toLowerCase()}
+        data-stars={r.stars ?? -1}
+        data-pushed={r.pushed_at ?? ""}
+        data-tags={[...r.tags, ...r.topics].join(" ")}
+        data-active={r.archived ? "0" : "1"}
+      >
+        <div class="repo-card-head">
+          <a href={`/repos/${r.id}`} class="repo-name">{r.full_name}</a>
+          <span>{r.category}</span>
+        </div>
+        <p>{r.description ?? "No description tracked yet."}</p>
+        <div class="package-row">
+          {packageLabels(r.package_urls).map((label) => <span>{label}</span>)}
+          {r.archived ? <span class="archived">archived</span> : null}
+        </div>
+        <dl>
+          <div><dt>Stars</dt><dd>{compactNumber(r.stars)}</dd></div>
+          <div><dt>Language</dt><dd>{r.language ?? "n/a"}</dd></div>
+          <div><dt>License</dt><dd>{r.license ?? "n/a"}</dd></div>
+          <div><dt>Pushed</dt><dd>{r.pushed_at ?? "n/a"}</dd></div>
+        </dl>
+        <div class="repo-links">
+          <a href={r.repo_url} rel="nofollow noopener">GitHub</a>
+          {r.homepage ? <a href={r.homepage} rel="nofollow noopener">Homepage</a> : null}
+          <a href={`/repos/${r.id}.json`}>JSON</a>
+          <button type="button" data-copy={`git clone ${r.repo_url}`}>Clone</button>
+        </div>
+      </article>
+    ))}
+  </div>
+
+  <style>
+    .repo-hero { display: grid; grid-template-columns: minmax(0, 1fr) 260px; gap: 1.5rem; align-items: end; padding: 2.2rem 0 1rem; }
+    .lede { max-width: 760px; font-size: 1.08rem; }
+    .repo-summary { padding: 1rem; display: grid; gap: 0.85rem; }
+    .repo-summary dl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.75rem; margin: 0; }
+    .repo-summary dt { color: var(--muted); font-weight: 750; text-transform: uppercase; font-size: 0.72rem; letter-spacing: 0.04em; }
+    .repo-summary dd { margin: 0.1rem 0 0; color: var(--text); font-size: 1.8rem; line-height: 1; font-weight: 800; font-variant-numeric: tabular-nums; }
+    .summary-links { display: flex; flex-wrap: wrap; gap: 0.55rem; }
+    .filters { display: flex; gap: 0.8rem; align-items: center; margin: 1rem 0 1.25rem; padding: 0.75rem; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; flex-wrap: wrap; }
+    .filters label { display: inline-flex; gap: 0.4rem; align-items: center; font-size: 0.9rem; color: #394457; font-weight: 650; }
+    .filters select, .filters input[type="search"] { max-width: 190px; padding: 0.32rem 0.45rem; border: 1px solid var(--line); border-radius: 6px; background: #fff; font: inherit; }
+    .filters .search-label { flex: 1 1 260px; }
+    .filters .search-label input { width: 100%; max-width: none; }
+    .count { margin-left: auto; color: var(--muted); font-size: 0.85rem; }
+    .repo-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+    .repo-card { display: grid; gap: 0.8rem; padding: 1rem; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; box-shadow: 0 10px 28px rgba(24, 32, 47, 0.05); }
+    .repo-card[hidden] { display: none; }
+    .repo-card-head { display: flex; gap: 0.75rem; justify-content: space-between; align-items: baseline; }
+    .repo-name { min-width: 0; overflow-wrap: anywhere; color: var(--text); font-weight: 800; text-decoration: none; }
+    .repo-card-head span { flex: 0 0 auto; padding: 0.16rem 0.45rem; border-radius: 999px; background: var(--accent-soft); color: var(--accent-strong); font-size: 0.75rem; font-weight: 750; }
+    .repo-card p { margin: 0; min-height: 3em; }
+    .package-row { display: flex; flex-wrap: wrap; gap: 0.38rem; min-height: 1.55rem; }
+    .package-row span { padding: 0.14rem 0.42rem; border-radius: 999px; background: #eef3fb; color: #34435a; font-size: 0.74rem; font-weight: 750; }
+    .package-row .archived { background: #fff0f0; color: #9a2f2f; }
+    .repo-card dl { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.55rem; margin: 0; }
+    .repo-card dl div { padding-top: 0.55rem; border-top: 1px solid #edf0f5; min-width: 0; }
+    .repo-card dt { color: var(--muted); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.04em; font-weight: 750; }
+    .repo-card dd { margin: 0.18rem 0 0; color: var(--text); font-size: 0.92rem; overflow-wrap: anywhere; }
+    .repo-links { display: flex; flex-wrap: wrap; gap: 0.55rem; }
+    .repo-links a, .repo-links button { padding: 0.22rem 0.48rem; border-radius: 999px; border: 0; background: var(--surface-soft); color: var(--text); text-decoration: none; font: inherit; font-size: 0.85rem; font-weight: 650; cursor: pointer; }
+    .repo-links button.copied { background: var(--accent-soft); color: var(--accent-strong); }
+    @media (max-width: 800px) {
+      .repo-hero { grid-template-columns: 1fr; }
+      .repo-grid { grid-template-columns: 1fr; }
+      .count { width: 100%; margin-left: 0; }
+    }
+    @media (max-width: 560px) {
+      .repo-card dl { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+  </style>
+  <script is:inline>
+    (() => {
+      const cSel = document.getElementById("filter-category");
+      const lSel = document.getElementById("filter-language");
+      const licSel = document.getElementById("filter-license");
+      const tSel = document.getElementById("filter-tag");
+      const qInp = document.getElementById("filter-query");
+      const active = document.getElementById("filter-active");
+      const sortMode = document.getElementById("sort-mode");
+      const grid = document.getElementById("repo-grid");
+      const counter = document.getElementById("visible-count");
+      if (!cSel || !lSel || !licSel || !tSel || !qInp || !active || !sortMode || !grid || !counter) return;
+      const cards = Array.from(grid.querySelectorAll(".repo-card"));
+      const empty = document.getElementById("empty-state");
+      const clearLink = document.getElementById("clear-filters");
+      function apply() {
+        const c = cSel.value;
+        const lang = lSel.value;
+        const license = licSel.value;
+        const tag = tSel.value;
+        const query = qInp.value.trim().toLowerCase();
+        let n = 0;
+        for (const card of cards) {
+          const tags = (card.dataset.tags || "").split(" ");
+          const hay = [card.dataset.name, card.dataset.description, card.dataset.category, card.dataset.language, card.dataset.license, card.dataset.tags].join(" ");
+          const visible =
+            (!query || hay.includes(query)) &&
+            (!c || card.dataset.category === c) &&
+            (!lang || card.dataset.language === lang) &&
+            (!license || card.dataset.license === license) &&
+            (!tag || tags.includes(tag)) &&
+            (!active.checked || card.dataset.active === "1");
+          card.hidden = !visible;
+          if (visible) n++;
+        }
+        const sorted = cards.slice().sort((a, b) => {
+          if (sortMode.value === "stars-desc") return Number(b.dataset.stars) - Number(a.dataset.stars) || a.dataset.name.localeCompare(b.dataset.name);
+          if (sortMode.value === "pushed-desc") return (b.dataset.pushed || "").localeCompare(a.dataset.pushed || "") || a.dataset.name.localeCompare(b.dataset.name);
+          if (sortMode.value === "name-asc") return a.dataset.name.localeCompare(b.dataset.name);
+          return 0;
+        });
+        for (const card of sorted) grid.appendChild(card);
+        counter.textContent = n + " visible";
+        if (empty) empty.hidden = n > 0;
+      }
+      for (const el of [cSel, lSel, licSel, tSel, active, sortMode]) el.addEventListener("change", apply);
+      qInp.addEventListener("input", apply);
+      if (clearLink) clearLink.addEventListener("click", (e) => {
+        e.preventDefault();
+        cSel.value = ""; lSel.value = ""; licSel.value = ""; tSel.value = ""; qInp.value = ""; active.checked = false; sortMode.value = "curated"; apply();
+      });
+      grid.addEventListener("click", async (e) => {
+        const btn = e.target.closest("button[data-copy]");
+        if (!btn) return;
+        try {
+          await navigator.clipboard.writeText(btn.dataset.copy);
+          const old = btn.textContent;
+          btn.textContent = "Copied";
+          btn.classList.add("copied");
+          setTimeout(() => { btn.textContent = old; btn.classList.remove("copied"); }, 1200);
+        } catch {
+          btn.textContent = "Copy failed";
+        }
+      });
+    })();
+  </script>
+</Base>

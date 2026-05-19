@@ -27,7 +27,9 @@ const last90 = bucket(d90);
 function entityProvider(id: string): string {
   const ent = entityById(id);
   if (!ent) return "—";
-  return ent.kind === "model" ? (ent as any).provider : (ent as any).vendor ?? "—";
+  if (ent.kind === "model") return (ent as any).provider;
+  if (ent.kind === "tool") return (ent as any).vendor;
+  return (ent as any).owner ?? "—";
 }
 
 const byProvider = new Map<string, typeof events>();
@@ -47,11 +49,11 @@ const typeGroups = Array.from(byType.entries()).sort((a, b) => b[1].length - a[1
 
 function renderEvent(e: typeof events[number]) {
   const ent = entityById(e.entity);
-  const path = ent?.kind === "tool" ? `/tools/${e.entity}` : `/models/${e.entity}`;
+  const path = ent?.kind === "tool" ? `/tools/${e.entity}` : ent?.kind === "repo" ? `/repos/${e.entity}` : `/models/${e.entity}`;
   return { ent, path, slug: eventSlug(e) };
 }
 ---
-<Base title="News — ai-tracker" description="What shipped today, this week, and this month in AI models and tools.">
+<Base title="News — ai-tracker" description="What shipped today, this week, and this month in AI models, tools, and developer repos.">
   <h1>News</h1>
   <p>
     Single-screen snapshot of recent AI activity. Different from

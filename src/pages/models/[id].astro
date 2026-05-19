@@ -4,13 +4,11 @@ import JsonLd from "../../components/JsonLd.astro";
 import ProviderMark from "../../components/ProviderMark.astro";
 import Votes from "../../components/Votes.astro";
 import { eventsForEntity, loadModels, loadTools } from "../../lib/data.ts";
-import type { Model } from "../../../schemas/index.ts";
 
 export function getStaticPaths() {
   return loadModels().map((m) => ({ params: { id: m.id }, props: { model: m } }));
 }
 
-interface Props { model: Model; }
 const { model } = Astro.props;
 const events = eventsForEntity(model.id);
 const usedBy = loadTools()
@@ -23,6 +21,131 @@ const priceBit =
     : "";
 const ctxBit = model.context_window ? ` ${(model.context_window / 1000).toLocaleString()}K context.` : "";
 const description = `${model.name} by ${model.provider}.${ctxBit}${priceBit}`.trim();
+const apiId = model.id.replace(`${model.provider}__`, "");
+const hasOpenRouter = model.sources.some((s) => s.includes("openrouter.ai"));
+const availability = [
+  model.links.docs ? { label: "Provider API docs", href: model.links.docs } : null,
+  model.links.homepage ? { label: "Homepage", href: model.links.homepage } : null,
+  model.links.card ? { label: "Model card / release", href: model.links.card } : null,
+  model.links.paper ? { label: "Paper", href: model.links.paper } : null,
+  hasOpenRouter ? { label: "OpenRouter catalog", href: "https://openrouter.ai/models" } : null,
+].filter(Boolean) as Array<{ label: string; href: string }>;
+
+function fmtTokens(n?: number | null): string {
+  if (!n) return "n/a";
+  if (n >= 1_000_000) return `${(n / 1_000_000).toLocaleString(undefined, { maximumFractionDigits: 1 })}M`;
+  if (n >= 1_000) return `${Math.round(n / 1_000).toLocaleString()}K`;
+  return n.toLocaleString();
+}
+
+function providerSnippet(provider: string, modelId: string, name: string): { title: string; code: string } {
+  const p = provider.toLowerCase();
+  if (p === "openai") {
+    return {
+      title: "OpenAI Responses API",
+      code: `curl https://api.openai.com/v1/responses \\
+  -H "Authorization: Bearer $OPENAI_API_KEY" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "model": "${modelId}",
+    "input": "Summarize the latest product changes in three bullets."
+  }'`,
+    };
+  }
+  if (p === "anthropic") {
+    return {
+      title: "Anthropic Messages API",
+      code: `curl https://api.anthropic.com/v1/messages \\
+  -H "x-api-key: $ANTHROPIC_API_KEY" \\
+  -H "anthropic-version: 2023-06-01" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "model": "${modelId}",
+    "max_tokens": 512,
+    "messages": [
+      { "role": "user", "content": "Summarize the latest product changes in three bullets." }
+    ]
+  }'`,
+    };
+  }
+  if (p === "google") {
+    return {
+      title: "Gemini API",
+      code: `curl "https://generativelanguage.googleapis.com/v1beta/models/${modelId}:generateContent?key=$GEMINI_API_KEY" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "contents": [
+      { "parts": [{ "text": "Summarize the latest product changes in three bullets." }] }
+    ]
+  }'`,
+    };
+  }
+  if (p === "xai") {
+    return {
+      title: "xAI chat completions",
+      code: `curl https://api.x.ai/v1/chat/completions \\
+  -H "Authorization: Bearer $XAI_API_KEY" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "model": "${modelId}",
+    "messages": [
+      { "role": "user", "content": "Summarize the latest product changes in three bullets." }
+    ]
+  }'`,
+    };
+  }
+  if (p === "deepseek") {
+    return {
+      title: "DeepSeek chat completions",
+      code: `curl https://api.deepseek.com/chat/completions \\
+  -H "Authorization: Bearer $DEEPSEEK_API_KEY" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "model": "${modelId}",
+    "messages": [
+      { "role": "user", "content": "Summarize the latest product changes in three bullets." }
+    ]
+  }'`,
+    };
+  }
+  if (p === "mistral") {
+    return {
+      title: "Mistral chat completions",
+      code: `curl https://api.mistral.ai/v1/chat/completions \\
+  -H "Authorization: Bearer $MISTRAL_API_KEY" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "model": "${modelId}",
+    "messages": [
+      { "role": "user", "content": "Summarize the latest product changes in three bullets." }
+    ]
+  }'`,
+    };
+  }
+  if (p === "cohere") {
+    return {
+      title: "Cohere chat API",
+      code: `curl https://api.cohere.com/v2/chat \\
+  -H "Authorization: Bearer $COHERE_API_KEY" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "model": "${modelId}",
+    "messages": [
+      { "role": "user", "content": "Summarize the latest product changes in three bullets." }
+    ]
+  }'`,
+    };
+  }
+  return {
+    title: "Integration note",
+    code: `# ${name}
+# Canonical ai-tracker id: ${model.id}
+# API-style id: ${modelId}
+# Verify the exact endpoint and model identifier in the provider docs before production use.`,
+  };
+}
+
+const snippet = providerSnippet(model.provider, apiId, model.name);
 ---
 <Base
   title={`${model.name} — ai-tracker`}
@@ -32,60 +155,185 @@ const description = `${model.name} by ${model.provider}.${ctxBit}${priceBit}`.tr
   canonical={canonicalUrl}
 >
   <JsonLd entity={model} url={canonicalUrl} />
-  <p><a href="/models">← Models</a></p>
-  <h1>{model.name}</h1>
-  <p><ProviderMark provider={model.provider} /><strong><a href={`/providers/${model.provider}`}>{model.provider}</a></strong> · {model.released ? `released ${model.released}` : "release date n/a"} · {model.license}</p>
-  <Votes entityId={model.id} />
+  <p class="back"><a href="/models">← Models</a></p>
+  <section class="model-hero">
+    <div>
+      <p class="eyebrow">Model profile</p>
+      <h1>{model.name}</h1>
+      <p class="dek">
+        <ProviderMark provider={model.provider} />
+        <strong><a href={`/providers/${model.provider}`}>{model.provider}</a></strong>
+        · {model.released ? `released ${model.released}` : "release date n/a"}
+        · {model.status}
+        · {model.license}
+      </p>
+      <div class="tag-row">
+        {model.modalities.map((m) => <span>{m}</span>)}
+        {model.tags.slice(0, 8).map((t) => <span>{t}</span>)}
+      </div>
+      <Votes entityId={model.id} />
+    </div>
+    <aside class="quick panel">
+      <div>
+        <span>API-style id</span>
+        <code>{apiId}</code>
+      </div>
+      <div>
+        <span>Context</span>
+        <strong>{fmtTokens(model.context_window)} tokens</strong>
+      </div>
+      <div>
+        <span>Output</span>
+        <strong>{fmtTokens(model.output_window)} tokens</strong>
+      </div>
+      {model.pricing ? (
+        <div>
+          <span>Price</span>
+          <strong>
+            {model.pricing.input_per_mtok != null ? `$${model.pricing.input_per_mtok}/M in` : "input n/a"}
+            {" · "}
+            {model.pricing.output_per_mtok != null ? `$${model.pricing.output_per_mtok}/M out` : "output n/a"}
+          </strong>
+          <small>as of {model.pricing.as_of}</small>
+        </div>
+      ) : null}
+    </aside>
+  </section>
 
-  {model.pricing ? (
-    <p>
-      <strong>Price:</strong>
-      {model.pricing.input_per_mtok != null ? ` $${model.pricing.input_per_mtok}/M in` : ""}
-      {model.pricing.output_per_mtok != null ? ` · $${model.pricing.output_per_mtok}/M out` : ""}
-      <em> (as of {model.pricing.as_of})</em>
-    </p>
-  ) : null}
+  <section class="dev-grid">
+    <div class="panel callout">
+      <div class="section-title">
+        <div>
+          <p class="eyebrow">Use it</p>
+          <h2>{snippet.title}</h2>
+        </div>
+        <button class="copy-btn" type="button" data-copy-target="snippet-code">Copy</button>
+      </div>
+      <pre><code id="snippet-code">{snippet.code}</code></pre>
+      <p class="note">Verify the exact model identifier in the provider docs before production use. ai-tracker stores canonical ids and pricing snapshots, not account entitlements.</p>
+    </div>
 
-  {model.context_window ? <p><strong>Context:</strong> {model.context_window.toLocaleString()} tokens</p> : null}
-  <p><strong>Modalities:</strong> {model.modalities.join(", ")}</p>
+    <div class="panel availability">
+      <p class="eyebrow">Availability</p>
+      <h2>Where to check</h2>
+      {availability.length > 0 ? (
+        <ul>
+          {availability.map((a) => <li><a href={a.href} rel="nofollow noopener">{a.label}</a></li>)}
+        </ul>
+      ) : (
+        <p>No provider links recorded yet.</p>
+      )}
+      <div class="machine-links">
+        <a href={`/models/${model.id}.json`}>JSON</a>
+        <a href={`/models/${model.id}.md`}>Markdown</a>
+        <a href="/picker">Cost picker</a>
+        <a href={`/compare?models=${model.id}`}>Compare</a>
+      </div>
+    </div>
+  </section>
 
   {model.benchmarks && Object.keys(model.benchmarks).length > 0 ? (
-    <>
+    <section class="panel content-panel">
       <h2>Benchmarks</h2>
-      <ul>
+      <ul class="benchmarks">
         {Object.entries(model.benchmarks).map(([k, v]) => <li>{k}: {v}</li>)}
       </ul>
-    </>
+    </section>
   ) : null}
 
-  <h2>Timeline</h2>
-  {events.length === 0 ? (
-    <p><em>No events recorded yet.</em></p>
-  ) : (
-    <ul>
-      {events.map((e) => (
-        <li>
-          <code>{e.date}</code> · <strong>{e.type}</strong> — {e.summary}
-          {" "}<a href={e.source} rel="nofollow noopener">[source]</a>
-        </li>
-      ))}
-    </ul>
-  )}
+  <section class="panel content-panel">
+    <h2>Timeline</h2>
+    {events.length === 0 ? (
+      <p><em>No events recorded yet.</em></p>
+    ) : (
+      <ol class="timeline">
+        {events.map((e) => (
+          <li>
+            <time datetime={e.date}>{e.date}</time>
+            <div>
+              <strong>{e.type.replace("_", " ")}</strong>
+              <p>{e.summary} <a href={e.source} rel="nofollow noopener">source</a></p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    )}
+  </section>
 
   {usedBy.length > 0 ? (
-    <>
+    <section class="panel content-panel">
       <h2>Used by</h2>
-      <ul>
+      <ul class="tool-list">
         {usedBy.map((t) => <li><a href={`/tools/${t.id}`}>{t.name}</a> · {t.vendor} · {t.category}</li>)}
       </ul>
-    </>
+    </section>
   ) : null}
 
-  <h2>Sources</h2>
-  <ul>{model.sources.map((s) => <li><a href={s} rel="nofollow noopener">{s}</a></li>)}</ul>
+  <section class="panel content-panel">
+    <h2>Sources</h2>
+    <ul class="sources">{model.sources.map((s) => <li><a href={s} rel="nofollow noopener">{s}</a></li>)}</ul>
+  </section>
 
-  <p>
-    <a href={`/models/${model.id}.json`}>JSON</a> ·
-    <a href={`/models/${model.id}.md`}>Markdown</a>
-  </p>
+  <script is:inline>
+    (() => {
+      document.querySelectorAll("[data-copy-target]").forEach((button) => {
+        button.addEventListener("click", async () => {
+          const target = document.getElementById(button.dataset.copyTarget);
+          if (!target) return;
+          try {
+            await navigator.clipboard.writeText(target.textContent || "");
+            const old = button.textContent;
+            button.textContent = "Copied";
+            setTimeout(() => { button.textContent = old; }, 1200);
+          } catch {
+            button.textContent = "Copy failed";
+          }
+        });
+      });
+    })();
+  </script>
+
+  <style>
+    .back { margin: 0 0 1rem; }
+    .model-hero { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 1.25rem; align-items: start; padding: 1rem 0 1.5rem; }
+    .model-hero h1 { margin-bottom: 0.75rem; }
+    .dek { margin: 0; font-size: 1rem; color: #4f5a6d; }
+    .dek a { color: var(--text); text-decoration: none; }
+    .tag-row { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 1rem 0 0.25rem; }
+    .tag-row span { padding: 0.18rem 0.48rem; border-radius: 999px; background: var(--surface-soft); color: #445066; font-size: 0.78rem; font-weight: 700; }
+    .quick { display: grid; gap: 0.85rem; padding: 1rem; }
+    .quick div { display: grid; gap: 0.22rem; padding-bottom: 0.8rem; border-bottom: 1px solid #edf0f5; }
+    .quick div:last-child { border-bottom: 0; padding-bottom: 0; }
+    .quick span { color: var(--muted); font-size: 0.78rem; font-weight: 750; text-transform: uppercase; letter-spacing: 0.05em; }
+    .quick strong, .quick code { color: var(--text); font-size: 1rem; overflow-wrap: anywhere; }
+    .quick small { color: var(--muted); }
+    .dev-grid { display: grid; grid-template-columns: minmax(0, 1fr) 330px; gap: 1rem; margin: 0.5rem 0 1rem; }
+    .callout, .availability, .content-panel { padding: 1rem; }
+    .section-title { display: flex; justify-content: space-between; gap: 1rem; align-items: start; }
+    .section-title .eyebrow { margin-bottom: 0.35rem; }
+    .copy-btn { min-height: 34px; padding: 0.35rem 0.65rem; border: 1px solid var(--line); border-radius: 7px; background: #fff; color: var(--text); cursor: pointer; font-weight: 700; }
+    .copy-btn:hover { border-color: #b8c2d1; background: #f8fafc; }
+    pre { margin: 0.75rem 0; padding: 1rem; overflow: auto; border-radius: 8px; background: #111827; color: #e5e7eb; font-size: 0.85rem; line-height: 1.55; }
+    pre code { color: inherit; }
+    .note { margin: 0; font-size: 0.88rem; }
+    .availability ul { padding-left: 1.1rem; margin: 0.75rem 0 1rem; }
+    .availability li { margin: 0.35rem 0; }
+    .machine-links { display: flex; flex-wrap: wrap; gap: 0.45rem; padding-top: 0.85rem; border-top: 1px solid #edf0f5; }
+    .machine-links a { padding: 0.2rem 0.5rem; border-radius: 999px; background: var(--surface-soft); color: var(--text); text-decoration: none; font-size: 0.82rem; font-weight: 700; }
+    .content-panel { margin-top: 1rem; }
+    .timeline { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.85rem; }
+    .timeline li { display: grid; grid-template-columns: 112px minmax(0, 1fr); gap: 1rem; padding-top: 0.85rem; border-top: 1px solid #edf0f5; }
+    .timeline li:first-child { border-top: 0; padding-top: 0; }
+    .timeline time { color: var(--muted); font-variant-numeric: tabular-nums; }
+    .timeline p { margin: 0.2rem 0 0; }
+    .tool-list, .sources { margin-bottom: 0; }
+    .sources a { overflow-wrap: anywhere; }
+    @media (max-width: 920px) {
+      .model-hero, .dev-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 620px) {
+      .timeline li { grid-template-columns: 1fr; gap: 0.25rem; }
+      .section-title { flex-direction: column; }
+    }
+  </style>
 </Base>

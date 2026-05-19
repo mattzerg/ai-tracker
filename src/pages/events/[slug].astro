@@ -20,14 +20,14 @@ export function getStaticPaths() {
 interface Props { event: Event; prev: Event | null; next: Event | null; }
 const { event, prev, next } = Astro.props;
 const entity = entityById(event.entity);
-const entityKind = entity?.kind === "tool" ? "tool" : "model";
+const entityKind = entity?.kind ?? "model";
 const entityPath = `/${entityKind}s/${event.entity}`;
 const entityName = entity?.name ?? event.entity;
 const sibling = eventsForEntity(event.entity).filter((e) => eventSlug(e) !== eventSlug(event));
 
 const title = `${entityName} — ${event.type} — ${event.date}`;
 const description = event.summary;
-const ogImage = entity ? `/og/${entityKind}s/${event.entity}.png` : undefined;
+const ogImage = entity && entity.kind !== "repo" ? `/og/${entityKind}s/${event.entity}.png` : undefined;
 const canonicalUrl = new URL(`/events/${eventSlug(event)}`, Astro.site).toString();
 // Suppress the site-wide latest banner when the event we're rendering IS the latest.
 const newest = allEvents[0];
@@ -57,11 +57,17 @@ const isLatest = newest && eventSlug(newest) === eventSlug(event);
           <a href={`/providers/${(entity as any).provider}`}>{(entity as any).provider}</a>
           {(entity as any).context_window ? <> · {(entity as any).context_window.toLocaleString()} ctx</> : null}
         </>
-      ) : (
+      ) : entity.kind === "tool" ? (
         <>
           {(entity as any).vendor}
           {" · "}
           <a href={`/categories/${(entity as any).category}`}>{(entity as any).category}</a>
+        </>
+      ) : (
+        <>
+          {(entity as any).owner}
+          {" · "}
+          <a href={`/repos/${entity.id}`}>{(entity as any).category}</a>
         </>
       )}
     </p>

@@ -31,6 +31,23 @@ function relativeAge(dateStr: string): string {
 }
 const latestAge = latest ? relativeAge(latest.date) : "";
 const buildTime = new Date().toISOString().slice(0, 16).replace("T", " ");
+const currentPath = Astro.url.pathname;
+const navLinks = [
+  { href: "/models", label: "Models" },
+  { href: "/tools", label: "Tools" },
+  { href: "/repos", label: "Repos" },
+  { href: "/picker", label: "Picker" },
+  { href: "/compare", label: "Compare" },
+  { href: "/timeline", label: "Timeline" },
+  { href: "/search", label: "Search" },
+];
+const actionLinks = [
+  { href: "/submit", label: "Submit" },
+  { href: "/about", label: "About" },
+];
+function activeFor(href: string): boolean {
+  return currentPath === href || currentPath.startsWith(`${href}/`);
+}
 ---
 <!doctype html>
 <html lang="en">
@@ -58,27 +75,30 @@ const buildTime = new Date().toISOString().slice(0, 16).replace("T", " ");
     <link rel="icon" href="/favicon.svg" />
   </head>
   <body>
-    <header>
-      <nav>
-        <a href="/"><strong>ai-tracker</strong></a>
-        <a href="/models">Models</a>
-        <a href="/tools">Tools</a>
-        <a href="/providers">Providers</a>
-        <a href="/categories">Categories</a>
-        <a href="/compare">Compare</a>
-        <a href="/news">News</a>
-        <a href="/timeline">Timeline</a>
-        <a href="/changes">Changes</a>
-        <a href="/search">Search</a>
-        <a href="/submit">Submit</a>
-        <a href="/about">About</a>
+    <header class="site-header">
+      <nav class="site-nav" aria-label="Primary">
+        <a href="/" class="brand" aria-label="ai-tracker home">
+          <span class="brand-mark" aria-hidden="true">ai</span>
+          <span class="brand-text">ai-tracker</span>
+        </a>
+        <div class="nav-links">
+          {navLinks.map((link) => (
+            <a href={link.href} class:list={[activeFor(link.href) && "active"]} aria-current={activeFor(link.href) ? "page" : undefined}>{link.label}</a>
+          ))}
+        </div>
+        <div class="nav-actions">
+          {actionLinks.map((link) => (
+            <a href={link.href} class:list={[activeFor(link.href) && "active"]} aria-current={activeFor(link.href) ? "page" : undefined}>{link.label}</a>
+          ))}
+        </div>
       </nav>
     </header>
     {latest && latestPath && !hideLatestBanner ? (
       <div class="latest-bar">
-        <span class="latest-label">Latest</span>
+        <span class="latest-label">Latest change</span>
         <a href={latestPath} class="latest-link">
-          <strong>{latest.type}</strong> · {latestName} — {latest.summary}
+          <strong>{latest.type.replaceAll("_", " ")}</strong>
+          <span>{latestName}: {latest.summary}</span>
         </a>
         <span class="latest-age">{latestAge}</span>
       </div>
@@ -94,26 +114,73 @@ const buildTime = new Date().toISOString().slice(0, 16).replace("T", " ");
       :root {
         font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
         line-height: 1.5;
-        color: #111;
-        background: #fff;
+        color: #18202f;
+        background: #f6f7f9;
+        --bg: #f6f7f9;
+        --surface: #ffffff;
+        --surface-soft: #f0f3f7;
+        --text: #18202f;
+        --muted: #687386;
+        --faint: #dfe4ec;
+        --line: #d8dee8;
+        --accent: #0f6b5f;
+        --accent-strong: #0b4f47;
+        --accent-soft: #dff3ee;
+        --blue: #2859d8;
+        --shadow: 0 16px 40px rgba(24, 32, 47, 0.08);
       }
-      body { margin: 0; }
-      main { max-width: 880px; margin: 0 auto; padding: 1.5rem; }
-      header { padding: 1rem 1.5rem; border-bottom: 1px solid #eee; }
-      header nav { display: flex; gap: 1rem; max-width: 880px; margin: 0 auto; flex-wrap: wrap; }
-      header a { text-decoration: none; color: inherit; }
-      .latest-bar { max-width: 880px; margin: 0 auto; padding: 0.45rem 1.5rem; display: flex; gap: 0.6rem; align-items: baseline; font-size: 0.85rem; color: #444; border-bottom: 1px solid #f0f0f0; flex-wrap: wrap; }
-      .latest-label { background: #1a4cff; color: #fff; padding: 0.05rem 0.5rem; border-radius: 999px; font-weight: 600; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.5px; }
-      .latest-link { text-decoration: none; color: inherit; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-      .latest-link:hover { color: #1a4cff; }
-      .latest-link strong { color: #1a4cff; }
-      .latest-age { color: #888; font-variant-numeric: tabular-nums; }
-      footer { max-width: 880px; margin: 2rem auto; padding: 1rem 1.5rem; border-top: 1px solid #eee; color: #666; font-size: 0.9rem; }
+      * { box-sizing: border-box; }
+      body { margin: 0; min-width: 320px; }
+      main { max-width: 1180px; margin: 0 auto; padding: 2rem 1.5rem 3rem; }
+      .site-header { position: sticky; top: 0; z-index: 20; background: rgba(255,255,255,0.92); border-bottom: 1px solid var(--line); backdrop-filter: blur(12px); }
+      .site-nav { min-height: 64px; display: flex; align-items: center; gap: 1.25rem; max-width: 1180px; margin: 0 auto; padding: 0 1.5rem; }
+      .site-header a { text-decoration: none; color: inherit; }
+      .brand { display: inline-flex; align-items: center; gap: 0.65rem; font-weight: 750; letter-spacing: 0; white-space: nowrap; }
+      .brand-mark { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 7px; background: var(--accent); color: #fff; font-size: 0.8rem; line-height: 1; }
+      .brand-text { font-size: 1rem; }
+      .nav-links, .nav-actions { display: flex; align-items: center; gap: 0.25rem; flex-wrap: wrap; }
+      .nav-links { flex: 1; }
+      .nav-links a, .nav-actions a { color: var(--muted); font-size: 0.92rem; padding: 0.42rem 0.62rem; border-radius: 6px; }
+      .nav-links a:hover, .nav-actions a:hover { color: var(--text); background: var(--surface-soft); }
+      .nav-links a.active, .nav-actions a.active { color: var(--text); background: var(--surface-soft); font-weight: 700; }
+      .nav-actions a:first-child { color: var(--accent-strong); background: var(--accent-soft); font-weight: 650; }
+      .nav-actions a:first-child.active { background: #ccebe4; }
+      .latest-bar { max-width: 1180px; margin: 0 auto; padding: 0.7rem 1.5rem; display: flex; gap: 0.75rem; align-items: center; font-size: 0.9rem; color: var(--muted); border-bottom: 1px solid var(--line); }
+      .latest-label { color: var(--accent-strong); background: var(--accent-soft); border: 1px solid #bfe5dd; padding: 0.2rem 0.55rem; border-radius: 999px; font-weight: 700; font-size: 0.72rem; text-transform: uppercase; white-space: nowrap; }
+      .latest-link { text-decoration: none; color: var(--text); display: flex; gap: 0.45rem; align-items: baseline; flex: 1; min-width: 0; overflow: hidden; }
+      .latest-link span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .latest-link:hover { color: var(--accent-strong); }
+      .latest-link strong { color: var(--accent-strong); white-space: nowrap; }
+      .latest-age { color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+      footer { max-width: 1180px; margin: 1rem auto 0; padding: 1.25rem 1.5rem 2rem; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.9rem; }
       footer p { margin: 0.3rem 0; }
-      footer .build-time { color: #999; font-size: 0.8rem; }
-      a { color: #1a4cff; }
-      h1, h2, h3 { line-height: 1.2; }
+      footer .build-time { color: #8791a2; font-size: 0.82rem; }
+      a { color: var(--blue); text-decoration-thickness: 1px; text-underline-offset: 0.18em; }
+      h1, h2, h3 { line-height: 1.12; letter-spacing: 0; color: var(--text); }
+      h1 { font-size: clamp(2.15rem, 4.6vw, 3.8rem); margin: 0; }
+      h2 { font-size: clamp(1.45rem, 3vw, 2.15rem); margin: 0 0 1rem; }
+      h3 { margin-top: 0; }
+      p { color: var(--muted); }
       ul { padding-left: 1.25rem; }
+      code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 0.92em; }
+      .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; box-shadow: var(--shadow); }
+      .eyebrow { margin: 0 0 0.85rem; color: var(--accent-strong); font-size: 0.78rem; font-weight: 750; text-transform: uppercase; letter-spacing: 0.06em; }
+      .button-row { display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; }
+      .button { display: inline-flex; align-items: center; justify-content: center; min-height: 40px; padding: 0.55rem 0.85rem; border-radius: 7px; border: 1px solid var(--line); background: var(--surface); color: var(--text); text-decoration: none; font-weight: 650; }
+      .button.primary { background: var(--text); color: #fff; border-color: var(--text); }
+      .button:hover { border-color: #b8c2d1; background: #f8fafc; }
+      .button.primary:hover { background: #2b3445; color: #fff; }
+      table { max-width: 100%; }
+      @media (max-width: 760px) {
+        main { padding: 1.25rem 1rem 2rem; }
+        .site-nav { min-height: auto; align-items: flex-start; flex-direction: column; gap: 0.7rem; padding: 0.85rem 1rem; }
+        .nav-links, .nav-actions { width: 100%; overflow-x: auto; flex-wrap: nowrap; padding-bottom: 0.15rem; }
+        .nav-links a, .nav-actions a { white-space: nowrap; }
+        .latest-bar { padding: 0.7rem 1rem; align-items: flex-start; }
+        .latest-link { display: block; }
+        .latest-link span { display: block; white-space: normal; }
+        .latest-age { display: none; }
+      }
     </style>
   </body>
 </html>

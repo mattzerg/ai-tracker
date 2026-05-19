@@ -1,0 +1,300 @@
+---
+import Base from "../layouts/Base.astro";
+import { loadModels } from "../lib/data.ts";
+
+const models = loadModels()
+  .filter((m) => m.status !== "retired" && m.pricing?.input_per_mtok != null && m.pricing?.output_per_mtok != null)
+  .sort((a, b) => a.name.localeCompare(b.name));
+
+const providers = Array.from(new Set(models.map((m) => m.provider))).sort();
+const modalities = Array.from(new Set(models.flatMap((m) => m.modalities))).sort();
+const licenses = Array.from(new Set(models.map((m) => m.license))).sort();
+---
+<Base title="Model picker — ai-tracker" description="Estimate model costs and shortlist AI models by workload, modality, provider, license, and context window.">
+  <section class="page-hero">
+    <p class="eyebrow">Developer utility</p>
+    <h1>Pick a model for the workload, not the leaderboard.</h1>
+    <p class="lede">
+      Estimate real monthly cost from token volume, then filter by context, modality, provider, and license.
+      This uses the tracked pricing snapshot for each model.
+    </p>
+  </section>
+
+  <section class="picker-layout">
+    <form class="controls panel" id="picker-form">
+      <div class="control-block">
+        <label for="preset">Workload preset</label>
+        <select id="preset">
+          <option value="custom">Custom</option>
+          <option value="coding">Coding agent</option>
+          <option value="rag">RAG / document Q&A</option>
+          <option value="extraction">High-volume extraction</option>
+          <option value="vision">Vision analysis</option>
+          <option value="chat">Customer support chat</option>
+        </select>
+      </div>
+
+      <div class="split">
+        <div class="control-block">
+          <label for="requests">Requests / month</label>
+          <input id="requests" type="number" min="1" step="1" value="100000" />
+        </div>
+        <div class="control-block">
+          <label for="context">Minimum context</label>
+          <select id="context">
+            <option value="0">Any</option>
+            <option value="128000">128K+</option>
+            <option value="200000">200K+</option>
+            <option value="1000000">1M+</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="split">
+        <div class="control-block">
+          <label for="input-tokens">Input tokens / request</label>
+          <input id="input-tokens" type="number" min="0" step="100" value="2500" />
+        </div>
+        <div class="control-block">
+          <label for="output-tokens">Output tokens / request</label>
+          <input id="output-tokens" type="number" min="0" step="100" value="600" />
+        </div>
+      </div>
+
+      <div class="split">
+        <div class="control-block">
+          <label for="modality">Required modality</label>
+          <select id="modality">
+            <option value="">Any</option>
+            {modalities.map((m) => <option value={m}>{m}</option>)}
+          </select>
+        </div>
+        <div class="control-block">
+          <label for="license">License</label>
+          <select id="license">
+            <option value="">Any</option>
+            {licenses.map((l) => <option value={l}>{l}</option>)}
+          </select>
+        </div>
+      </div>
+
+      <div class="split">
+        <div class="control-block">
+          <label for="provider">Provider</label>
+          <select id="provider">
+            <option value="">Any</option>
+            {providers.map((p) => <option value={p}>{p}</option>)}
+          </select>
+        </div>
+        <label class="check">
+          <input id="open-only" type="checkbox" />
+          Open-weight only
+        </label>
+      </div>
+    </form>
+
+    <aside class="summary panel" aria-live="polite">
+      <span>Estimated workload</span>
+      <strong id="monthly-tokens">—</strong>
+      <p id="summary-copy">Adjust the inputs to estimate monthly model spend.</p>
+    </aside>
+  </section>
+
+  <section class="results-head">
+    <div>
+      <p class="eyebrow">Shortlist</p>
+      <h2>Recommended by estimated monthly cost</h2>
+    </div>
+    <span id="result-count">—</span>
+  </section>
+
+  <div class="table-shell panel">
+    <table class="results">
+      <thead>
+        <tr>
+          <th>Model</th>
+          <th>Fit</th>
+          <th>Context</th>
+          <th>$/M in</th>
+          <th>$/M out</th>
+          <th>Monthly est.</th>
+        </tr>
+      </thead>
+      <tbody id="results-body"></tbody>
+    </table>
+    <p id="empty" hidden>No priced models match these constraints.</p>
+  </div>
+
+  <script is:inline id="models-data" type="application/json" set:html={JSON.stringify(models)}></script>
+
+  <style>
+    .page-hero { padding: 2.25rem 0 1rem; max-width: 900px; }
+    .page-hero h1 { max-width: 850px; }
+    .lede { max-width: 760px; margin: 1rem 0 0; font-size: 1.08rem; color: #4f5a6d; }
+    .picker-layout { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 1rem; margin: 1.5rem 0 2rem; align-items: start; }
+    .controls { padding: 1rem; display: grid; gap: 0.9rem; }
+    .split { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.85rem; }
+    .control-block { display: grid; gap: 0.35rem; }
+    label, .check { color: #445066; font-size: 0.86rem; font-weight: 700; }
+    select, input[type="number"] { width: 100%; min-height: 40px; padding: 0.45rem 0.55rem; border: 1px solid var(--line); border-radius: 7px; background: #fff; color: var(--text); font: inherit; }
+    select:focus, input:focus { outline: 2px solid #bfe5dd; border-color: var(--accent); }
+    .check { display: flex; align-items: center; gap: 0.5rem; min-height: 40px; padding-top: 1.35rem; }
+    .summary { padding: 1rem; position: sticky; top: 88px; }
+    .summary span { color: var(--muted); font-size: 0.82rem; font-weight: 750; text-transform: uppercase; letter-spacing: 0.05em; }
+    .summary strong { display: block; margin: 0.45rem 0; font-size: 2.1rem; line-height: 1; font-variant-numeric: tabular-nums; }
+    .summary p { margin: 0; }
+    .results-head { display: flex; justify-content: space-between; align-items: end; gap: 1rem; margin: 1rem 0; }
+    .results-head .eyebrow { margin-bottom: 0.35rem; }
+    #result-count { color: var(--muted); font-weight: 700; white-space: nowrap; }
+    .table-shell { overflow: auto; }
+    table.results { width: 100%; border-collapse: collapse; min-width: 820px; }
+    .results th, .results td { padding: 0.75rem 0.85rem; text-align: left; border-bottom: 1px solid #edf0f5; vertical-align: top; }
+    .results th { color: #445066; background: #f8fafc; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.04em; }
+    .results td.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .model-cell a { color: var(--text); font-weight: 800; text-decoration: none; }
+    .model-cell a:hover { color: var(--blue); }
+    .model-cell span { display: block; margin-top: 0.2rem; color: var(--muted); font-size: 0.86rem; }
+    .fit { display: flex; flex-wrap: wrap; gap: 0.35rem; max-width: 280px; }
+    .pill { display: inline-flex; align-items: center; padding: 0.14rem 0.42rem; border-radius: 999px; background: var(--surface-soft); color: #445066; font-size: 0.76rem; font-weight: 700; }
+    .pill.good { background: var(--accent-soft); color: var(--accent-strong); }
+    #empty { padding: 1rem; margin: 0; }
+    @media (max-width: 900px) {
+      .picker-layout { grid-template-columns: 1fr; }
+      .summary { position: static; }
+    }
+    @media (max-width: 620px) {
+      .split { grid-template-columns: 1fr; }
+      .check { padding-top: 0; }
+    }
+  </style>
+
+  <script is:inline>
+    (() => {
+      const models = JSON.parse(document.getElementById("models-data").textContent);
+      const $ = (id) => document.getElementById(id);
+      const els = {
+        preset: $("preset"),
+        requests: $("requests"),
+        input: $("input-tokens"),
+        output: $("output-tokens"),
+        context: $("context"),
+        modality: $("modality"),
+        license: $("license"),
+        provider: $("provider"),
+        openOnly: $("open-only"),
+        body: $("results-body"),
+        empty: $("empty"),
+        count: $("result-count"),
+        monthlyTokens: $("monthly-tokens"),
+        summary: $("summary-copy"),
+      };
+
+      const presets = {
+        custom: null,
+        coding: { requests: 25000, input: 18000, output: 3500, context: 128000, modality: "text", tags: ["coding", "code", "agentic-coding", "reasoning"] },
+        rag: { requests: 75000, input: 12000, output: 900, context: 128000, modality: "text", tags: ["rag", "long-context", "very-long-context"] },
+        extraction: { requests: 1000000, input: 1600, output: 250, context: 0, modality: "text", tags: ["cheap", "high-volume", "fast"] },
+        vision: { requests: 50000, input: 3500, output: 700, context: 0, modality: "vision", tags: ["multimodal"] },
+        chat: { requests: 300000, input: 1800, output: 450, context: 0, modality: "text", tags: ["balanced", "fast", "cheap"] },
+      };
+
+      function numberValue(el) {
+        const n = Number(el.value);
+        return Number.isFinite(n) && n >= 0 ? n : 0;
+      }
+
+      function money(n) {
+        if (n < 1) return "$" + n.toFixed(3);
+        if (n < 100) return "$" + n.toFixed(2);
+        return "$" + Math.round(n).toLocaleString();
+      }
+
+      function shortContext(n) {
+        if (!n) return "—";
+        if (n >= 1000000) return (n / 1000000).toLocaleString(undefined, { maximumFractionDigits: 1 }) + "M";
+        return Math.round(n / 1000).toLocaleString() + "K";
+      }
+
+      function modelCost(m, requests, inputTokens, outputTokens) {
+        const p = m.pricing;
+        return ((requests * inputTokens) / 1000000) * p.input_per_mtok + ((requests * outputTokens) / 1000000) * p.output_per_mtok;
+      }
+
+      function fitScore(m, preset) {
+        if (!preset || !preset.tags) return 0;
+        const tags = new Set([...(m.tags || []), ...(m.modalities || []), m.license]);
+        return preset.tags.reduce((score, tag) => score + (tags.has(tag) ? 1 : 0), 0);
+      }
+
+      function fitPills(m, score) {
+        const pills = [];
+        if (score > 0) pills.push(`<span class="pill good">${score} task match${score === 1 ? "" : "es"}</span>`);
+        if (m.modalities.includes("vision")) pills.push(`<span class="pill">vision</span>`);
+        if (m.license !== "proprietary") pills.push(`<span class="pill">${m.license}</span>`);
+        if ((m.tags || []).includes("long-context") || (m.tags || []).includes("very-long-context")) pills.push(`<span class="pill">long context</span>`);
+        if ((m.tags || []).includes("coding") || (m.tags || []).includes("code") || (m.tags || []).includes("agentic-coding")) pills.push(`<span class="pill">code</span>`);
+        return pills.slice(0, 4).join("");
+      }
+
+      function applyPreset() {
+        const preset = presets[els.preset.value];
+        if (!preset) return;
+        els.requests.value = preset.requests;
+        els.input.value = preset.input;
+        els.output.value = preset.output;
+        els.context.value = String(preset.context);
+        els.modality.value = preset.modality;
+      }
+
+      function render() {
+        const preset = presets[els.preset.value];
+        const requests = numberValue(els.requests);
+        const inputTokens = numberValue(els.input);
+        const outputTokens = numberValue(els.output);
+        const minContext = Number(els.context.value || 0);
+        const modality = els.modality.value;
+        const license = els.license.value;
+        const provider = els.provider.value;
+        const openOnly = els.openOnly.checked;
+        const inputMonthly = requests * inputTokens;
+        const outputMonthly = requests * outputTokens;
+
+        els.monthlyTokens.textContent = ((inputMonthly + outputMonthly) / 1000000).toLocaleString(undefined, { maximumFractionDigits: 1 }) + "M tokens";
+        els.summary.textContent = `${(inputMonthly / 1000000).toLocaleString(undefined, { maximumFractionDigits: 1 })}M input + ${(outputMonthly / 1000000).toLocaleString(undefined, { maximumFractionDigits: 1 })}M output tokens / month.`;
+
+        const rows = models
+          .filter((m) => !provider || m.provider === provider)
+          .filter((m) => !license || m.license === license)
+          .filter((m) => !openOnly || m.license !== "proprietary" || (m.tags || []).includes("open-weights"))
+          .filter((m) => !modality || m.modalities.includes(modality))
+          .filter((m) => !minContext || (m.context_window || 0) >= minContext)
+          .map((m) => ({ model: m, cost: modelCost(m, requests, inputTokens, outputTokens), score: fitScore(m, preset) }))
+          .sort((a, b) => a.cost - b.cost || b.score - a.score)
+          .slice(0, 20);
+
+        els.count.textContent = `${rows.length} shown`;
+        els.empty.hidden = rows.length > 0;
+        els.body.innerHTML = rows.map(({ model: m, cost, score }) => `
+          <tr>
+            <td class="model-cell">
+              <a href="/models/${m.id}">${m.name}</a>
+              <span>${m.provider} · ${m.released || "release n/a"} · pricing ${m.pricing.as_of}</span>
+            </td>
+            <td><div class="fit">${fitPills(m, score) || `<span class="pill">priced</span>`}</div></td>
+            <td class="num">${shortContext(m.context_window)}</td>
+            <td class="num">$${m.pricing.input_per_mtok}</td>
+            <td class="num">$${m.pricing.output_per_mtok}</td>
+            <td class="num"><strong>${money(cost)}</strong></td>
+          </tr>
+        `).join("");
+      }
+
+      els.preset.addEventListener("change", () => { applyPreset(); render(); });
+      ["requests", "input", "output", "context", "modality", "license", "provider", "openOnly"].forEach((key) => {
+        els[key].addEventListener("input", render);
+        els[key].addEventListener("change", render);
+      });
+      render();
+    })();
+  </script>
+</Base>

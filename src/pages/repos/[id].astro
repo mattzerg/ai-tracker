@@ -1,0 +1,187 @@
+---
+import Base from "../../layouts/Base.astro";
+import JsonLd from "../../components/JsonLd.astro";
+import Votes from "../../components/Votes.astro";
+import { eventsForEntity, loadRepos, loadTools } from "../../lib/data.ts";
+import type { Repo } from "../../../schemas/index.ts";
+
+export function getStaticPaths() {
+  return loadRepos().map((r) => ({ params: { id: r.id }, props: { repo: r } }));
+}
+
+interface Props { repo: Repo; }
+const { repo } = Astro.props;
+const events = eventsForEntity(repo.id);
+const relatedTools = loadTools().filter((tool) => tool.oss_repo === repo.repo_url || tool.sources.includes(repo.repo_url));
+const canonicalUrl = new URL(`/repos/${repo.id}`, Astro.site).toString();
+const description = `${repo.full_name} — ${repo.category}${repo.language ? `, ${repo.language}` : ""}.${repo.description ? ` ${repo.description}` : ""}`;
+
+function compactNumber(n: number | null): string {
+  if (n == null) return "n/a";
+  return Intl.NumberFormat("en", { notation: "compact", maximumFractionDigits: 1 }).format(n);
+}
+
+function installCommand(url: string): string | null {
+  if (url.includes("pypi.org/project/")) {
+    const name = url.split("/project/")[1]?.split("/")[0];
+    return name ? `pip install ${name}` : null;
+  }
+  if (url.includes("npmjs.com/package/")) {
+    const name = url.split("/package/")[1]?.split("/")[0];
+    return name ? `npm install ${name}` : null;
+  }
+  return null;
+}
+
+const installCommands = repo.package_urls.map(installCommand).filter((x): x is string => Boolean(x));
+const cloneCommand = `git clone ${repo.repo_url}`;
+---
+<Base
+  title={`${repo.full_name} — ai-tracker`}
+  description={description}
+  ogType="article"
+  canonical={canonicalUrl}
+>
+  <JsonLd entity={repo} url={canonicalUrl} />
+  <p><a href="/repos">← Repos</a></p>
+  <section class="repo-detail">
+    <div>
+      <p class="eyebrow">{repo.category}</p>
+      <h1>{repo.full_name}</h1>
+      <p class="lede">{repo.description ?? "No description tracked yet."}</p>
+      <div class="button-row">
+        <a class="button primary" href={repo.repo_url} rel="nofollow noopener">GitHub</a>
+        {repo.homepage ? <a class="button" href={repo.homepage} rel="nofollow noopener">Homepage</a> : null}
+        <a class="button" href={`/repos/${repo.id}.json`}>JSON</a>
+        <a class="button" href={`/repos/${repo.id}.md`}>Markdown</a>
+      </div>
+      <Votes entityId={repo.id} />
+    </div>
+    <dl class="facts panel">
+      <div><dt>Stars</dt><dd>{compactNumber(repo.stars)}</dd></div>
+      <div><dt>Forks</dt><dd>{compactNumber(repo.forks)}</dd></div>
+      <div><dt>Language</dt><dd>{repo.language ?? "n/a"}</dd></div>
+      <div><dt>License</dt><dd>{repo.license ?? "n/a"}</dd></div>
+      <div><dt>Created</dt><dd>{repo.created_at ?? "n/a"}</dd></div>
+      <div><dt>Pushed</dt><dd>{repo.pushed_at ?? "n/a"}</dd></div>
+      <div><dt>Status</dt><dd>{repo.archived ? "archived" : "active"}</dd></div>
+    </dl>
+  </section>
+
+  <section class="developer panel">
+    <div>
+      <h2>Developer Quick Start</h2>
+      <p>Clone, inspect, and pull the machine-readable record from the tracker.</p>
+    </div>
+    <div class="snippet-list">
+      <div class="snippet">
+        <span>Clone</span>
+        <code>{cloneCommand}</code>
+        <button type="button" data-copy={cloneCommand}>Copy</button>
+      </div>
+      {installCommands.map((cmd) => (
+        <div class="snippet">
+          <span>Install</span>
+          <code>{cmd}</code>
+          <button type="button" data-copy={cmd}>Copy</button>
+        </div>
+      ))}
+      <div class="snippet">
+        <span>Data</span>
+        <code>curl {new URL(`/repos/${repo.id}.json`, Astro.site).toString()}</code>
+        <button type="button" data-copy={`curl ${new URL(`/repos/${repo.id}.json`, Astro.site).toString()}`}>Copy</button>
+      </div>
+    </div>
+  </section>
+
+  {repo.topics.length || repo.tags.length ? (
+    <section>
+      <h2>Topics</h2>
+      <div class="chips">
+        {Array.from(new Set([...repo.topics, ...repo.tags])).map((tag) => <span>{tag}</span>)}
+      </div>
+    </section>
+  ) : null}
+
+  {repo.package_urls.length ? (
+    <section>
+      <h2>Packages</h2>
+      <ul>{repo.package_urls.map((u) => <li><a href={u} rel="nofollow noopener">{u}</a></li>)}</ul>
+    </section>
+  ) : null}
+
+  {relatedTools.length ? (
+    <section>
+      <h2>Tracked Tools Using This Repo</h2>
+      <ul>
+        {relatedTools.map((tool) => <li><a href={`/tools/${tool.id}`}>{tool.name}</a> · {tool.vendor} · {tool.category}</li>)}
+      </ul>
+    </section>
+  ) : null}
+
+  <section>
+    <h2>Timeline</h2>
+    {events.length === 0 ? (
+      <p><em>No events recorded yet.</em></p>
+    ) : (
+      <ul>
+        {events.map((e) => (
+          <li>
+            <code>{e.date}</code> · <strong>{e.type}</strong> — {e.summary}
+            {" "}<a href={e.source} rel="nofollow noopener">[source]</a>
+          </li>
+        ))}
+      </ul>
+    )}
+  </section>
+
+  <section>
+    <h2>Sources</h2>
+    <ul>{repo.sources.map((s) => <li><a href={s} rel="nofollow noopener">{s}</a></li>)}</ul>
+  </section>
+
+  <style>
+    .repo-detail { display: grid; grid-template-columns: minmax(0, 1fr) minmax(280px, 0.45fr); gap: 1.4rem; align-items: start; padding: 1.2rem 0 2rem; }
+    .repo-detail h1 { overflow-wrap: anywhere; }
+    .lede { max-width: 720px; font-size: 1.08rem; }
+    .facts { margin: 0; padding: 1rem; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.85rem; }
+    .facts div { min-width: 0; }
+    .facts dt { color: var(--muted); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.04em; font-weight: 750; }
+    .facts dd { margin: 0.18rem 0 0; color: var(--text); font-size: 1rem; overflow-wrap: anywhere; }
+    .developer { padding: 1rem; display: grid; grid-template-columns: minmax(0, 0.35fr) minmax(0, 0.65fr); gap: 1rem; align-items: start; }
+    .developer h2 { margin-bottom: 0.35rem; }
+    .developer p { margin: 0; }
+    .snippet-list { display: grid; gap: 0.55rem; min-width: 0; }
+    .snippet { display: grid; grid-template-columns: 72px minmax(0, 1fr) auto; gap: 0.5rem; align-items: center; padding: 0.5rem; border: 1px solid var(--line); border-radius: 7px; background: #f8fafc; }
+    .snippet span { color: var(--muted); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.04em; font-weight: 750; }
+    .snippet code { min-width: 0; overflow-wrap: anywhere; white-space: normal; color: var(--text); }
+    .snippet button { padding: 0.24rem 0.52rem; border-radius: 6px; border: 1px solid var(--line); background: var(--surface); color: var(--text); font: inherit; font-size: 0.82rem; font-weight: 650; cursor: pointer; }
+    .snippet button.copied { background: var(--accent-soft); color: var(--accent-strong); border-color: #bfe5dd; }
+    .chips { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+    .chips span { padding: 0.22rem 0.52rem; border-radius: 999px; background: var(--surface-soft); color: var(--text); font-size: 0.85rem; font-weight: 650; }
+    section { margin-top: 1.5rem; }
+    @media (max-width: 780px) {
+      .repo-detail { grid-template-columns: 1fr; }
+      .developer { grid-template-columns: 1fr; }
+      .snippet { grid-template-columns: 1fr auto; }
+      .snippet span { grid-column: 1 / -1; }
+    }
+  </style>
+  <script is:inline>
+    (() => {
+      document.addEventListener("click", async (e) => {
+        const btn = e.target.closest("button[data-copy]");
+        if (!btn) return;
+        try {
+          await navigator.clipboard.writeText(btn.dataset.copy);
+          const old = btn.textContent;
+          btn.textContent = "Copied";
+          btn.classList.add("copied");
+          setTimeout(() => { btn.textContent = old; btn.classList.remove("copied"); }, 1200);
+        } catch {
+          btn.textContent = "Copy failed";
+        }
+      });
+    })();
+  </script>
+</Base>

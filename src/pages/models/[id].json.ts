@@ -6,8 +6,18 @@ export const getStaticPaths: GetStaticPaths = () =>
 
 export const GET: APIRoute = ({ props }) => {
   const model = (props as { model: ReturnType<typeof loadModels>[number] }).model;
+  const apiId = model.id.replace(`${model.provider}__`, "");
   const body = JSON.stringify(
-    { ...model, events: eventsForEntity(model.id) },
+    {
+      ...model,
+      developer: {
+        api_style_id: apiId,
+        docs: model.links.docs ?? null,
+        homepage: model.links.homepage ?? null,
+        pricing_as_of: model.pricing?.as_of ?? null,
+      },
+      events: eventsForEntity(model.id),
+    },
     null,
     2,
   );

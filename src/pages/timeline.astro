@@ -46,8 +46,8 @@ const maxDate = events.length ? events[0].date : "";
     <ul id="timeline">
       {events.map((e) => {
         const entity = entityById(e.entity);
-        const path = entity?.kind === "model" ? `/models/${e.entity}` : `/tools/${e.entity}`;
-        const provider = entity?.kind === "model" ? entity.provider : (entity as any)?.vendor ?? "";
+        const path = entity?.kind === "model" ? `/models/${e.entity}` : entity?.kind === "tool" ? `/tools/${e.entity}` : `/repos/${e.entity}`;
+        const provider = entity?.kind === "model" ? entity.provider : entity?.kind === "tool" ? (entity as any).vendor : (entity as any)?.owner ?? "";
         return (
           <li data-provider={provider} data-type={e.type} data-date={e.date}>
             <code>{e.date}</code> · <strong>{e.type}</strong> ·

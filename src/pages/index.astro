@@ -1,11 +1,15 @@
 ---
 import Base from "../layouts/Base.astro";
-import { entityById, loadEvents, loadModels, loadTools } from "../lib/data.ts";
+import { entityById, loadEvents, loadModels, loadRepos, loadTools } from "../lib/data.ts";
 
 const allEvents = loadEvents();
-const events = allEvents.slice(0, 25);
+const events = allEvents.slice(0, 12);
 const models = loadModels();
 const tools = loadTools();
+const repos = loadRepos();
+const providerCount = new Set(models.map((m) => m.provider)).size;
+const categoryCount = new Set(tools.map((t) => t.category)).size;
+const repoCategoryCount = new Set(repos.map((r) => r.category)).size;
 
 // Highlights — actually useful comparisons.
 const cheapestInput = models
@@ -27,65 +31,182 @@ const mostUsed = Array.from(usageCount.entries())
 function entityPath(id: string): string {
   const e = entityById(id);
   if (!e) return `#${id}`;
-  return e.kind === "model" ? `/models/${id}` : `/tools/${id}`;
+  if (e.kind === "model") return `/models/${id}`;
+  if (e.kind === "tool") return `/tools/${id}`;
+  return `/repos/${id}`;
+}
+
+function eventTypeLabel(type: string): string {
+  return type.replaceAll("_", " ");
 }
 ---
-<Base title="ai-tracker — what's shipping in AI" description="Canonical machine-readable timeline of AI models and tools.">
-  <h1>ai-tracker</h1>
-  <p>{models.length} models · {tools.length} tools · {allEvents.length} events tracked.</p>
+<Base title="ai-tracker — what's shipping in AI" description="Canonical machine-readable timeline of AI models, tools, and developer repos.">
+  <section class="hero">
+    <div class="hero-copy">
+      <p class="eyebrow">Machine-readable AI market tracker</p>
+      <h1>What changed in AI models and tools?</h1>
+      <p class="lede">
+        A public directory, changelog, and agent-facing data feed for model releases, pricing shifts,
+        tool ecosystems, open-source repos, and source-backed metadata.
+      </p>
+      <p class="trust-strip">Community-maintained · free · no signup · open data · <a href="/about">how this is run</a></p>
+      <div class="button-row">
+        <a href="/picker" class="button primary">Pick a model</a>
+        <a href="/models" class="button">Browse models</a>
+        <a href="/tools" class="button">Browse tools</a>
+        <a href="/repos" class="button">Track repos</a>
+        <a href="/llms.txt" class="button">For agents</a>
+      </div>
+    </div>
+    <div class="hero-panel panel" aria-label="Tracker coverage">
+      <div class="stat-grid">
+        <a href="/models" class="stat">
+          <strong>{models.length}</strong>
+          <span>models</span>
+        </a>
+        <a href="/tools" class="stat">
+          <strong>{tools.length}</strong>
+          <span>tools</span>
+        </a>
+        <a href="/repos" class="stat">
+          <strong>{repos.length}</strong>
+          <span>repos</span>
+        </a>
+        <a href="/timeline" class="stat">
+          <strong>{allEvents.length}</strong>
+          <span>events</span>
+        </a>
+      </div>
+      <div class="surface-links">
+        <span>{providerCount} model providers, {categoryCount} tool categories, {repoCategoryCount} repo categories</span>
+        <a href="/api/search.json">search.json</a>
+        <a href="/dump/all.json">all.json</a>
+        <a href="/sitemap-agents.xml">sitemap</a>
+      </div>
+    </div>
+  </section>
 
-  <section class="highlights">
-    <div class="card">
+  <section class="section-head">
+    <div>
+      <p class="eyebrow">Ranked snapshots</p>
+      <h2>Useful cuts through the catalog</h2>
+    </div>
+    <a href="/compare">Compare models</a>
+  </section>
+
+  <section class="highlights" aria-label="Model highlights">
+    <div class="insight-card">
       <h3>Cheapest input</h3>
       <ol>
         {cheapestInput.map((m) => (
-          <li><a href={`/models/${m.id}`}>{m.name}</a> — ${m.pricing!.input_per_mtok}/M</li>
+          <li>
+            <a href={`/models/${m.id}`}>{m.name}</a>
+            <span>${m.pricing!.input_per_mtok}/M</span>
+          </li>
         ))}
       </ol>
     </div>
-    <div class="card">
+    <div class="insight-card">
       <h3>Longest context</h3>
       <ol>
         {longestContext.map((m) => (
-          <li><a href={`/models/${m.id}`}>{m.name}</a> — {m.context_window!.toLocaleString()}</li>
+          <li>
+            <a href={`/models/${m.id}`}>{m.name}</a>
+            <span>{m.context_window!.toLocaleString()} tok</span>
+          </li>
         ))}
       </ol>
     </div>
-    <div class="card">
+    <div class="insight-card">
       <h3>Most used by tools</h3>
       <ol>
         {mostUsed.map((x) => (
-          <li><a href={`/models/${x.model.id}`}>{x.model.name}</a> — {x.count} tools</li>
+          <li>
+            <a href={`/models/${x.model.id}`}>{x.model.name}</a>
+            <span>{x.count} tools</span>
+          </li>
         ))}
       </ol>
     </div>
   </section>
 
-  <h2>Latest</h2>
+  <section class="latest-section">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">Changelog</p>
+        <h2>Latest tracked events</h2>
+      </div>
+      <a href="/timeline">Full timeline</a>
+    </div>
   {events.length === 0 ? (
-    <p><em>No events yet — repo just bootstrapped.</em></p>
+    <p><em>No events yet - repo just bootstrapped.</em></p>
   ) : (
-    <ul>
+    <ol class="event-list">
       {events.map((e) => {
         const entity = entityById(e.entity);
         return (
-          <li>
-            <code>{e.date}</code> · <strong>{e.type}</strong> ·
-            <a href={entityPath(e.entity)}>{entity?.name ?? e.entity}</a>
-            — {e.summary}
+          <li class="event-row">
+            <time datetime={e.date}>{e.date}</time>
+            <div>
+              <span class="event-type">{eventTypeLabel(e.type)}</span>
+              <a href={entityPath(e.entity)}>{entity?.name ?? e.entity}</a>
+              <p>{e.summary}</p>
+            </div>
           </li>
         );
       })}
-    </ul>
+    </ol>
   )}
-
-  <p><a href="/timeline">→ Full timeline ({allEvents.length} events)</a></p>
+  </section>
 
   <style>
-    .highlights { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
-    .card { padding: 0.75rem 1rem; background: #f6f6f6; border-radius: 4px; }
-    .card h3 { margin: 0 0 0.5rem; font-size: 0.95rem; color: #555; }
-    .card ol { padding-left: 1.25rem; margin: 0; font-size: 0.92rem; }
-    .card li { margin-bottom: 0.2rem; }
+    .hero { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(320px, 0.75fr); gap: 2rem; align-items: stretch; padding: 3.25rem 0 2rem; }
+    .hero-copy { min-width: 0; }
+    .hero h1 { max-width: 880px; font-size: clamp(2.7rem, 7vw, 5.8rem); }
+    .lede { max-width: 720px; margin: 1.1rem 0 0.85rem; font-size: clamp(1.05rem, 2vw, 1.28rem); color: #4f5a6d; }
+    .trust-strip { max-width: 720px; margin: 0 0 1.45rem; font-size: 0.92rem; color: var(--muted); }
+    .trust-strip a { color: inherit; text-decoration: underline; text-decoration-color: rgba(0,0,0,0.2); }
+    .trust-strip a:hover { text-decoration-color: currentColor; }
+    .hero-panel { padding: 1.15rem; align-self: end; }
+    .stat-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.75rem; }
+    .stat { min-height: 112px; display: flex; flex-direction: column; justify-content: flex-end; padding: 0.95rem; border: 1px solid var(--line); border-radius: 7px; background: linear-gradient(180deg, #ffffff, #f7f9fc); color: inherit; text-decoration: none; }
+    .stat:hover { border-color: #b9c3d1; }
+    .stat strong { color: var(--text); font-size: clamp(2rem, 5vw, 3.1rem); line-height: 0.95; font-variant-numeric: tabular-nums; }
+    .stat span { margin-top: 0.45rem; color: var(--muted); font-size: 0.9rem; font-weight: 650; text-transform: uppercase; letter-spacing: 0.04em; }
+    .surface-links { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; gap: 0.55rem; align-items: center; font-size: 0.88rem; }
+    .surface-links span { width: 100%; color: var(--muted); font-weight: 700; }
+    .surface-links a { padding: 0.22rem 0.48rem; border-radius: 999px; background: var(--surface-soft); color: var(--text); text-decoration: none; }
+    .section-head { display: flex; justify-content: space-between; align-items: end; gap: 1rem; margin: 2.5rem 0 1rem; }
+    .section-head .eyebrow { margin-bottom: 0.35rem; }
+    .section-head a { font-weight: 700; white-space: nowrap; }
+    .highlights { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+    .insight-card { padding: 1.05rem; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; box-shadow: 0 10px 28px rgba(24, 32, 47, 0.05); }
+    .insight-card h3 { margin: 0 0 0.8rem; font-size: 0.96rem; color: #394457; }
+    .insight-card ol { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.55rem; }
+    .insight-card li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0.8rem; align-items: baseline; padding-top: 0.55rem; border-top: 1px solid #edf0f5; }
+    .insight-card li:first-child { border-top: 0; padding-top: 0; }
+    .insight-card span { color: var(--muted); font-size: 0.88rem; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .latest-section { margin-top: 0.5rem; }
+    .event-list { list-style: none; padding: 0; margin: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+    .event-row { display: grid; grid-template-columns: 112px minmax(0, 1fr); gap: 1rem; padding: 0.9rem 1rem; border-top: 1px solid #edf0f5; }
+    .event-row:first-child { border-top: 0; }
+    .event-row time { color: var(--muted); font-size: 0.88rem; font-variant-numeric: tabular-nums; padding-top: 0.12rem; }
+    .event-row a { font-weight: 750; color: var(--text); text-decoration: none; }
+    .event-row a:hover { color: var(--blue); }
+    .event-row p { margin: 0.28rem 0 0; color: #4f5a6d; }
+    .event-type { display: inline-flex; margin-right: 0.5rem; padding: 0.12rem 0.42rem; border-radius: 999px; background: var(--accent-soft); color: var(--accent-strong); font-size: 0.75rem; font-weight: 750; text-transform: uppercase; letter-spacing: 0.04em; }
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; padding-top: 2rem; }
+      .hero-panel { align-self: stretch; }
+      .highlights { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 620px) {
+      .hero h1 { font-size: clamp(2.25rem, 14vw, 3.5rem); }
+      .stat-grid { grid-template-columns: 1fr 1fr; }
+      .stat { min-height: 92px; padding: 0.75rem; }
+      .section-head { align-items: flex-start; flex-direction: column; }
+      .event-row { grid-template-columns: 1fr; gap: 0.35rem; }
+      .event-row time { padding-top: 0; }
+    }
   </style>
 </Base>

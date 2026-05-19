@@ -1,20 +1,20 @@
 # ai-tracker
 
-Public-utility, no-revenue directory + changelog for AI models and tools. Designed to be consumed by agents.
+Community-maintained, public-utility directory + changelog for AI models, tools, and developer repos. Designed to be consumed by agents. Free to use, no signup, no ads, no SaaS pitch — contributions welcome via [SUBMITTING.md](./SUBMITTING.md) or pull request.
 
 **Live**: <https://ai-tracker-dxu.pages.dev>
 
-41 models · 35 tools · 41 events · 9 providers · 11 categories.
+41 models · 35 tools · 8 repos · 196 repo candidates · 42 events · 9 providers · 11 tool categories.
 
 ## What it is
 
-Other directories list AI products. ai-tracker is built so an LLM agent can answer *"what changed for Claude Opus 4.7 in the last month"* without scraping HTML. Every entity has HTML, JSON, and Markdown twins; every event flows through RSS, Atom, `/dump/all.json`, `/llms.txt`, JSON-LD, and an MCP server. Auth-free, signup-free, ad-free.
+Other directories list AI products. ai-tracker is built so an LLM agent can answer *"what changed for Claude Opus 4.7 in the last month"* or *"which agent repos should I inspect?"* without scraping HTML. Every entity has HTML, JSON, and Markdown twins; every event flows through RSS, Atom, `/dump/all.json`, `/llms.txt`, JSON-LD, and an MCP server. Auth-free, signup-free, ad-free.
 
 ## What's tracked
 
 **Authoritative readers (9 providers)**: Anthropic, Google, xAI, Mistral, OpenAI, DeepSeek, Meta, Alibaba, Cohere — each with a hand-curated `KNOWN` map of models pulled from official docs.
 
-**Supplementary aggregators (2)**: OpenRouter API (model catalog), GitHub topic search (OSS tools).
+**Supplementary aggregators (3)**: OpenRouter API (model catalog), GitHub topic search (OSS tools), GitHub repo search (first-class developer repos).
 
 **Source-trust hierarchy**: authoritative entries can correct stale supplementary values; supplementary sources never overwrite curated data.
 
@@ -25,8 +25,10 @@ ai-tracker/
   data/
     models/<provider>__<id>.json    canonical model entries
     tools/<slug>.json               canonical tool entries
+    repos/github__<owner>_<repo>.json canonical AI repo entries
+    repo-candidates/github-repos.json GitHub-discovered repo review queue
     events/<date>__<entity>__<type>.json   append-only event log
-  schemas/                          Zod schemas (model, tool, event, common)
+  schemas/                          Zod schemas (model, tool, repo, event, common)
   scripts/
     ingest.ts                       nightly ingest orchestrator
     ingest/sources/*.ts             one file per source (auth + supp)
@@ -59,7 +61,7 @@ pnpm run ingest:dry   # dry-run nightly ingest, writes report only
 ## Common tasks
 
 ```bash
-pnpm run verify:refs           # entity references resolve (events ↔ models/tools)
+pnpm run verify:refs           # entity references resolve (events ↔ models/tools/repos)
 pnpm run verify:sources        # HEAD-check every source URL (soft-pass on 401/403/405/429)
 pnpm run ingest:apply:updates  # apply pricing/link/tag updates only (skip new entries)
 pnpm run events:backfill-releases   # add 'released' events for any model missing one
@@ -74,14 +76,16 @@ Full script reference in `package.json`.
 |---|---|
 | `/llms.txt` | Discovery file: stats, query patterns, highlights, recent events |
 | `/llms-full.txt` | Full corpus as plain text |
-| `/dump/all.json` | Bulk export — every model, tool, event, queue status |
+| `/dump/all.json` | Bulk export — every model, tool, repo, event, queue status |
 | `/dump/events-30d.json` | Last 30 days of events |
 | `/api/search.json` | Lean denormalized search index (~25KB) |
+| `/repos/candidates.json` | GitHub-discovered repo candidates awaiting review |
 | `/api/votes.json` | Vote counts (Worker stub today, real Worker Phase 4) |
 | `/feed.xml`, `/atom.xml` | Last 100 events |
 | `/sitemap-agents.xml` | Every machine-consumable URL with priority + changefreq |
 | `/models/<id>.json`, `/models/<id>.md` | Per-entity twins |
 | `/tools/<id>.json`, `/tools/<id>.md` | Per-entity twins |
+| `/repos/<id>.json`, `/repos/<id>.md` | Per-repo twins |
 | `/events/<slug>` | Per-event detail page (also linked from RSS) |
 | `/og/models/<id>.png`, `/og/tools/<id>.png` | 1200×630 share cards |
 | MCP server (`npm install -g ai-tracker-mcp`) | search_models, search_tools, get_entity, get_timeline, recent_events |
