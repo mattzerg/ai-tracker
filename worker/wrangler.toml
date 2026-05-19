@@ -18,7 +18,7 @@ compatibility_date = "2026-05-01"
 workers_dev = false
 
 [vars]
-GITHUB_REPO = "OWNER/REPO"           # TODO: fill once repo exists
+GITHUB_REPO = "Epoch-ML/ai-tracker"
 QUEUE_BRANCH = "submissions/queue"
 ANTHROPIC_MODEL = "claude-haiku-4-5"
 MODERATION_MIN_CONFIDENCE = "0.4"

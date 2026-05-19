@@ -7,7 +7,7 @@ import { loadModels, loadTools } from "../lib/data.ts";
 // useful before Phase 4 ships and seamlessly upgrades after.
 const apiBase = import.meta.env.PUBLIC_API_BASE ?? "";
 const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITEKEY ?? "";
-const ghIssuesUrl = "https://github.com/mattzerg/ai-tracker/issues/new";
+const ghIssuesUrl = "https://github.com/Epoch-ML/ai-tracker/issues/new/choose";
 
 const entities = [
   ...loadModels().map((m) => ({ id: m.id, label: `${m.name} (model · ${m.provider})` })),

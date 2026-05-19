@@ -4,5 +4,5 @@ contact_links:
     url: https://ai-tracker-dxu.pages.dev/submit
     about: The fastest path. Pick the kind (event / new model / new tool / new repo), the form previews the JSON payload as you type. Routes through moderation + the submissions queue.
   - name: Read SUBMITTING.md
-    url: https://github.com/REPLACE_WITH_REPO/blob/main/SUBMITTING.md
+    url: https://github.com/Epoch-ML/ai-tracker/blob/main/SUBMITTING.md
     about: What counts as a good submission, how the review queue works, anti-spam rules.

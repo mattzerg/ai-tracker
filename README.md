@@ -2,7 +2,7 @@
 
 Community-maintained, public-utility directory + changelog for AI models, tools, and developer repos. Designed to be consumed by agents. Free to use, no signup, no ads, no SaaS pitch — contributions welcome via [SUBMITTING.md](./SUBMITTING.md) or pull request.
 
-**Live**: <https://ai-tracker-dxu.pages.dev>
+**Live**: <https://ai-tracker-dxu.pages.dev> · **Repo**: <https://github.com/Epoch-ML/ai-tracker> · **Code of Conduct**: [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md)
 
 41 models · 35 tools · 8 repos · 196 repo candidates · 42 events · 9 providers · 11 tool categories.
 
