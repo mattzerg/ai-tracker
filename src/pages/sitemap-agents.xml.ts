@@ -1,5 +1,5 @@
 import type { APIRoute } from "astro";
-import { eventSlug, loadEvents, loadModels, loadTools } from "../lib/data.ts";
+import { eventSlug, loadEvents, loadModels, loadRepoCandidateQueue, loadRepos, loadTools } from "../lib/data.ts";
 
 // Companion sitemap for agent-consumable endpoints: JSON twins, Markdown twins,
 // bulk dumps, OG SVGs, feeds, and the MCP advertisement files. The default
@@ -50,6 +50,11 @@ export const GET: APIRoute = ({ site }) => {
   // - Stub: low change/priority until Worker ships.
   urls.push(urlEntry(`${base}/api/votes.json`, { lastmod: today, changefreq: "monthly", priority: 0.2 }));
   urls.push(urlEntry(`${base}/api/search.json`, { lastmod: today, changefreq: "daily", priority: 0.8 }));
+  urls.push(urlEntry(`${base}/picker`, { lastmod: today, changefreq: "weekly", priority: 0.7 }));
+  const repoCandidateQueue = loadRepoCandidateQueue();
+  const repoCandidateLastmod = repoCandidateQueue.generated_at.slice(0, 10) || today;
+  urls.push(urlEntry(`${base}/repos/candidates`, { lastmod: repoCandidateLastmod, changefreq: "daily", priority: 0.5 }));
+  urls.push(urlEntry(`${base}/repos/candidates.json`, { lastmod: repoCandidateLastmod, changefreq: "daily", priority: 0.6 }));
   urls.push(urlEntry(`${base}/og/default.svg`, { lastmod: today, changefreq: "weekly", priority: 0.4 }));
   urls.push(urlEntry(`${base}/og/default.png`, { lastmod: today, changefreq: "weekly", priority: 0.4 }));
 
@@ -68,6 +73,11 @@ export const GET: APIRoute = ({ site }) => {
     urls.push(urlEntry(`${base}/tools/${t.id}.md`, { lastmod: lm, changefreq: "weekly", priority: 0.6 }));
     urls.push(urlEntry(`${base}/og/tools/${t.id}.svg`, { lastmod: lm, changefreq: "monthly", priority: 0.3 }));
     urls.push(urlEntry(`${base}/og/tools/${t.id}.png`, { lastmod: lm, changefreq: "monthly", priority: 0.3 }));
+  }
+  for (const r of loadRepos()) {
+    const lm = r.pushed_at ?? r.created_at ?? today;
+    urls.push(urlEntry(`${base}/repos/${r.id}.json`, { lastmod: lm, changefreq: "weekly", priority: 0.7 }));
+    urls.push(urlEntry(`${base}/repos/${r.id}.md`, { lastmod: lm, changefreq: "weekly", priority: 0.6 }));
   }
 
   // Event detail pages — append-only, never change after creation. Low changefreq,

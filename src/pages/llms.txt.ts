@@ -1,5 +1,5 @@
 import type { APIRoute } from "astro";
-import { entityById, eventSlug, loadEvents, loadModels, loadTools } from "../lib/data.ts";
+import { entityById, eventSlug, loadEvents, loadModels, loadRepoCandidateQueue, loadRepos, loadTools } from "../lib/data.ts";
 import { loadQueueStatus } from "../lib/queueStatus.ts";
 
 function thirtyDaysAgo(): string {
@@ -12,6 +12,8 @@ export const GET: APIRoute = ({ site }) => {
   const base = (site?.toString() ?? "").replace(/\/$/, "");
   const models = loadModels();
   const tools = loadTools();
+  const repos = loadRepos();
+  const repoCandidateQueue = loadRepoCandidateQueue();
   const events = loadEvents();
   const queue = loadQueueStatus();
   const today = new Date().toISOString().slice(0, 10);
@@ -42,28 +44,34 @@ export const GET: APIRoute = ({ site }) => {
   const categoryCounts = new Map<string, number>();
   for (const t of tools) categoryCounts.set(t.category, (categoryCounts.get(t.category) ?? 0) + 1);
   const categoriesByCount = Array.from(categoryCounts.entries()).sort((a, b) => b[1] - a[1]);
+  const repoCategoryCounts = new Map<string, number>();
+  for (const r of repos) repoCategoryCounts.set(r.category, (repoCategoryCounts.get(r.category) ?? 0) + 1);
+  const repoCategoriesByCount = Array.from(repoCategoryCounts.entries()).sort((a, b) => b[1] - a[1]);
 
   const recent30 = events.filter((e) => e.date >= cutoff);
   const sortedModels = models.slice().sort((a, b) => (b.released ?? "0").localeCompare(a.released ?? "0"));
   const sortedTools = tools.slice().sort((a, b) => (b.released ?? "0").localeCompare(a.released ?? "0"));
+  const sortedRepos = repos.slice().sort((a, b) => (b.stars ?? -1) - (a.stars ?? -1) || a.full_name.localeCompare(b.full_name));
 
   const lines: string[] = [];
   lines.push("# ai-tracker");
   lines.push("");
-  lines.push(`Canonical machine-readable timeline of AI models and tools. Updated ${today}.`);
+  lines.push(`Canonical machine-readable timeline of AI models, tools, and developer repos. Updated ${today}.`);
   lines.push("Designed to be consumed by agents. No login, no signup, AI-bot-friendly.");
   lines.push("");
-  lines.push(`Stats: ${models.length} models · ${tools.length} tools · ${events.length} events · ${recent30.length} events in last 30 days.`);
+  lines.push(`Stats: ${models.length} models · ${tools.length} tools · ${repos.length} repos · ${repoCandidateQueue.candidates.length} repo candidates · ${events.length} events · ${recent30.length} events in last 30 days.`);
   lines.push("");
 
   lines.push("## How to query");
   lines.push("");
-  lines.push(`- Bulk: ${base}/dump/all.json (every model, tool, event, queue status)`);
+  lines.push(`- Bulk: ${base}/dump/all.json (every model, tool, repo, event, queue status)`);
   lines.push(`- 30-day events only: ${base}/dump/events-30d.json`);
   lines.push(`- Full corpus as text: ${base}/llms-full.txt`);
-  lines.push(`- Per-entity JSON twin: ${base}/models/<id>.json or ${base}/tools/<id>.json`);
-  lines.push(`- Per-entity Markdown twin: ${base}/models/<id>.md or ${base}/tools/<id>.md`);
+  lines.push(`- Per-entity JSON twin: ${base}/models/<id>.json, ${base}/tools/<id>.json, or ${base}/repos/<id>.json`);
+  lines.push(`- Per-entity Markdown twin: ${base}/models/<id>.md, ${base}/tools/<id>.md, or ${base}/repos/<id>.md`);
+  lines.push(`- Repo candidate review queue: ${base}/repos/candidates.json`);
   lines.push(`- Per-event detail: ${base}/events/<date>__<entity>__<type>`);
+  lines.push(`- Human model picker + workload cost calculator: ${base}/picker`);
   lines.push(`- RSS / Atom: ${base}/feed.xml · ${base}/atom.xml`);
   lines.push(`- Agent sitemap: ${base}/sitemap-agents.xml (all machine-consumable URLs)`);
   lines.push(`- MCP server: npm install -g ai-tracker-mcp (tools: search_models, search_tools, get_entity, get_timeline, recent_events)`);
@@ -85,6 +93,7 @@ export const GET: APIRoute = ({ site }) => {
   lines.push("");
   lines.push(`Providers: ${providersByCount.map(([p, n]) => `${p} (${n})`).join(", ")}`);
   lines.push(`Tool categories: ${categoriesByCount.map(([c, n]) => `${c} (${n})`).join(", ")}`);
+  lines.push(`Repo categories: ${repoCategoriesByCount.map(([c, n]) => `${c} (${n})`).join(", ")}`);
   lines.push("");
 
   if (queue.available && queue.branches.length > 0) {
@@ -128,6 +137,15 @@ export const GET: APIRoute = ({ site }) => {
     const oss = t.oss ? " · OSS" : "";
     const free = t.free_tier ? " · free tier" : "";
     lines.push(`- [${t.name}](${base}/tools/${t.id}) — ${t.vendor}, ${t.category}${oss}${free}`);
+  }
+  lines.push("");
+
+  lines.push(`## Repos (${repos.length})`);
+  lines.push("");
+  for (const r of sortedRepos) {
+    const stars = r.stars != null ? ` · ${r.stars.toLocaleString()} stars` : "";
+    const lang = r.language ? ` · ${r.language}` : "";
+    lines.push(`- [${r.full_name}](${base}/repos/${r.id}) — ${r.category}${lang}${stars}`);
   }
   lines.push("");
 

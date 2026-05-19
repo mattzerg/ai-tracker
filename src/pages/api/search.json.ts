@@ -1,5 +1,5 @@
 import type { APIRoute } from "astro";
-import { entityById, eventSlug, loadEvents, loadModels, loadTools } from "../../lib/data.ts";
+import { entityById, eventSlug, loadEvents, loadModels, loadRepos, loadTools } from "../../lib/data.ts";
 
 // Lean search-shaped index. Smaller than /dump/all.json (which dumps every
 // field). Designed for agents that want fuzzy lookup over names + tags
@@ -8,6 +8,7 @@ import { entityById, eventSlug, loadEvents, loadModels, loadTools } from "../../
 // Shape:
 //   { generated_at, models: [{id,name,provider,kind,context,tags,license}],
 //     tools: [{id,name,vendor,category,kind,oss,free_tier,tags,built_on}],
+//     repos: [{id,full_name,category,language,license,stars,tags}],
 //     events: [{slug,date,type,entity,entity_name,summary}] }
 //
 // Cache-control 1h since this is denormalized.
@@ -35,6 +36,19 @@ export const GET: APIRoute = () => {
     tags: t.tags,
     built_on: t.built_on_models,
   }));
+  const repos = loadRepos().map((r) => ({
+    kind: "repo" as const,
+    id: r.id,
+    name: r.name,
+    full_name: r.full_name,
+    owner: r.owner,
+    category: r.category,
+    language: r.language,
+    license: r.license,
+    stars: r.stars,
+    archived: r.archived,
+    tags: Array.from(new Set([...r.tags, ...r.topics])),
+  }));
   const events = loadEvents().map((e) => {
     const ent = entityById(e.entity);
     return {
@@ -52,6 +66,7 @@ export const GET: APIRoute = () => {
     schema_version: 1,
     models,
     tools,
+    repos,
     events,
   });
   return new Response(body, {

@@ -33,6 +33,19 @@ interface LeanTool {
   tags: string[];
   built_on: string[];
 }
+interface LeanRepo {
+  kind: "repo";
+  id: string;
+  name: string;
+  full_name: string;
+  owner: string;
+  category: string;
+  language: string | null;
+  license: string | null;
+  stars: number | null;
+  archived: boolean;
+  tags: string[];
+}
 interface LeanEvent {
   slug: string;
   date: string;
@@ -46,12 +59,13 @@ interface SearchIndex {
   schema_version: number;
   models: LeanModel[];
   tools: LeanTool[];
+  repos: LeanRepo[];
   events: LeanEvent[];
 }
 
 // Per-entity twin — used for get_entity / get_timeline. Full record + events.
 interface EntityTwin {
-  kind: "model" | "tool";
+  kind: "model" | "tool" | "repo";
   id: string;
   name: string;
   [k: string]: unknown;
@@ -73,13 +87,14 @@ async function getIndex(): Promise<SearchIndex> {
 async function getEntity(id: string): Promise<EntityTwin | null> {
   const cached = entityCache.get(id);
   if (cached && Date.now() - cached.fetched < CACHE_TTL_MS) return cached.data;
-  // Try /models/<id>.json first, then /tools/<id>.json. Order: fetch index to
+  // Try the targeted twin after checking the lean index for the entity bucket.
   // learn which bucket the id is in, then targeted fetch.
   const idx = await getIndex();
   const isModel = idx.models.some((m) => m.id === id);
   const isTool = idx.tools.some((t) => t.id === id);
-  if (!isModel && !isTool) return null;
-  const path = isModel ? `/models/${id}.json` : `/tools/${id}.json`;
+  const isRepo = (idx.repos ?? []).some((r) => r.id === id);
+  if (!isModel && !isTool && !isRepo) return null;
+  const path = isModel ? `/models/${id}.json` : isTool ? `/tools/${id}.json` : `/repos/${id}.json`;
   const res = await fetch(`${BASE}${path}`, { headers: UA });
   if (!res.ok) return null;
   const data = (await res.json()) as EntityTwin;
@@ -126,8 +141,23 @@ const tools = [
     },
   },
   {
+    name: "search_repos",
+    description: "Search tracked AI GitHub repos by free-text query and optional filters.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        query: { type: "string", description: "Free-text query" },
+        category: { type: "string", description: "Exact category (e.g. 'agent-framework', 'mcp', 'rag')" },
+        language: { type: "string", description: "Exact primary language (e.g. 'Python', 'TypeScript')" },
+        min_stars: { type: "number", description: "Minimum GitHub stars when known" },
+        active_only: { type: "boolean" },
+        limit: { type: "number", default: 20 },
+      },
+    },
+  },
+  {
     name: "get_entity",
-    description: "Fetch a single entity by id (model or tool). Returns full record + its events.",
+    description: "Fetch a single entity by id (model, tool, or repo). Returns full record + its events.",
     inputSchema: {
       type: "object",
       properties: { id: { type: "string", description: "Entity id (e.g. 'anthropic__claude-opus-4-7' or 'cursor')" } },
@@ -196,6 +226,23 @@ server.setRequestHandler(CallToolRequestSchema, async (req) => {
         .filter((t) => !q || matchQuery(`${t.name} ${t.vendor} ${(t.tags ?? []).join(" ")}`, q))
         .slice(0, limit);
       return textResult({ count: out.length, tools: out });
+    }
+    case "search_repos": {
+      const idx = await getIndex();
+      const q = (args.query as string | undefined) ?? "";
+      const category = args.category as string | undefined;
+      const language = args.language as string | undefined;
+      const minStars = args.min_stars as number | undefined;
+      const activeOnly = args.active_only as boolean | undefined;
+      const limit = (args.limit as number | undefined) ?? 20;
+      const out = (idx.repos ?? [])
+        .filter((r) => !category || r.category === category)
+        .filter((r) => !language || r.language === language)
+        .filter((r) => minStars == null || (r.stars ?? -1) >= minStars)
+        .filter((r) => !activeOnly || !r.archived)
+        .filter((r) => !q || matchQuery(`${r.full_name} ${r.owner} ${r.category} ${r.language ?? ""} ${(r.tags ?? []).join(" ")}`, q))
+        .slice(0, limit);
+      return textResult({ count: out.length, repos: out });
     }
     case "get_entity": {
       const id = args.id as string;

@@ -1,16 +1,17 @@
 # ai-tracker-mcp
 
-MCP server for [ai-tracker](https://ai-tracker-dxu.pages.dev) — query the canonical AI models & tools timeline directly from Claude Desktop, Claude Code, or any MCP-compatible client.
+MCP server for [ai-tracker](https://ai-tracker-dxu.pages.dev) — query the canonical AI models, tools, and developer repos timeline directly from Claude Desktop, Claude Code, or any MCP-compatible client.
 
 ## What you get
 
-Five tools, all read-only against the public ai-tracker site (no API key needed):
+Six tools, all read-only against the public ai-tracker site (no API key needed):
 
 | Tool | Returns |
 |---|---|
 | `search_models` | Filter the model catalog by query, provider, min context, max input/output price |
 | `search_tools` | Filter the tool catalog by query, category, OSS-only, free-tier-only |
-| `get_entity` | Full record for one model or tool, including pricing, modalities, sources, links, events |
+| `search_repos` | Filter tracked AI GitHub repos by query, category, language, active status, stars |
+| `get_entity` | Full record for one model, tool, or repo, including sources, links, events |
 | `get_timeline` | Chronological event list for one entity |
 | `recent_events` | Cross-entity feed of releases, price changes, deprecations, etc. — newest first |
 
@@ -36,7 +37,7 @@ Add to `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS)
 }
 ```
 
-Restart Claude Desktop. The five tools appear under the 🔧 menu.
+Restart Claude Desktop. The six tools appear in Claude's tool menu.
 
 ## Configure (Claude Code)
 
@@ -79,6 +80,15 @@ claude mcp add ai-tracker -- ai-tracker-mcp
 }
 ```
 
+**"MCP repos to inspect"**
+
+```json
+{
+  "tool": "search_repos",
+  "arguments": { "category": "mcp", "active_only": true, "limit": 10 }
+}
+```
+
 **"What changed for Claude Opus 4.7"**
 
 ```json
@@ -99,7 +109,7 @@ claude mcp add ai-tracker -- ai-tracker-mcp
 
 ## Data sources
 
-ai-tracker pulls from authoritative provider docs (Anthropic, Google, xAI, Mistral, OpenAI, DeepSeek, Meta, Alibaba, Cohere) plus supplementary aggregators (OpenRouter, GitHub topic search). Sources are tagged trust-level so authoritative entries can correct stale supplementary values, but supplementary sources never overwrite curated data. See [the about page](https://ai-tracker-dxu.pages.dev/about) for details.
+ai-tracker pulls from authoritative provider docs (Anthropic, Google, xAI, Mistral, OpenAI, DeepSeek, Meta, Alibaba, Cohere) plus supplementary aggregators (OpenRouter, GitHub topic search, GitHub repo search). Sources are tagged trust-level so authoritative entries can correct stale supplementary values, while GitHub refreshes repo metrics. See [the about page](https://ai-tracker-dxu.pages.dev/about) for details.
 
 ## License
 

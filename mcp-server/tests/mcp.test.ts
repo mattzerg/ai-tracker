@@ -1,5 +1,5 @@
 // Integration tests for the MCP server. Spawns the built server over stdio,
-// drives it via JSON-RPC, asserts the 5 tools behave end-to-end against the
+// drives it via JSON-RPC, asserts the tools behave end-to-end against the
 // live ai-tracker site (or AI_TRACKER_BASE override).
 //
 // Network-dependent — gated behind RUN_MCP_TESTS=1 so `pnpm test` from the
@@ -69,13 +69,13 @@ describeIf("ai-tracker MCP server", () => {
     proc?.kill();
   });
 
-  it("lists 5 tools", async () => {
+  it("lists 6 tools", async () => {
     const resp = await send("tools/list");
     const names = resp.result.tools.map((t: { name: string }) => t.name);
     expect(names).toEqual(expect.arrayContaining([
-      "search_models", "search_tools", "get_entity", "get_timeline", "recent_events",
+      "search_models", "search_tools", "search_repos", "get_entity", "get_timeline", "recent_events",
     ]));
-    expect(names).toHaveLength(5);
+    expect(names).toHaveLength(6);
   });
 
   it("search_models filters by provider", async () => {
@@ -103,6 +103,14 @@ describeIf("ai-tracker MCP server", () => {
     for (const t of r.tools) {
       expect(t.category).toBe("agent-framework");
       expect(t.oss).toBe(true);
+    }
+  });
+
+  it("search_repos filters by category", async () => {
+    const r = parseResult(await call("search_repos", { category: "agent-framework", limit: 50 }));
+    expect(r.count).toBeGreaterThan(0);
+    for (const repo of r.repos) {
+      expect(repo.category).toBe("agent-framework");
     }
   });
 

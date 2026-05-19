@@ -1,7 +1,7 @@
 {
   "name": "ai-tracker-mcp",
   "version": "0.0.3",
-  "description": "MCP server for ai-tracker — query the canonical AI models & tools timeline.",
+  "description": "MCP server for ai-tracker — query the canonical AI models, tools, and repos timeline.",
   "type": "module",
   "bin": {
     "ai-tracker-mcp": "dist/index.js"

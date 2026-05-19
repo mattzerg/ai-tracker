@@ -1,8 +1,8 @@
 ---
-import type { Model, Tool } from "../../schemas/index.ts";
+import type { Model, Repo, Tool } from "../../schemas/index.ts";
 
 interface Props {
-  entity: Model | Tool;
+  entity: Model | Tool | Repo;
   url: string; // canonical URL for this page
 }
 const { entity, url } = Astro.props;
@@ -124,6 +124,23 @@ function toolLd(t: Tool, url: string) {
   };
 }
 
-const ld = entity.kind === "model" ? modelLd(entity, url) : toolLd(entity, url);
+function repoLd(r: Repo, url: string) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "SoftwareSourceCode",
+    "name": r.full_name,
+    "description": r.description ?? undefined,
+    "url": url,
+    "codeRepository": r.repo_url,
+    "programmingLanguage": r.language ?? undefined,
+    "license": r.license ?? undefined,
+    "dateCreated": r.created_at ?? undefined,
+    "keywords": Array.from(new Set([...r.topics, ...r.tags])).join(", ") || undefined,
+    "creator": { "@type": "Organization", "name": r.owner },
+    "sameAs": r.sources,
+  };
+}
+
+const ld = entity.kind === "model" ? modelLd(entity, url) : entity.kind === "tool" ? toolLd(entity, url) : repoLd(entity, url);
 ---
 <script is:inline type="application/ld+json" set:html={JSON.stringify(ld)}></script>
