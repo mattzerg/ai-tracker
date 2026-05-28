@@ -1,6 +1,7 @@
 ---
 import Base from "../layouts/Base.astro";
 import { entityById, loadEvents, loadModels, loadRepos, loadTools } from "../lib/data.ts";
+import { catalogFreshness } from "../lib/freshness.ts";
 
 const allEvents = loadEvents();
 const events = allEvents.slice(0, 12);
@@ -10,6 +11,7 @@ const repos = loadRepos();
 const providerCount = new Set(models.map((m) => m.provider)).size;
 const categoryCount = new Set(tools.map((t) => t.category)).size;
 const repoCategoryCount = new Set(repos.map((r) => r.category)).size;
+const freshness = catalogFreshness(allEvents, models, repos);
 
 // Highlights — actually useful comparisons.
 const cheapestInput = models
@@ -30,7 +32,10 @@ const mostUsed = Array.from(usageCount.entries())
 
 function entityPath(id: string): string {
   const e = entityById(id);
-  if (!e) return `#${id}`;
+  if (!e) {
+    console.warn(`event references unknown entity: ${id}`);
+    return `#${id}`;
+  }
   if (e.kind === "model") return `/models/${id}`;
   if (e.kind === "tool") return `/tools/${id}`;
   return `/repos/${id}`;
@@ -40,18 +45,18 @@ function eventTypeLabel(type: string): string {
   return type.replaceAll("_", " ");
 }
 ---
-<Base title="ai-tracker — what's shipping in AI" description="Canonical machine-readable timeline of AI models, tools, and developer repos.">
+<Base title="ai-tracker — AI models, tools, repos, and changes" description="Source-backed directory and machine-readable changelog of AI models, tools, developer repos, and market changes.">
   <section class="hero">
     <div class="hero-copy">
       <p class="eyebrow">Machine-readable AI market tracker</p>
-      <h1>What changed in AI models and tools?</h1>
+      <h1>AI models, tools, repos, and changes.</h1>
       <p class="lede">
         A public directory, changelog, and agent-facing data feed for model releases, pricing shifts,
-        tool ecosystems, open-source repos, and source-backed metadata.
+        tool ecosystems, open-source repos, and source-backed metadata for agents and humans.
       </p>
-      <p class="trust-strip">Community-maintained · free · no signup · open data · <a href="/about">how this is run</a></p>
+      <p class="trust-strip">Public beta · source-backed records · free · no signup · open data · <a href="/about">how this is run</a></p>
       <div class="button-row">
-        <a href="/picker" class="button primary">Pick a model</a>
+        <a href="/changes" class="button primary">See changes</a>
         <a href="/models" class="button">Browse models</a>
         <a href="/tools" class="button">Browse tools</a>
         <a href="/repos" class="button">Track repos</a>
@@ -72,13 +77,16 @@ function eventTypeLabel(type: string): string {
           <strong>{repos.length}</strong>
           <span>repos</span>
         </a>
-        <a href="/timeline" class="stat">
+        <a href="/changes" class="stat">
           <strong>{allEvents.length}</strong>
           <span>events</span>
         </a>
       </div>
       <div class="surface-links">
         <span>{providerCount} model providers, {categoryCount} tool categories, {repoCategoryCount} repo categories</span>
+        <span>{freshness.label} from {freshness.source}</span>
+        <a href="/providers">providers</a>
+        <a href="/categories">categories</a>
         <a href="/api/search.json">search.json</a>
         <a href="/dump/all.json">all.json</a>
         <a href="/sitemap-agents.xml">sitemap</a>
@@ -90,6 +98,7 @@ function eventTypeLabel(type: string): string {
     <div>
       <p class="eyebrow">Ranked snapshots</p>
       <h2>Useful cuts through the catalog</h2>
+      <p class="section-note">These are sortable metadata views from tracked pricing, context windows, and tool links. They are not benchmark rankings.</p>
     </div>
     <a href="/compare">Compare models</a>
   </section>
@@ -136,7 +145,7 @@ function eventTypeLabel(type: string): string {
         <p class="eyebrow">Changelog</p>
         <h2>Latest tracked events</h2>
       </div>
-      <a href="/timeline">Full timeline</a>
+      <a href="/changes">Changes by week</a>
     </div>
   {events.length === 0 ? (
     <p><em>No events yet - repo just bootstrapped.</em></p>
@@ -178,6 +187,7 @@ function eventTypeLabel(type: string): string {
     .surface-links a { padding: 0.22rem 0.48rem; border-radius: 999px; background: var(--surface-soft); color: var(--text); text-decoration: none; }
     .section-head { display: flex; justify-content: space-between; align-items: end; gap: 1rem; margin: 2.5rem 0 1rem; }
     .section-head .eyebrow { margin-bottom: 0.35rem; }
+    .section-note { max-width: 620px; margin: 0.35rem 0 0; }
     .section-head a { font-weight: 700; white-space: nowrap; }
     .highlights { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
     .insight-card { padding: 1.05rem; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; box-shadow: 0 10px 28px rgba(24, 32, 47, 0.05); }

@@ -4,6 +4,8 @@ import JsonLd from "../../components/JsonLd.astro";
 import ProviderMark from "../../components/ProviderMark.astro";
 import Votes from "../../components/Votes.astro";
 import { eventsForEntity, loadModels, loadTools } from "../../lib/data.ts";
+import { freshnessForEntity } from "../../lib/freshness.ts";
+import { requireSite } from "../../lib/site.ts";
 
 export function getStaticPaths() {
   return loadModels().map((m) => ({ params: { id: m.id }, props: { model: m } }));
@@ -14,7 +16,8 @@ const events = eventsForEntity(model.id);
 const usedBy = loadTools()
   .filter((t) => t.built_on_models.includes(model.id))
   .sort((a, b) => a.name.localeCompare(b.name));
-const canonicalUrl = new URL(`/models/${model.id}`, Astro.site).toString();
+const site = requireSite(Astro.site);
+const canonicalUrl = new URL(`/models/${model.id}`, site).toString();
 const priceBit =
   model.pricing?.input_per_mtok != null && model.pricing?.output_per_mtok != null
     ? ` $${model.pricing.input_per_mtok}/M in · $${model.pricing.output_per_mtok}/M out.`
@@ -146,6 +149,7 @@ function providerSnippet(provider: string, modelId: string, name: string): { tit
 }
 
 const snippet = providerSnippet(model.provider, apiId, model.name);
+const freshness = freshnessForEntity(model, events);
 ---
 <Base
   title={`${model.name} — ai-tracker`}
@@ -197,6 +201,11 @@ const snippet = providerSnippet(model.provider, apiId, model.name);
           <small>as of {model.pricing.as_of}</small>
         </div>
       ) : null}
+      <div>
+        <span>Freshness</span>
+        <strong>{freshness.label}</strong>
+        <small>{freshness.source}</small>
+      </div>
     </aside>
   </section>
 
@@ -251,7 +260,7 @@ const snippet = providerSnippet(model.provider, apiId, model.name);
           <li>
             <time datetime={e.date}>{e.date}</time>
             <div>
-              <strong>{e.type.replace("_", " ")}</strong>
+              <strong>{e.type.replaceAll("_", " ")}</strong>
               <p>{e.summary} <a href={e.source} rel="nofollow noopener">source</a></p>
             </div>
           </li>
@@ -296,6 +305,7 @@ const snippet = providerSnippet(model.provider, apiId, model.name);
   <style>
     .back { margin: 0 0 1rem; }
     .model-hero { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 1.25rem; align-items: start; padding: 1rem 0 1.5rem; }
+    .model-hero > *, .dev-grid > * { min-width: 0; }
     .model-hero h1 { margin-bottom: 0.75rem; }
     .dek { margin: 0; font-size: 1rem; color: #4f5a6d; }
     .dek a { color: var(--text); text-decoration: none; }
@@ -313,7 +323,7 @@ const snippet = providerSnippet(model.provider, apiId, model.name);
     .section-title .eyebrow { margin-bottom: 0.35rem; }
     .copy-btn { min-height: 34px; padding: 0.35rem 0.65rem; border: 1px solid var(--line); border-radius: 7px; background: #fff; color: var(--text); cursor: pointer; font-weight: 700; }
     .copy-btn:hover { border-color: #b8c2d1; background: #f8fafc; }
-    pre { margin: 0.75rem 0; padding: 1rem; overflow: auto; border-radius: 8px; background: #111827; color: #e5e7eb; font-size: 0.85rem; line-height: 1.55; }
+    pre { max-width: 100%; margin: 0.75rem 0; padding: 1rem; overflow: auto; border-radius: 8px; background: #111827; color: #e5e7eb; font-size: 0.85rem; line-height: 1.55; }
     pre code { color: inherit; }
     .note { margin: 0; font-size: 0.88rem; }
     .availability ul { padding-left: 1.1rem; margin: 0.75rem 0 1rem; }

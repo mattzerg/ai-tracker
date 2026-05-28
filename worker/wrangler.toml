@@ -8,29 +8,29 @@
 #        wrangler secret put GITHUB_TOKEN          # repo:write scope
 #        wrangler secret put TURNSTILE_SECRET      # CF Turnstile site secret
 #        wrangler secret put ANTHROPIC_API_KEY     # Haiku moderation
-#   3. Update GITHUB_REPO below to <owner>/<repo>.
-#   4. Bind to api.<domain> via Pages → custom routes.
+#   3. Confirm GITHUB_REPO below matches the public repository.
+#   4. Use workers.dev for initial live API, then optionally bind to api.<domain>.
 #   5. wrangler deploy
 
 name = "ai-tracker-api"
 main = "src/index.ts"
 compatibility_date = "2026-05-01"
-workers_dev = false
+workers_dev = true
 
 [vars]
-GITHUB_REPO = "Epoch-ML/ai-tracker"
+GITHUB_REPO = "mattzerg/ai-tracker"
 QUEUE_BRANCH = "submissions/queue"
-ANTHROPIC_MODEL = "claude-haiku-4-5"
+ANTHROPIC_MODEL = "claude-haiku-4-5-20251001"
 MODERATION_MIN_CONFIDENCE = "0.4"
 RATE_LIMIT_PER_DAY = "5"
 
 [[kv_namespaces]]
 binding = "VOTES"
-id = ""                              # TODO: paste from `wrangler kv:namespace create "VOTES"`
+id = "bbe8814911774fd68847fa63592ab8fd"
 
 [[kv_namespaces]]
 binding = "RATELIMIT"
-id = ""                              # TODO: paste from `wrangler kv:namespace create "RATELIMIT"`
+id = "32533f0c6b4c431499e8c9102652d033"
 
 # Routes attach via Cloudflare dashboard once api.<domain> exists.
 # [[routes]]

@@ -1,14 +1,16 @@
 # ai-tracker
 
-Community-maintained, public-utility directory + changelog for AI models, tools, and developer repos. Designed to be consumed by agents. Free to use, no signup, no ads, no SaaS pitch — contributions welcome via [SUBMITTING.md](./SUBMITTING.md) or pull request.
+Public-beta, community-maintained directory + changelog for AI models, tools, and developer repos. Designed to be consumed by agents. Free to use, no signup, no ads, no SaaS pitch — contributions welcome via [SUBMITTING.md](./SUBMITTING.md).
 
-**Live**: <https://ai-tracker-dxu.pages.dev> · **Repo**: <https://github.com/Epoch-ML/ai-tracker> · **Code of Conduct**: [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md)
+**Live**: <https://ai-tracker-dxu.pages.dev> · **Repo**: <https://github.com/mattzerg/ai-tracker> · **Code of Conduct**: [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md)
 
-41 models · 35 tools · 8 repos · 196 repo candidates · 42 events · 9 providers · 11 tool categories.
+Current counts are generated on the live site and in `/llms.txt`; see `/about` for the human-readable breakdown.
 
 ## What it is
 
 Other directories list AI products. ai-tracker is built so an LLM agent can answer *"what changed for Claude Opus 4.7 in the last month"* or *"which agent repos should I inspect?"* without scraping HTML. Every entity has HTML, JSON, and Markdown twins; every event flows through RSS, Atom, `/dump/all.json`, `/llms.txt`, JSON-LD, and an MCP server. Auth-free, signup-free, ad-free.
+
+Public beta means source-backed, not exhaustive. Ranking views are metadata slices from tracked pricing, context windows, repo stats, and cross-links; they are not universal quality benchmarks. Production decisions should still verify current provider docs.
 
 ## What's tracked
 
@@ -31,7 +33,7 @@ ai-tracker/
   schemas/                          Zod schemas (model, tool, repo, event, common)
   scripts/
     ingest.ts                       nightly ingest orchestrator
-    ingest/sources/*.ts             one file per source (auth + supp)
+    ingest/sources/*.ts             one file per source (authoritative + supplementary)
     generate-release-events.ts      backfill released events
     generate-pricing-events.ts      backfill price_change from git history
     fill-built-on-models.ts         tool→model cross-link curation
@@ -88,11 +90,11 @@ Full script reference in `package.json`.
 | `/repos/<id>.json`, `/repos/<id>.md` | Per-repo twins |
 | `/events/<slug>` | Per-event detail page (also linked from RSS) |
 | `/og/models/<id>.png`, `/og/tools/<id>.png` | 1200×630 share cards |
-| MCP server (`npm install -g ai-tracker-mcp`) | search_models, search_tools, search_repos, get_entity, get_timeline, recent_events |
+| MCP server (`mcp-server/`, local package until npm publish) | search_models, search_tools, search_repos, get_entity, get_timeline, recent_events |
 
 ## Submitting
 
-See [SUBMITTING.md](./SUBMITTING.md). The `/submit` form previews the JSON payload as you type and falls back to "Open as GitHub issue" until the Worker ships.
+See [SUBMITTING.md](./SUBMITTING.md). The `/submit` form accepts events, new models, new tools, and new repos; it previews the JSON payload as you type and falls back to a configured GitHub issue link or copyable JSON until the Worker ships.
 
 ## Phases
 
@@ -101,15 +103,15 @@ See [SUBMITTING.md](./SUBMITTING.md). The `/submit` form previews the JSON paylo
 | 0 | Repo skeleton, Astro, schemas, CF Pages | ✅ shipped |
 | 1 | Seed ~30 frontier models hand-curated | ✅ shipped (41) |
 | 2 | Seed ~50 tools hand-curated, cross-ref | ✅ shipped (35) |
-| 3 | 11 ingest sources, rolling PR, source verification | ✅ shipped |
-| 4 | Worker `/submit` + `/upvote`, watchdog | ▶ code-complete, awaiting GH remote + CF Worker deploy |
+| 3 | 12 ingest sources, rolling PR, source verification | ✅ shipped |
+| 4 | Worker `/submit` + `/upvote`, watchdog | ▶ code-complete, awaiting GH remote + CF Worker deploy + KV/Turnstile secrets |
 | 5 | `/llms.txt`, MCP, bulk dumps, robots.txt | ✅ shipped |
 | 6 | Domain + launch | pending domain pick |
 
 ## Deploy
 
-CF Pages on the work account. `./deploy.sh` wraps `verify:refs` + `npm run build` + `wrangler pages deploy`.
+CF Pages on the work account. `./deploy.sh` wraps `verify:refs` + `pnpm build` + `wrangler pages deploy`.
 
 ## License
 
-Public data. Code MIT. Data licensed for any use including AI training and retrieval; `robots.txt` explicitly allows the major AI bot fleet.
+Public data. Code MIT; see [LICENSE](./LICENSE). Project-authored structured records and original submission text are dedicated for unrestricted reuse under [LICENSE-DATA](./LICENSE-DATA) to the extent the project can grant those rights; source URLs, provider docs, GitHub metadata, package metadata, and other third-party material remain under their original terms. `robots.txt` explicitly allows the major AI bot fleet.

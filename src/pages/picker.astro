@@ -1,6 +1,7 @@
 ---
 import Base from "../layouts/Base.astro";
 import { loadModels } from "../lib/data.ts";
+import { htmlSafeJson } from "../lib/html.ts";
 
 const models = loadModels()
   .filter((m) => m.status !== "retired" && m.pricing?.input_per_mtok != null && m.pricing?.output_per_mtok != null)
@@ -125,7 +126,7 @@ const licenses = Array.from(new Set(models.map((m) => m.license))).sort();
     <p id="empty" hidden>No priced models match these constraints.</p>
   </div>
 
-  <script is:inline id="models-data" type="application/json" set:html={JSON.stringify(models)}></script>
+  <script is:inline id="models-data" type="application/json" set:html={htmlSafeJson(models)}></script>
 
   <style>
     .page-hero { padding: 2.25rem 0 1rem; max-width: 900px; }
@@ -215,6 +216,15 @@ const licenses = Array.from(new Set(models.map((m) => m.license))).sort();
         return Math.round(n / 1000).toLocaleString() + "K";
       }
 
+      function esc(value) {
+        return String(value ?? "")
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#39;");
+      }
+
       function modelCost(m, requests, inputTokens, outputTokens) {
         const p = m.pricing;
         return ((requests * inputTokens) / 1000000) * p.input_per_mtok + ((requests * outputTokens) / 1000000) * p.output_per_mtok;
@@ -230,7 +240,7 @@ const licenses = Array.from(new Set(models.map((m) => m.license))).sort();
         const pills = [];
         if (score > 0) pills.push(`<span class="pill good">${score} task match${score === 1 ? "" : "es"}</span>`);
         if (m.modalities.includes("vision")) pills.push(`<span class="pill">vision</span>`);
-        if (m.license !== "proprietary") pills.push(`<span class="pill">${m.license}</span>`);
+        if (m.license !== "proprietary") pills.push(`<span class="pill">${esc(m.license)}</span>`);
         if ((m.tags || []).includes("long-context") || (m.tags || []).includes("very-long-context")) pills.push(`<span class="pill">long context</span>`);
         if ((m.tags || []).includes("coding") || (m.tags || []).includes("code") || (m.tags || []).includes("agentic-coding")) pills.push(`<span class="pill">code</span>`);
         return pills.slice(0, 4).join("");
@@ -277,8 +287,8 @@ const licenses = Array.from(new Set(models.map((m) => m.license))).sort();
         els.body.innerHTML = rows.map(({ model: m, cost, score }) => `
           <tr>
             <td class="model-cell">
-              <a href="/models/${m.id}">${m.name}</a>
-              <span>${m.provider} · ${m.released || "release n/a"} · pricing ${m.pricing.as_of}</span>
+              <a href="/models/${m.id}">${esc(m.name)}</a>
+              <span>${esc(m.provider)} · ${esc(m.released || "release n/a")} · pricing ${esc(m.pricing.as_of)}</span>
             </td>
             <td><div class="fit">${fitPills(m, score) || `<span class="pill">priced</span>`}</div></td>
             <td class="num">${shortContext(m.context_window)}</td>

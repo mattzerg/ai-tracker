@@ -50,12 +50,17 @@ const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITEKEY ?? "";
     const status = root.querySelector(".status");
 
     // Vote-token plumbing — global because Turnstile callbacks are global.
-    window.onVoteTurnstileToken ||= (token) => {
+    window.__voteTurnstileHandlers ||= {};
+    window.__voteTurnstileHandlers[entityId] = (token) => {
       const el = document.getElementById("vote-turnstile-" + entityId);
       if (el) el.value = token;
     };
+    window.onVoteTurnstileToken ||= (token) => {
+      Object.values(window.__voteTurnstileHandlers || {}).forEach((handler) => handler(token));
+    };
 
-    fetch("/api/votes.json").then((r) => r.json()).then((d) => {
+    const votesUrl = apiBase ? `${apiBase}/votes` : "/api/votes.json";
+    fetch(votesUrl).then((r) => r.json()).then((d) => {
       const n = (d.counts && d.counts[entityId]) || 0;
       countEl.textContent = String(n);
       // Enable the button only when the live Worker is wired (apiBase set).

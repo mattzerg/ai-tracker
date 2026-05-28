@@ -20,7 +20,9 @@ Search uses the lean `/api/search.json` index (~25 KB); detail tools fetch the p
 ## Install
 
 ```bash
-npm install -g ai-tracker-mcp
+cd mcp-server
+pnpm install
+pnpm build
 ```
 
 ## Configure (Claude Desktop)
@@ -31,7 +33,8 @@ Add to `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS)
 {
   "mcpServers": {
     "ai-tracker": {
-      "command": "ai-tracker-mcp"
+      "command": "node",
+      "args": ["/absolute/path/to/ai-tracker/mcp-server/dist/index.js"]
     }
   }
 }
@@ -42,7 +45,7 @@ Restart Claude Desktop. The six tools appear in Claude's tool menu.
 ## Configure (Claude Code)
 
 ```bash
-claude mcp add ai-tracker -- ai-tracker-mcp
+claude mcp add ai-tracker -- node /absolute/path/to/ai-tracker/mcp-server/dist/index.js
 ```
 
 ## Environment

@@ -57,48 +57,50 @@ const tags = Array.from(tagCounts.entries()).sort((a, b) => b[1] - a[1] || a[0].
 
   <p id="empty-state" hidden><em>No models match those filters. <a href="#" id="clear-filters">Clear filters</a>.</em></p>
 
-  <table class="models">
-    <thead>
-      <tr>
-        <th class="cmp-col"></th>
-        <th>Name</th>
-        <th>Provider</th>
-        <th>Released</th>
-        <th>Context</th>
-        <th>$/M in</th>
-        <th>$/M out</th>
-        <th>License</th>
-        <th>Tools</th>
-      </tr>
-    </thead>
-    <tbody id="models-body">
-      {models.map((m) => {
-        const tu = usageCount.get(m.id) ?? 0;
-        return (
-        <tr
-          data-provider={m.provider}
-          data-license={m.license}
-          data-tags={m.tags.join(" ")}
-          data-released={m.released ?? ""}
-          data-input={m.pricing?.input_per_mtok ?? ""}
-          data-context={m.context_window ?? ""}
-          data-tools={tu}
-          data-name={m.name}
-          data-id={m.id}
-        >
-          <td class="cmp-col"><input type="checkbox" class="cmp" data-id={m.id} aria-label={`Compare ${m.name}`} /></td>
-          <td><a href={`/models/${m.id}`}>{m.name}</a></td>
-          <td><ProviderMark provider={m.provider} size={18} /><a href={`/providers/${m.provider}`}>{m.provider}</a></td>
-          <td>{m.released ?? "—"}</td>
-          <td class="num">{m.context_window ? m.context_window.toLocaleString() : "—"}</td>
-          <td class="num">{m.pricing?.input_per_mtok ?? "—"}</td>
-          <td class="num">{m.pricing?.output_per_mtok ?? "—"}</td>
-          <td>{m.license}</td>
-          <td class="num">{tu || "—"}</td>
+  <div class="table-wrap" role="region" aria-label="Tracked models table" tabindex="0">
+    <table class="models">
+      <thead>
+        <tr>
+          <th class="cmp-col"></th>
+          <th>Name</th>
+          <th>Provider</th>
+          <th>Released</th>
+          <th>Context</th>
+          <th>$/M in</th>
+          <th>$/M out</th>
+          <th>License</th>
+          <th>Tools</th>
         </tr>
-      );})}
-    </tbody>
-  </table>
+      </thead>
+      <tbody id="models-body">
+        {models.map((m) => {
+          const tu = usageCount.get(m.id) ?? 0;
+          return (
+          <tr
+            data-provider={m.provider}
+            data-license={m.license}
+            data-tags={m.tags.join(" ")}
+            data-released={m.released ?? ""}
+            data-input={m.pricing?.input_per_mtok ?? ""}
+            data-context={m.context_window ?? ""}
+            data-tools={tu}
+            data-name={m.name}
+            data-id={m.id}
+          >
+            <td class="cmp-col"><input type="checkbox" class="cmp" data-id={m.id} aria-label={`Compare ${m.name}`} /></td>
+            <td><a href={`/models/${m.id}`}>{m.name}</a></td>
+            <td><ProviderMark provider={m.provider} size={18} /><a href={`/providers/${m.provider}`}>{m.provider}</a></td>
+            <td>{m.released ?? "—"}</td>
+            <td class="num">{m.context_window ? m.context_window.toLocaleString() : "—"}</td>
+            <td class="num">{m.pricing?.input_per_mtok ?? "—"}</td>
+            <td class="num">{m.pricing?.output_per_mtok ?? "—"}</td>
+            <td>{m.license}</td>
+            <td class="num">{tu || "—"}</td>
+          </tr>
+        );})}
+      </tbody>
+    </table>
+  </div>
 
   <div id="cmp-bar" hidden>
     <span id="cmp-count">0</span> selected — max 6.
@@ -111,7 +113,8 @@ const tags = Array.from(tagCounts.entries()).sort((a, b) => b[1] - a[1] || a[0].
     .filters label { display: inline-flex; gap: 0.4rem; align-items: center; font-size: 0.9rem; }
     .filters select { padding: 0.25rem 0.4rem; }
     .count { margin-left: auto; color: #666; font-size: 0.85rem; }
-    table.models { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+    .table-wrap { width: 100%; overflow-x: auto; border: 1px solid #eee; border-radius: 6px; background: #fff; }
+    table.models { width: 100%; min-width: 860px; border-collapse: collapse; font-size: 0.92rem; }
     table.models th, table.models td { padding: 0.4rem 0.5rem; text-align: left; border-bottom: 1px solid #eee; }
     table.models th { background: #f9f9f9; font-weight: 600; }
     table.models td.num { text-align: right; font-variant-numeric: tabular-nums; }

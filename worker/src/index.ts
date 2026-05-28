@@ -28,11 +28,31 @@ const CORS = {
   "access-control-allow-headers": "content-type",
 };
 
-function json(body: unknown, status = 200): Response {
+const ENTITY_ID_RX = /^[a-z0-9][a-z0-9_-]*(?:__[a-z0-9][a-z0-9._-]*)?$/;
+const REQUIRED_ENV_KEYS = [
+  "GITHUB_REPO",
+  "QUEUE_BRANCH",
+  "GITHUB_TOKEN",
+  "TURNSTILE_SECRET",
+  "ANTHROPIC_API_KEY",
+] as const;
+const REQUIRED_KV_BINDINGS = ["VOTES", "RATELIMIT"] as const;
+
+function json(body: unknown, status = 200, headers: Record<string, string> = {}): Response {
   return new Response(JSON.stringify(body), {
     status,
-    headers: { "content-type": "application/json; charset=utf-8", ...CORS },
+    headers: { "content-type": "application/json; charset=utf-8", ...CORS, ...headers },
   });
+}
+
+function validateEnv(env: Env): string | null {
+  for (const key of REQUIRED_KV_BINDINGS) {
+    if (!env[key]) return key;
+  }
+  for (const key of REQUIRED_ENV_KEYS) {
+    if (!env[key]) return key;
+  }
+  return null;
 }
 
 async function sha256Hex(s: string): Promise<string> {
@@ -42,8 +62,23 @@ async function sha256Hex(s: string): Promise<string> {
 
 async function ipHash(req: Request): Promise<string> {
   const ip = req.headers.get("cf-connecting-ip") ?? "unknown";
-  const ua = req.headers.get("user-agent") ?? "unknown";
-  return (await sha256Hex(`${ip}|${ua}`)).slice(0, 16);
+  return (await sha256Hex(ip)).slice(0, 32);
+}
+
+function encodeBase64Utf8(value: string): string {
+  const bytes = new TextEncoder().encode(value);
+  let binary = "";
+  for (let i = 0; i < bytes.length; i += 0x8000) {
+    binary += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
+  }
+  return btoa(binary);
+}
+
+function decodeBase64Utf8(value: string): string {
+  const binary = atob(value.replace(/\n/g, ""));
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i += 1) bytes[i] = binary.charCodeAt(i);
+  return new TextDecoder().decode(bytes);
 }
 
 async function verifyTurnstile(token: string, secret: string, ip: string): Promise<boolean> {
@@ -61,12 +96,21 @@ async function verifyTurnstile(token: string, secret: string, ip: string): Promi
 }
 
 interface SubmitPayload {
-  kind: "event" | "model" | "tool";
+  kind: "event" | "model" | "tool" | "repo";
   source: string;
   contact?: string;
   turnstile?: string;
   event?: { entity: string; type: string; date: string; summary: string; delta?: { field: string; from: unknown; to: unknown } };
-  entity?: { kind: string; name: string; provider: string; released?: string | null; notes?: string };
+  entity?: {
+    kind: string;
+    name?: string;
+    provider?: string;
+    released?: string | null;
+    full_name?: string;
+    category?: string;
+    repo_url?: string;
+    notes?: string;
+  };
 }
 
 async function moderate(
@@ -74,7 +118,7 @@ async function moderate(
   env: Env,
 ): Promise<{ classification: "spam" | "duplicate" | "new-entity" | "new-event"; confidence: number; reason: string }> {
   const sys = "You moderate AI-tracker submissions. Classify as one of: spam, duplicate, new-entity, new-event. Reply ONLY JSON: {classification, confidence (0-1), reason}.";
-  const user = JSON.stringify(payload);
+  const user = JSON.stringify({ ...payload, turnstile: undefined });
   const res = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
     headers: {
@@ -123,27 +167,45 @@ async function pushToQueue(payload: SubmitPayload, classification: string, env: 
   };
 
   // Read current file (if any) on the queue branch.
-  const get = await fetch(`${apiBase}?ref=${branch}`, { headers });
-  let sha: string | undefined;
-  let existing = "";
-  if (get.ok) {
-    const data = (await get.json()) as { sha?: string; content?: string };
-    sha = data.sha;
-    if (data.content) existing = atob(data.content.replace(/\n/g, ""));
+  async function readCurrent(): Promise<{ sha?: string; existing: string }> {
+    const get = await fetch(`${apiBase}?ref=${branch}`, { headers });
+    let sha: string | undefined;
+    let existing = "";
+    if (get.ok) {
+      const data = (await get.json()) as { sha?: string; content?: string };
+      sha = data.sha;
+      if (data.content) existing = decodeBase64Utf8(data.content);
+    }
+    return { sha, existing };
   }
 
-  const newContent = btoa(existing + line);
-  const put = await fetch(apiBase, {
-    method: "PUT",
-    headers: { ...headers, "content-type": "application/json" },
-    body: JSON.stringify({
-      message: `submission(${classification}): ${payload.kind}`,
-      content: newContent,
-      branch,
-      ...(sha ? { sha } : {}),
-    }),
-  });
-  if (!put.ok) throw new Error(`gh contents PUT failed: ${put.status} ${await put.text()}`);
+  async function putContent(sha: string | undefined, existing: string): Promise<Response> {
+    const newContent = encodeBase64Utf8(existing + line);
+    return fetch(apiBase, {
+      method: "PUT",
+      headers: { ...headers, "content-type": "application/json" },
+      body: JSON.stringify({
+        message: `submission(${classification}): ${payload.kind}`,
+        content: newContent,
+        branch,
+        ...(sha ? { sha } : {}),
+      }),
+    });
+  }
+
+  // Retry once on GitHub Contents SHA races. This is enough for low-volume
+  // public-beta submissions without moving queue writes to a Durable Object.
+  let current = await readCurrent();
+  let put = await putContent(current.sha, current.existing);
+  if (put.status === 409 || put.status === 422) {
+    await new Promise((resolve) => setTimeout(resolve, 250));
+    current = await readCurrent();
+    put = await putContent(current.sha, current.existing);
+  }
+  if (!put.ok) {
+    console.error("GitHub queue write failed", { status: put.status, body: await put.text() });
+    throw new Error(`gh contents PUT failed: ${put.status}`);
+  }
   const result = (await put.json()) as { commit?: { html_url?: string } };
   return { commitUrl: result.commit?.html_url ?? "" };
 }
@@ -158,7 +220,9 @@ async function handleSubmit(req: Request, env: Env): Promise<Response> {
   const ts = await verifyTurnstile(payload.turnstile, env.TURNSTILE_SECRET, ip);
   if (!ts) return json({ error: "turnstile failed" }, 403);
 
-  // Rate limit: N submits per ip-hash per UTC day.
+  // Rate limit: N submits per ip-hash per UTC day. KV is eventually
+  // consistent, so this bounds normal abuse but is not a strict concurrency
+  // primitive under simultaneous requests from the same IP hash.
   const day = new Date().toISOString().slice(0, 10);
   const hash = await ipHash(req);
   const rlKey = `rl:${day}:${hash}`;
@@ -168,6 +232,9 @@ async function handleSubmit(req: Request, env: Env): Promise<Response> {
   await env.RATELIMIT.put(rlKey, String(cur + 1), { expirationTtl: 86400 });
 
   const mod = await moderate(payload, env);
+  if (mod.reason.startsWith("moderator error") || mod.reason.startsWith("parse failed")) {
+    return json({ error: "moderation failed", reason: mod.reason }, 500);
+  }
   const minConf = Number(env.MODERATION_MIN_CONFIDENCE ?? "0.4");
   if (mod.classification === "spam" || mod.confidence < minConf) {
     return json({ message: "rejected", reason: mod.reason, classification: mod.classification, confidence: mod.confidence }, 200);
@@ -177,7 +244,8 @@ async function handleSubmit(req: Request, env: Env): Promise<Response> {
     const { commitUrl } = await pushToQueue({ ...payload, contact: undefined }, mod.classification, env);
     return json({ message: "queued for review", commit: commitUrl, classification: mod.classification, confidence: mod.confidence });
   } catch (err) {
-    return json({ error: `queue push failed: ${(err as Error).message}` }, 500);
+    console.error("Queue push failed", err);
+    return json({ error: "queue write failed; retry or contact maintainer" }, 500);
   }
 }
 
@@ -186,6 +254,7 @@ async function handleUpvote(req: Request, env: Env): Promise<Response> {
   try { body = await req.json(); } catch { return json({ error: "invalid json" }, 400); }
   const entity = body.entity;
   if (!entity) return json({ error: "entity required" }, 400);
+  if (!ENTITY_ID_RX.test(entity) || entity.length > 128) return json({ error: "invalid entity id" }, 400);
   if (!body.turnstile) return json({ error: "turnstile token required" }, 400);
 
   const ip = req.headers.get("cf-connecting-ip") ?? "unknown";
@@ -207,21 +276,26 @@ async function handleUpvote(req: Request, env: Env): Promise<Response> {
 }
 
 async function handleVotes(env: Env): Promise<Response> {
-  // Walk all count:* keys. KV list returns up to 1000 keys per call; with our
-  // entity counts this stays well under that limit.
-  const list = await env.VOTES.list({ prefix: "count:" });
   const counts: Record<string, number> = {};
-  for (const k of list.keys) {
-    const v = await env.VOTES.get(k.name);
-    counts[k.name.slice("count:".length)] = Number(v ?? "0");
-  }
-  return json({ generated_at: new Date().toISOString(), schema_version: 1, counts });
+  let cursor: string | undefined;
+  do {
+    const list = await env.VOTES.list({ prefix: "count:", cursor });
+    const values = await Promise.all(list.keys.map((k) => env.VOTES.get(k.name)));
+    list.keys.forEach((k, i) => {
+      const v = values[i];
+      counts[k.name.slice("count:".length)] = Number(v ?? "0");
+    });
+    cursor = list.list_complete ? undefined : list.cursor;
+  } while (cursor);
+  return json({ generated_at: new Date().toISOString(), schema_version: 1, counts }, 200, { "cache-control": "public, max-age=30" });
 }
 
 export default {
   async fetch(req: Request, env: Env): Promise<Response> {
     const url = new URL(req.url);
     if (req.method === "OPTIONS") return new Response(null, { status: 204, headers: CORS });
+    const missing = validateEnv(env);
+    if (missing) return json({ error: `worker misconfigured: ${missing} not set` }, 500);
     if (req.method === "POST" && url.pathname === "/submit") return handleSubmit(req, env);
     if (req.method === "POST" && url.pathname === "/upvote") return handleUpvote(req, env);
     if (req.method === "GET" && url.pathname === "/votes") return handleVotes(env);

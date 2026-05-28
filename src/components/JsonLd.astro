@@ -1,5 +1,6 @@
 ---
 import type { Model, Repo, Tool } from "../../schemas/index.ts";
+import { htmlSafeJson } from "../lib/html.ts";
 
 interface Props {
   entity: Model | Tool | Repo;
@@ -92,9 +93,9 @@ function toolLd(t: Tool, url: string) {
     "@type": "Offer",
     "name": tier.name,
     "priceCurrency": "USD",
-    "price": tier.monthly_usd ?? "Contact",
     ...(tier.monthly_usd != null
       ? {
+          "price": tier.monthly_usd,
           "priceSpecification": {
             "@type": "UnitPriceSpecification",
             "price": tier.monthly_usd,
@@ -143,4 +144,4 @@ function repoLd(r: Repo, url: string) {
 
 const ld = entity.kind === "model" ? modelLd(entity, url) : entity.kind === "tool" ? toolLd(entity, url) : repoLd(entity, url);
 ---
-<script is:inline type="application/ld+json" set:html={JSON.stringify(ld)}></script>
+<script is:inline type="application/ld+json" set:html={htmlSafeJson(ld)}></script>

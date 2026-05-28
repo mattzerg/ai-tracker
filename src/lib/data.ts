@@ -27,7 +27,12 @@ function loadJsonDir<T>(dir: string, parse: (raw: unknown, file: string) => T): 
     return [];
   }
   return files.map((f) => {
-    const raw = JSON.parse(readFileSync(join(full, f), "utf8")) as unknown;
+    let raw: unknown;
+    try {
+      raw = JSON.parse(readFileSync(join(full, f), "utf8")) as unknown;
+    } catch (err) {
+      throw new Error(`${dir}/${f}: invalid JSON - ${(err as Error).message}`);
+    }
     return parse(raw, f);
   });
 }
@@ -39,36 +44,36 @@ let _repoCandidateQueue: RepoCandidateQueue | null = null;
 let _events: Event[] | null = null;
 
 export function loadModels(): Model[] {
-  if (CACHE_DATA && _models) return _models;
+  if (CACHE_DATA && _models) return [..._models];
   const models = loadJsonDir("models", (raw, file) => {
     const r = modelSchema.safeParse(raw);
     if (!r.success) throw new Error(`models/${file}: ${r.error.message}`);
     return r.data;
   });
   if (CACHE_DATA) _models = models;
-  return models;
+  return [...models];
 }
 
 export function loadTools(): Tool[] {
-  if (CACHE_DATA && _tools) return _tools;
+  if (CACHE_DATA && _tools) return [..._tools];
   const tools = loadJsonDir("tools", (raw, file) => {
     const r = toolSchema.safeParse(raw);
     if (!r.success) throw new Error(`tools/${file}: ${r.error.message}`);
     return r.data;
   });
   if (CACHE_DATA) _tools = tools;
-  return tools;
+  return [...tools];
 }
 
 export function loadRepos(): Repo[] {
-  if (CACHE_DATA && _repos) return _repos;
+  if (CACHE_DATA && _repos) return [..._repos];
   const repos = loadJsonDir("repos", (raw, file) => {
     const r = repoSchema.safeParse(raw);
     if (!r.success) throw new Error(`repos/${file}: ${r.error.message}`);
     return r.data;
   }).sort((a, b) => (b.stars ?? -1) - (a.stars ?? -1) || a.full_name.localeCompare(b.full_name));
   if (CACHE_DATA) _repos = repos;
-  return repos;
+  return [...repos];
 }
 
 export function loadRepoCandidateQueue(): RepoCandidateQueue {
@@ -103,14 +108,14 @@ export function loadRepoCandidateQueue(): RepoCandidateQueue {
 }
 
 export function loadEvents(): Event[] {
-  if (CACHE_DATA && _events) return _events;
+  if (CACHE_DATA && _events) return [..._events];
   const events = loadJsonDir("events", (raw, file) => {
     const r = eventSchema.safeParse(raw);
     if (!r.success) throw new Error(`events/${file}: ${r.error.message}`);
     return r.data;
   }).sort((a, b) => b.date.localeCompare(a.date));
   if (CACHE_DATA) _events = events;
-  return events;
+  return [...events];
 }
 
 export function eventsForEntity(id: string): Event[] {

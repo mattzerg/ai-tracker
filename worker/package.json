@@ -2,10 +2,11 @@
   "name": "ai-tracker-worker",
   "version": "0.0.1",
   "private": true,
+  "license": "MIT",
   "type": "module",
   "scripts": {
     "dev": "wrangler dev",
-    "deploy": "wrangler deploy",
+    "deploy": "node scripts/check-kv-bindings.mjs && wrangler deploy",
     "tail": "wrangler tail"
   },
   "devDependencies": {

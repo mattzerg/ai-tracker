@@ -1,38 +1,61 @@
 ---
 import Base from "../layouts/Base.astro";
-import { loadModels, loadTools } from "../lib/data.ts";
+import { loadModels, loadRepos, loadTools } from "../lib/data.ts";
 
 // Worker endpoint resolves at runtime via PUBLIC_API_BASE; if unset, the form
 // degrades to "preview only" + GitHub-issue fallback. This means the page is
 // useful before Phase 4 ships and seamlessly upgrades after.
 const apiBase = import.meta.env.PUBLIC_API_BASE ?? "";
 const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITEKEY ?? "";
-const ghIssuesUrl = "https://github.com/Epoch-ML/ai-tracker/issues/new/choose";
+const ghIssuesUrl = import.meta.env.PUBLIC_GITHUB_ISSUES_URL ?? "";
+const submitConfigGap = Boolean(apiBase && !turnstileSiteKey);
 
 const entities = [
   ...loadModels().map((m) => ({ id: m.id, label: `${m.name} (model · ${m.provider})` })),
   ...loadTools().map((t) => ({ id: t.id, label: `${t.name} (tool · ${t.vendor})` })),
+  ...loadRepos().map((r) => ({ id: r.id, label: `${r.full_name} (repo · ${r.category})` })),
 ].sort((a, b) => a.label.localeCompare(b.label));
 
 const eventTypes = ["released", "price_change", "deprecated", "capability_added", "benchmark_update", "license_change", "model_swap", "shut_down", "rebrand", "acquired"];
+const repoCategories = Array.from(new Set([...loadRepos().map((r) => r.category), "other"])).sort();
 ---
 <Base
   title="Submit — ai-tracker"
-  description="Submit a new model, tool, or event. Goes through moderation and lands in a public PR queue."
+  description="Submit a new model, tool, repo, or event for ai-tracker review."
 >
   <h1>Submit</h1>
   <p>
-    Add a model, tool, or event. Submissions land in a moderated PR queue (Anthropic
-    Haiku classifies confidence ≥0.4 → queued, &lt;0.4 → dropped). Once the queue is
-    reviewed, your contribution goes live.
+    Add a model, tool, repo, or event. Submissions are reviewed before they land in
+    the public catalog, and every accepted record needs an authoritative source URL.
   </p>
   {!apiBase ? (
     <p class="banner">
-      <strong>Phase 4 in progress</strong> — the live submission API isn't deployed yet.
-      The form below works as a preview; click <em>Open as GitHub issue</em> at the
-      bottom to submit by hand for now.
+      <strong>Phase 4 in progress</strong> — the live submission API is not configured
+      for this build. The form still validates and packages the same JSON that the
+      API will receive.
     </p>
   ) : null}
+  {submitConfigGap ? (
+    <p class="banner warning">
+      <strong>Config gap.</strong> Live API is configured, but Turnstile site key is not.
+      Use the GitHub issue or copy JSON path until the site key is set.
+    </p>
+  ) : null}
+
+  <section class="submission-paths" aria-label="Submission paths">
+    <div class:list={["path-card", apiBase && !submitConfigGap && "available"]}>
+      <strong>Live API</strong>
+      <span>{submitConfigGap ? "Missing Turnstile site key" : apiBase ? "Enabled for this build" : "Not configured yet"}</span>
+    </div>
+    <div class:list={["path-card", ghIssuesUrl && "available"]}>
+      <strong>GitHub issue</strong>
+      <span>{ghIssuesUrl ? "Fallback link will prefill the JSON" : "No issue URL configured"}</span>
+    </div>
+    <div class="path-card available">
+      <strong>Copy JSON</strong>
+      <span>Always available for manual review or PR comments</span>
+    </div>
+  </section>
 
   <form id="submit-form">
     <div class="row">
@@ -41,6 +64,7 @@ const eventTypes = ["released", "price_change", "deprecated", "capability_added"
         <option value="event">Event on an existing entity (price change, deprecation, etc.)</option>
         <option value="model">New model</option>
         <option value="tool">New tool</option>
+        <option value="repo">New developer repo</option>
       </select>
     </div>
 
@@ -97,6 +121,28 @@ const eventTypes = ["released", "price_change", "deprecated", "capability_added"
       </div>
     </fieldset>
 
+    <fieldset id="repo-fields" hidden>
+      <legend>New repo</legend>
+      <div class="row">
+        <label for="repo-full-name">GitHub repo</label>
+        <input type="text" id="repo-full-name" name="repo_full_name" maxlength="160" placeholder="owner/name" />
+      </div>
+      <div class="row">
+        <label for="repo-category">Category</label>
+        <select id="repo-category" name="repo_category">
+          {repoCategories.map((category) => <option value={category}>{category}</option>)}
+        </select>
+      </div>
+      <div class="row">
+        <label for="repo-url">Repo URL</label>
+        <input type="url" id="repo-url" name="repo_url" placeholder="https://github.com/owner/name" />
+      </div>
+      <div class="row">
+        <label for="repo-notes">Why this belongs in ai-tracker</label>
+        <textarea id="repo-notes" name="repo_notes" rows="4" maxlength="1000"></textarea>
+      </div>
+    </fieldset>
+
     <div class="row">
       <label for="source">Source URL (must be authoritative — provider docs, official blog, etc.)</label>
       <input type="url" id="source" name="source" required placeholder="https://www.anthropic.com/news/..." />
@@ -121,7 +167,10 @@ const eventTypes = ["released", "price_change", "deprecated", "capability_added"
 
     <div class="actions">
       <button type="submit" id="submit-btn" disabled>Submit</button>
-      <a id="gh-fallback" href={ghIssuesUrl} target="_blank" rel="noopener">Open as GitHub issue</a>
+      {ghIssuesUrl ? (
+        <a id="gh-fallback" href={ghIssuesUrl} target="_blank" rel="noopener" class="secondary-link">Open GitHub issue</a>
+      ) : null}
+      <button type="button" id="copy-json-btn" class="secondary">Copy JSON</button>
     </div>
 
     <p id="result" class="result" hidden></p>
@@ -129,53 +178,69 @@ const eventTypes = ["released", "price_change", "deprecated", "capability_added"
 
   <style>
     form { display: flex; flex-direction: column; gap: 0; max-width: 100%; }
-    fieldset { margin: 1rem 0; padding: 0.8rem 1rem; border: 1px solid #ddd; border-radius: 4px; }
-    fieldset legend { font-weight: 600; padding: 0 0.4rem; color: #333; }
+    .submission-paths { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.75rem; margin: 1rem 0 1.2rem; }
+    .path-card { padding: 0.8rem; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); color: var(--muted); }
+    .path-card strong { display: block; color: var(--text); margin-bottom: 0.18rem; }
+    .path-card span { font-size: 0.9rem; }
+    .path-card.available { border-color: #bfe5dd; background: var(--accent-soft); color: var(--accent-strong); }
+    .banner.warning { border-left-color: #b7791f; background: #fff8e5; color: #70520b; }
+    fieldset { margin: 1rem 0; padding: 0.8rem 1rem; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
+    fieldset legend { font-weight: 700; padding: 0 0.4rem; color: var(--text); }
     .row { display: flex; flex-direction: column; gap: 0.3rem; margin-bottom: 0.8rem; }
-    .row label { font-size: 0.9rem; font-weight: 500; color: #444; }
+    .row label { font-size: 0.9rem; font-weight: 650; color: #394457; }
     input[type="text"], input[type="url"], input[type="email"], input[type="date"], select, textarea {
-      padding: 0.45rem 0.6rem; border: 1px solid #ccc; border-radius: 3px; font: inherit; font-size: 0.95rem;
+      padding: 0.45rem 0.6rem; border: 1px solid var(--line); border-radius: 6px; font: inherit; font-size: 0.95rem; background: #fff;
     }
     textarea { font-family: inherit; }
     .delta-inputs { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 0.4rem; }
-    .preview { background: #0e1116; color: #d4d8e0; padding: 0.8rem 1rem; border-radius: 4px; font-size: 0.85rem; overflow-x: auto; }
-    .banner { background: #fff8e0; padding: 0.6rem 0.8rem; border-left: 3px solid #d4a02a; border-radius: 3px; }
+    .preview { background: #0e1116; color: #d4d8e0; padding: 0.8rem 1rem; border-radius: 8px; font-size: 0.85rem; overflow-x: auto; }
+    .banner { background: #fff8e0; padding: 0.6rem 0.8rem; border-left: 3px solid #d4a02a; border-radius: 6px; }
     .turnstile-stub { background: #f6f6f6; padding: 0.6rem; border: 1px dashed #ccc; border-radius: 3px; font-size: 0.8rem; color: #666; text-align: center; }
     .turnstile-stub::before { content: "[Turnstile widget — Phase 4]"; }
     .errors { background: #fff0f0; border-left: 3px solid #c33; padding: 0.5rem 0.8rem; border-radius: 3px; font-size: 0.88rem; margin-top: 0.5rem; }
     .errors ul { margin: 0; padding-left: 1.2rem; }
-    .actions { display: flex; gap: 0.8rem; align-items: center; margin-top: 1rem; }
-    button { padding: 0.5rem 1.2rem; font: inherit; cursor: pointer; background: #1a4cff; color: #fff; border: none; border-radius: 3px; }
+    .actions { display: flex; gap: 0.8rem; align-items: center; margin-top: 1rem; flex-wrap: wrap; }
+    button { padding: 0.5rem 1.2rem; font: inherit; cursor: pointer; background: var(--text); color: #fff; border: none; border-radius: 7px; font-weight: 700; }
+    button.secondary { background: #fff; color: #18202f; border: 1px solid #ccc; }
     button:disabled { background: #999; cursor: not-allowed; }
+    .secondary-link { display: inline-flex; align-items: center; min-height: 40px; padding: 0.5rem 0.8rem; border-radius: 7px; border: 1px solid var(--line); background: var(--surface); color: var(--text); text-decoration: none; font-weight: 700; }
     .result { margin-top: 1rem; padding: 0.6rem 0.8rem; border-radius: 3px; }
     .result.ok { background: #f0fff4; border-left: 3px solid #2a8a4f; }
     .result.err { background: #fff0f0; border-left: 3px solid #c33; }
+    @media (max-width: 760px) {
+      .submission-paths { grid-template-columns: 1fr; }
+      .delta-inputs { grid-template-columns: 1fr; }
+    }
   </style>
 
   {turnstileSiteKey ? (
     <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
   ) : null}
   <script is:inline define:vars={{ apiBase, ghIssuesUrl, turnstileSiteKey }}>
-    window.onTurnstileToken = (token) => {
-      const el = document.getElementById("turnstile-token");
-      if (el) el.value = token;
-    };
-  </script>
-  <script is:inline define:vars={{ apiBase, ghIssuesUrl, turnstileSiteKey }}>
     (() => {
       const form = document.getElementById("submit-form");
       const kind = document.getElementById("kind");
       const eventFields = document.getElementById("event-fields");
       const entityFields = document.getElementById("entity-fields");
+      const repoFields = document.getElementById("repo-fields");
       const preview = document.getElementById("preview");
       const result = document.getElementById("result");
       const submitBtn = document.getElementById("submit-btn");
       const ghFallback = document.getElementById("gh-fallback");
+      const copyJsonBtn = document.getElementById("copy-json-btn");
       const errBox = document.getElementById("errors");
+
+      window.onTurnstileToken = (token) => {
+        const el = document.getElementById("turnstile-token");
+        if (el) {
+          el.value = token;
+          refresh();
+        }
+      };
 
       // Mirror of the Zod rules from schemas/event.ts and schemas/common.ts.
       // Keep in sync if either changes.
-      const ENTITY_ID_RX = /^[a-z0-9][a-z0-9_-]*(?:__[a-z0-9][a-z0-9_.-]*)?$/i;
+      const ENTITY_ID_RX = /^[a-z0-9][a-z0-9_-]*(?:__[a-z0-9][a-z0-9._-]*)?$/;
       const ISO_DATE_RX = /^\d{4}-\d{2}-\d{2}$/;
       const URL_RX = /^https?:\/\/\S+$/;
       const EVENT_TYPES = new Set(["released","price_change","deprecated","capability_added","benchmark_update","license_change","model_swap","shut_down","rebrand","acquired"]);
@@ -185,6 +250,7 @@ const eventTypes = ["released", "price_change", "deprecated", "capability_added"
         if (!payload.source) errs.push("Source URL is required.");
         else if (!URL_RX.test(payload.source)) errs.push("Source must be a valid http(s) URL.");
         if (payload.contact && !/^\S+@\S+\.\S+$/.test(payload.contact)) errs.push("Contact must be a valid email.");
+        if (apiBase && !turnstileSiteKey) errs.push("Live submission needs a Turnstile site key. Use GitHub issue or Copy JSON instead.");
         if (turnstileSiteKey && apiBase && !payload.turnstile) errs.push("Solve the Turnstile challenge before submitting.");
         if (payload.kind === "event") {
           const ev = payload.event;
@@ -195,13 +261,16 @@ const eventTypes = ["released", "price_change", "deprecated", "capability_added"
           else if (!ISO_DATE_RX.test(ev.date)) errs.push("Date must be ISO YYYY-MM-DD.");
           if (!ev.summary) errs.push("Summary is required.");
           else if (ev.summary.length > 280) errs.push("Summary must be 280 chars or fewer.");
-          if (ev.delta && (ev.delta.from === "" || ev.delta.to === "")) {
-            // delta_field present without both from/to — flag if field is set
-            if (!ev.delta.field) errs.push("Delta field is required when from/to are set.");
-          }
-          if (ev.delta && ev.delta.field && (ev.delta.from === undefined || ev.delta.to === undefined)) {
+          if (ev.delta?.field && (ev.delta.from == null || ev.delta.to == null)) {
             errs.push("Delta requires from and to values.");
           }
+        } else if (payload.kind === "repo") {
+          const ent = payload.entity;
+          if (!ent.full_name) errs.push("GitHub repo is required.");
+          else if (!/^[^/\s]+\/[^/\s]+$/.test(ent.full_name)) errs.push("GitHub repo must look like owner/name.");
+          if (!ent.repo_url) errs.push("Repo URL is required.");
+          else if (!URL_RX.test(ent.repo_url)) errs.push("Repo URL must be a valid http(s) URL.");
+          if (!ent.category) errs.push("Category is required.");
         } else {
           const ent = payload.entity;
           if (!ent.name) errs.push("Name is required.");
@@ -213,6 +282,19 @@ const eventTypes = ["released", "price_change", "deprecated", "capability_added"
 
       function val(id) { const el = document.getElementById(id); return el ? el.value.trim() : ""; }
       function pickByName(name) { const el = form.querySelector(`[name="${name}"]`); return el ? el.value.trim() : ""; }
+
+      function renderErrors(errs) {
+        errBox.replaceChildren();
+        const title = document.createElement("strong");
+        title.textContent = "Fix these before submitting:";
+        const list = document.createElement("ul");
+        for (const message of errs) {
+          const item = document.createElement("li");
+          item.textContent = message;
+          list.appendChild(item);
+        }
+        errBox.append(title, list);
+      }
 
       function buildPayload() {
         const k = kind.value;
@@ -233,6 +315,18 @@ const eventTypes = ["released", "price_change", "deprecated", "capability_added"
           };
           return { ...base, event };
         }
+        if (k === "repo") {
+          return {
+            ...base,
+            entity: {
+              kind: "repo",
+              full_name: pickByName("repo_full_name"),
+              category: pickByName("repo_category"),
+              repo_url: pickByName("repo_url"),
+              notes: pickByName("repo_notes"),
+            },
+          };
+        }
         return {
           ...base,
           entity: {
@@ -248,23 +342,33 @@ const eventTypes = ["released", "price_change", "deprecated", "capability_added"
       function refresh() {
         const k = kind.value;
         eventFields.hidden = k !== "event";
-        entityFields.hidden = k === "event";
+        entityFields.hidden = k === "event" || k === "repo";
+        repoFields.hidden = k !== "repo";
         const p = buildPayload();
         preview.textContent = JSON.stringify(p, null, 2);
         // Wire the GitHub fallback to pre-fill an issue with the JSON payload.
-        const issueUrl = new URL(ghIssuesUrl);
-        issueUrl.searchParams.set("title", `[submit] ${k}: ${val("summary") || val("name") || "untitled"}`);
-        issueUrl.searchParams.set("body", "```json\n" + JSON.stringify(p, null, 2) + "\n```");
-        ghFallback.href = issueUrl.toString();
+        if (ghFallback && ghIssuesUrl) {
+          const issueUrl = new URL(ghIssuesUrl);
+          issueUrl.searchParams.set("title", `[submit] ${k}: ${val("summary") || val("name") || pickByName("repo_full_name") || "untitled"}`);
+          issueUrl.searchParams.set("body", "```json\n" + JSON.stringify(p, null, 2) + "\n```");
+          const href = issueUrl.toString();
+          if (href.length > 7000) {
+            ghFallback.removeAttribute("href");
+            ghFallback.textContent = "GitHub issue too large — copy JSON";
+          } else {
+            ghFallback.href = href;
+            ghFallback.textContent = "Open GitHub issue";
+          }
+        }
         // Validation gate.
         const errs = validate(p);
         if (errs.length === 0) {
           errBox.hidden = true;
-          submitBtn.disabled = !apiBase;
-          submitBtn.textContent = apiBase ? "Submit" : "Submit (Phase 4 only)";
+          submitBtn.disabled = !apiBase || (apiBase && !turnstileSiteKey);
+          submitBtn.textContent = apiBase && turnstileSiteKey ? "Submit" : "Submit (Phase 4 only)";
         } else {
           errBox.hidden = false;
-          errBox.innerHTML = "<strong>Fix these before submitting:</strong><ul>" + errs.map((m) => "<li>" + m.replace(/&/g, "&amp;").replace(/</g, "&lt;") + "</li>").join("") + "</ul>";
+          renderErrors(errs);
           submitBtn.disabled = true;
           submitBtn.textContent = "Submit (fix errors)";
         }
@@ -274,12 +378,29 @@ const eventTypes = ["released", "price_change", "deprecated", "capability_added"
       kind.addEventListener("change", refresh);
       refresh();
 
+      if (copyJsonBtn) {
+        copyJsonBtn.addEventListener("click", async () => {
+          try {
+            await navigator.clipboard.writeText(preview.textContent || "{}");
+            result.hidden = false;
+            result.className = "result ok";
+            result.textContent = "Submission JSON copied.";
+          } catch {
+            result.hidden = false;
+            result.className = "result err";
+            result.textContent = "Copy failed. Select the preview JSON manually.";
+          }
+        });
+      }
+
       form.addEventListener("submit", async (e) => {
         e.preventDefault();
         if (!apiBase) {
           result.hidden = false;
           result.className = "result err";
-          result.textContent = "Live submission isn't enabled yet — use the GitHub issue link instead.";
+          result.textContent = ghIssuesUrl
+            ? "Live submission isn't enabled yet — use the GitHub issue link instead."
+            : "Live submission isn't enabled yet — copy the JSON for manual review.";
           return;
         }
         submitBtn.disabled = true;

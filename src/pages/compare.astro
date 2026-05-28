@@ -1,6 +1,7 @@
 ---
 import Base from "../layouts/Base.astro";
 import { loadModels } from "../lib/data.ts";
+import { htmlSafeJson } from "../lib/html.ts";
 
 const models = loadModels().sort((a, b) => a.name.localeCompare(b.name));
 // Field labels in render order. Each gets its own row in the side-by-side table.
@@ -38,8 +39,8 @@ const FIELDS = [
 
   <div id="table-wrap"></div>
 
-  <script is:inline id="models-data" type="application/json" set:html={JSON.stringify(models)}></script>
-  <script is:inline id="fields-data" type="application/json" set:html={JSON.stringify(FIELDS)}></script>
+  <script is:inline id="models-data" type="application/json" set:html={htmlSafeJson(models)}></script>
+  <script is:inline id="fields-data" type="application/json" set:html={htmlSafeJson(FIELDS)}></script>
 
   <style>
     .picker { display: flex; gap: 0.75rem; align-items: center; margin: 1rem 0; padding: 0.75rem; background: #f6f6f6; border-radius: 4px; flex-wrap: wrap; }
@@ -79,8 +80,17 @@ const FIELDS = [
       function fmt(value, field) {
         if (value == null || value === "") return "—";
         if (field.num) return Number(value).toLocaleString();
-        if (field.list) return Array.isArray(value) ? value.join(", ") : String(value);
-        return String(value);
+        if (field.list) return esc(Array.isArray(value) ? value.join(", ") : String(value));
+        return esc(value);
+      }
+
+      function esc(value) {
+        return String(value ?? "")
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#39;");
       }
 
       function rowValues(field, picked) {
@@ -113,12 +123,12 @@ const FIELDS = [
         empty.style.display = "none";
         const picked = ids.map((id) => byId.get(id));
         const head = `<thead><tr><th class="field"></th>${picked.map((m, i) =>
-          `<th class="model"><a href="/models/${m.id}">${m.name}</a><button class="remove" data-i="${i}" type="button" aria-label="remove">×</button></th>`
+          `<th class="model"><a href="/models/${m.id}">${esc(m.name)}</a><button class="remove" data-i="${i}" type="button" aria-label="remove">×</button></th>`
         ).join("")}</tr></thead>`;
         const body = fields.map((f) => {
           const values = rowValues(f, picked);
           const bi = bestIndex(f, values);
-          return `<tr><th class="field">${f.label}</th>${values.map((v, i) =>
+          return `<tr><th class="field">${esc(f.label)}</th>${values.map((v, i) =>
             `<td class="${f.num ? "num" : ""}${i === bi ? " best" : ""}">${fmt(v, f)}</td>`
           ).join("")}</tr>`;
         }).join("");

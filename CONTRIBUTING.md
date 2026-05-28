@@ -91,4 +91,6 @@ The repo also has three GitHub Actions in `.github/workflows/`:
 
 ## Pull requests
 
-Open them. The `pr-gate` skill in this org runs review automation; smaller PRs land faster.
+Once public access to the configured repo is confirmed, open them. The `pr-gate` skill in this org runs review automation; smaller PRs land faster.
+
+By submitting a pull request, you agree to license code contributions under the MIT license in [LICENSE](./LICENSE) and original data contributions under the data license in [LICENSE-DATA](./LICENSE-DATA).

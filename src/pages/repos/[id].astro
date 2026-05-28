@@ -3,6 +3,8 @@ import Base from "../../layouts/Base.astro";
 import JsonLd from "../../components/JsonLd.astro";
 import Votes from "../../components/Votes.astro";
 import { eventsForEntity, loadRepos, loadTools } from "../../lib/data.ts";
+import { freshnessForEntity } from "../../lib/freshness.ts";
+import { requireSite } from "../../lib/site.ts";
 import type { Repo } from "../../../schemas/index.ts";
 
 export function getStaticPaths() {
@@ -13,7 +15,9 @@ interface Props { repo: Repo; }
 const { repo } = Astro.props;
 const events = eventsForEntity(repo.id);
 const relatedTools = loadTools().filter((tool) => tool.oss_repo === repo.repo_url || tool.sources.includes(repo.repo_url));
-const canonicalUrl = new URL(`/repos/${repo.id}`, Astro.site).toString();
+const site = requireSite(Astro.site);
+const repoJsonUrl = new URL(`/repos/${repo.id}.json`, site).toString();
+const canonicalUrl = new URL(`/repos/${repo.id}`, site).toString();
 const description = `${repo.full_name} — ${repo.category}${repo.language ? `, ${repo.language}` : ""}.${repo.description ? ` ${repo.description}` : ""}`;
 
 function compactNumber(n: number | null): string {
@@ -22,19 +26,27 @@ function compactNumber(n: number | null): string {
 }
 
 function installCommand(url: string): string | null {
-  if (url.includes("pypi.org/project/")) {
-    const name = url.split("/project/")[1]?.split("/")[0];
-    return name ? `pip install ${name}` : null;
+  let parsed: URL;
+  try {
+    parsed = new URL(url);
+  } catch {
+    return null;
   }
-  if (url.includes("npmjs.com/package/")) {
-    const name = url.split("/package/")[1]?.split("/")[0];
-    return name ? `npm install ${name}` : null;
+  const segments = parsed.pathname.split("/").filter(Boolean).map((segment) => decodeURIComponent(segment));
+  if (parsed.hostname === "pypi.org" && segments[0] === "project") {
+    const name = segments[1];
+    return name && /^[A-Za-z0-9][A-Za-z0-9._-]*$/.test(name) ? `pip install ${name}` : null;
+  }
+  if ((parsed.hostname === "www.npmjs.com" || parsed.hostname === "npmjs.com") && segments[0] === "package") {
+    const name = segments[1]?.startsWith("@") ? `${segments[1]}/${segments[2] ?? ""}` : segments[1];
+    return name && /^(@[a-z0-9-~][a-z0-9-._~]*\/)?[a-z0-9-~][a-z0-9-._~]*$/.test(name) ? `npm install ${name}` : null;
   }
   return null;
 }
 
 const installCommands = repo.package_urls.map(installCommand).filter((x): x is string => Boolean(x));
 const cloneCommand = `git clone ${repo.repo_url}`;
+const freshness = freshnessForEntity(repo, events);
 ---
 <Base
   title={`${repo.full_name} — ai-tracker`}
@@ -65,6 +77,8 @@ const cloneCommand = `git clone ${repo.repo_url}`;
       <div><dt>Created</dt><dd>{repo.created_at ?? "n/a"}</dd></div>
       <div><dt>Pushed</dt><dd>{repo.pushed_at ?? "n/a"}</dd></div>
       <div><dt>Status</dt><dd>{repo.archived ? "archived" : "active"}</dd></div>
+      <div><dt>Freshness</dt><dd>{freshness.label}</dd></div>
+      <div><dt>Signal</dt><dd>{freshness.source}</dd></div>
     </dl>
   </section>
 
@@ -88,8 +102,8 @@ const cloneCommand = `git clone ${repo.repo_url}`;
       ))}
       <div class="snippet">
         <span>Data</span>
-        <code>curl {new URL(`/repos/${repo.id}.json`, Astro.site).toString()}</code>
-        <button type="button" data-copy={`curl ${new URL(`/repos/${repo.id}.json`, Astro.site).toString()}`}>Copy</button>
+        <code>curl {repoJsonUrl}</code>
+        <button type="button" data-copy={`curl ${repoJsonUrl}`}>Copy</button>
       </div>
     </div>
   </section>

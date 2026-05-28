@@ -3,6 +3,8 @@ import Base from "../../layouts/Base.astro";
 import JsonLd from "../../components/JsonLd.astro";
 import Votes from "../../components/Votes.astro";
 import { entityById, eventsForEntity, loadTools } from "../../lib/data.ts";
+import { freshnessForEntity } from "../../lib/freshness.ts";
+import { requireSite } from "../../lib/site.ts";
 import type { Tool } from "../../../schemas/index.ts";
 
 export function getStaticPaths() {
@@ -15,7 +17,8 @@ const events = eventsForEntity(tool.id);
 const builtOn = tool.built_on_models
   .map((id) => entityById(id))
   .filter((m): m is NonNullable<ReturnType<typeof entityById>> => m != null);
-const canonicalUrl = new URL(`/tools/${tool.id}`, Astro.site).toString();
+const site = requireSite(Astro.site);
+const canonicalUrl = new URL(`/tools/${tool.id}`, site).toString();
 const cheapestPaid = tool.pricing_tiers
   .filter((t) => t.monthly_usd != null && t.monthly_usd > 0)
   .sort((a, b) => a.monthly_usd! - b.monthly_usd!)[0];
@@ -25,6 +28,20 @@ const priceBit = tool.free_tier && cheapestPaid
     ? ` From $${cheapestPaid.monthly_usd}/mo.`
     : tool.free_tier ? " Free tier available." : "";
 const description = `${tool.name} by ${tool.vendor} — ${tool.category}.${tool.oss ? " Open source." : ""}${priceBit}`.trim();
+const freshness = freshnessForEntity(tool, events);
+const pricingSummary = tool.free_tier
+  ? cheapestPaid ? `Free tier; ${cheapestPaid.name} from $${cheapestPaid.monthly_usd}/mo` : "Free tier"
+  : cheapestPaid ? `${cheapestPaid.name} from $${cheapestPaid.monthly_usd}/mo` : "Not tracked";
+
+function entityRoute(entity: NonNullable<ReturnType<typeof entityById>>): string {
+  if (entity.kind === "model") return `/models/${entity.id}`;
+  if (entity.kind === "tool") return `/tools/${entity.id}`;
+  return `/repos/${entity.id}`;
+}
+
+function entityLabel(entity: NonNullable<ReturnType<typeof entityById>>): string {
+  return entity.kind === "repo" ? entity.full_name : entity.name;
+}
 ---
 <Base
   title={`${tool.name} — ai-tracker`}
@@ -34,30 +51,79 @@ const description = `${tool.name} by ${tool.vendor} — ${tool.category}.${tool.
   canonical={canonicalUrl}
 >
   <JsonLd entity={tool} url={canonicalUrl} />
-  <p><a href="/tools">← Tools</a></p>
-  <h1>{tool.name}</h1>
-  <p>
-    <strong>{tool.vendor}</strong> · <a href={`/categories/${tool.category}`}>{tool.category}</a> · {tool.released ? `released ${tool.released}` : "release date n/a"}
-    {tool.oss ? " · open source" : ""}
-  </p>
-  <Votes entityId={tool.id} />
+  <p class="back"><a href="/tools">← Tools</a></p>
+  <section class="tool-hero">
+    <div>
+      <p class="eyebrow">Tool profile</p>
+      <h1>{tool.name}</h1>
+      <p class="dek">
+        <strong>{tool.vendor}</strong> · <a href={`/categories/${tool.category}`}>{tool.category}</a> · {tool.released ? `released ${tool.released}` : "release date n/a"}
+        {tool.oss ? " · open source" : ""}
+      </p>
+      <div class="tag-row">
+        {tool.tags.slice(0, 10).map((tag) => <span>{tag}</span>)}
+      </div>
+      <div class="button-row">
+        <a class="button primary" href={tool.links.homepage} rel="nofollow noopener">Homepage</a>
+        <a class="button" href={`/tools/${tool.id}.json`}>JSON</a>
+        <a class="button" href={`/tools/${tool.id}.md`}>Markdown</a>
+      </div>
+      <Votes entityId={tool.id} />
+    </div>
+    <aside class="quick panel">
+      <div>
+        <span>Vendor</span>
+        <strong>{tool.vendor}</strong>
+      </div>
+      <div>
+        <span>Category</span>
+        <strong>{tool.category}</strong>
+      </div>
+      <div>
+        <span>Pricing</span>
+        <strong>{pricingSummary}</strong>
+      </div>
+      <div>
+        <span>Open source</span>
+        <strong>{tool.oss ? "yes" : "no"}</strong>
+      </div>
+      <div>
+        <span>Freshness</span>
+        <strong>{freshness.label}</strong>
+        <small>{freshness.source}</small>
+      </div>
+    </aside>
+  </section>
 
-  {builtOn.length > 0 ? (
-    <p>
-      <strong>Built on:</strong>{" "}
-      {builtOn.map((m, i) => (
-        <>
-          {i > 0 ? ", " : ""}
-          <a href={`/${m.kind === "model" ? "models" : "tools"}/${m.id}`}>{m.name}</a>
-        </>
-      ))}
-    </p>
-  ) : null}
+  <section class="detail-grid">
+    <div class="panel content-panel">
+      <h2>Built On</h2>
+      {builtOn.length > 0 ? (
+        <ul class="link-list">
+          {builtOn.map((m) => (
+            <li><a href={entityRoute(m)}>{entityLabel(m)}</a> · {m.kind}</li>
+          ))}
+        </ul>
+      ) : (
+        <p>No model dependencies tracked yet.</p>
+      )}
+    </div>
+
+    <div class="panel content-panel">
+      <h2>Machine Links</h2>
+      <div class="machine-links">
+        <a href={`/tools/${tool.id}.json`}>JSON</a>
+        <a href={`/tools/${tool.id}.md`}>Markdown</a>
+        <a href="/api/search.json">Search API</a>
+        <a href="/dump/all.json">Full dump</a>
+      </div>
+    </div>
+  </section>
 
   {tool.pricing_tiers.length > 0 ? (
-    <>
+    <section class="panel content-panel">
       <h2>Pricing</h2>
-      <ul>
+      <ul class="link-list">
         {tool.pricing_tiers.map((p) => (
           <li>
             <strong>{p.name}:</strong>{" "}
@@ -66,29 +132,67 @@ const description = `${tool.name} by ${tool.vendor} — ${tool.category}.${tool.
           </li>
         ))}
       </ul>
-    </>
+    </section>
   ) : null}
 
-  <h2>Timeline</h2>
-  {events.length === 0 ? (
-    <p><em>No events recorded yet.</em></p>
-  ) : (
-    <ul>
-      {events.map((e) => (
-        <li>
-          <code>{e.date}</code> · <strong>{e.type}</strong> — {e.summary}
-          {" "}<a href={e.source} rel="nofollow noopener">[source]</a>
-        </li>
-      ))}
-    </ul>
-  )}
+  <section class="panel content-panel">
+    <h2>Timeline</h2>
+    {events.length === 0 ? (
+      <p><em>No events recorded yet.</em></p>
+    ) : (
+      <ol class="timeline">
+        {events.map((e) => (
+          <li>
+            <time datetime={e.date}>{e.date}</time>
+            <div>
+              <strong>{e.type.replaceAll("_", " ")}</strong>
+              <p>{e.summary} <a href={e.source} rel="nofollow noopener">source</a></p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    )}
+  </section>
 
-  <h2>Sources</h2>
-  <ul>{tool.sources.map((s) => <li><a href={s} rel="nofollow noopener">{s}</a></li>)}</ul>
+  <section class="panel content-panel">
+    <h2>Sources</h2>
+    <ul class="sources">{tool.sources.map((s) => <li><a href={s} rel="nofollow noopener">{s}</a></li>)}</ul>
+  </section>
 
-  <p>
-    <a href={tool.links.homepage} rel="nofollow noopener">Homepage</a> ·
-    <a href={`/tools/${tool.id}.json`}>JSON</a> ·
-    <a href={`/tools/${tool.id}.md`}>Markdown</a>
-  </p>
+  <style>
+    .back { margin: 0 0 1rem; }
+    .tool-hero { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 1.25rem; align-items: start; padding: 1rem 0 1.5rem; }
+    .tool-hero h1 { margin-bottom: 0.75rem; overflow-wrap: anywhere; }
+    .dek { margin: 0; color: #4f5a6d; }
+    .dek a { color: var(--text); text-decoration: none; }
+    .tag-row { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 1rem 0; }
+    .tag-row span { padding: 0.18rem 0.48rem; border-radius: 999px; background: var(--surface-soft); color: #445066; font-size: 0.78rem; font-weight: 700; }
+    .quick { display: grid; gap: 0.85rem; padding: 1rem; }
+    .quick div { display: grid; gap: 0.22rem; padding-bottom: 0.8rem; border-bottom: 1px solid #edf0f5; }
+    .quick div:last-child { border-bottom: 0; padding-bottom: 0; }
+    .quick span { color: var(--muted); font-size: 0.78rem; font-weight: 750; text-transform: uppercase; letter-spacing: 0.05em; }
+    .quick strong { color: var(--text); font-size: 1rem; overflow-wrap: anywhere; }
+    .quick small { color: var(--muted); }
+    .detail-grid { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 1rem; margin: 0.5rem 0 1rem; }
+    .content-panel { padding: 1rem; margin-top: 1rem; }
+    .detail-grid .content-panel { margin-top: 0; }
+    .content-panel h2 { margin-bottom: 0.75rem; }
+    .link-list { margin: 0; padding-left: 1.1rem; }
+    .link-list li { margin: 0.4rem 0; }
+    .machine-links { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+    .machine-links a { padding: 0.2rem 0.5rem; border-radius: 999px; background: var(--surface-soft); color: var(--text); text-decoration: none; font-size: 0.82rem; font-weight: 700; }
+    .timeline { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.85rem; }
+    .timeline li { display: grid; grid-template-columns: 112px minmax(0, 1fr); gap: 1rem; padding-top: 0.85rem; border-top: 1px solid #edf0f5; }
+    .timeline li:first-child { border-top: 0; padding-top: 0; }
+    .timeline time { color: var(--muted); font-variant-numeric: tabular-nums; }
+    .timeline p { margin: 0.2rem 0 0; }
+    .sources { margin-bottom: 0; }
+    .sources a { overflow-wrap: anywhere; }
+    @media (max-width: 900px) {
+      .tool-hero, .detail-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 620px) {
+      .timeline li { grid-template-columns: 1fr; gap: 0.25rem; }
+    }
+  </style>
 </Base>

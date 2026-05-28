@@ -21,7 +21,16 @@ function isoWeekKey(dateStr: string): { key: string; weekStart: string } {
 interface WeekBucket {
   key: string;
   weekStart: string;
-  events: Array<{ event: ReturnType<typeof loadEvents>[number]; entityName: string; entityKind: "model" | "tool"; entityId: string }>;
+  events: Array<{ event: ReturnType<typeof loadEvents>[number]; entityName: string; entityPath: string }>;
+}
+
+function entityPath(id: string): string {
+  const ent = entityById(id);
+  if (ent?.kind === "tool") return `/tools/${id}`;
+  if (ent?.kind === "repo") return `/repos/${id}`;
+  if (ent?.kind === "model") return `/models/${id}`;
+  console.warn(`event references unknown entity: ${id}`);
+  return `#${id}`;
 }
 
 const events = loadEvents(); // newest first
@@ -33,8 +42,7 @@ for (const e of events) {
   buckets.get(key)!.events.push({
     event: e,
     entityName: ent?.name ?? e.entity,
-    entityKind: (ent?.kind === "tool" ? "tool" : "model"),
-    entityId: e.entity,
+    entityPath: entityPath(e.entity),
   });
 }
 
@@ -50,9 +58,20 @@ function fmtRange(weekStart: string): string {
   return `${m(start)} – ${m(end)}, ${end.getUTCFullYear()}`;
 }
 ---
-<Base title="Changes by week — ai-tracker" description="Every tracked AI model and tool event, grouped by ISO week.">
-  <h1>Changes</h1>
-  <p>{events.length} events across {weeksAll.length} weeks. Newest first.</p>
+<Base title="Changes by week — ai-tracker" description="Every tracked AI model, tool, and repo event, grouped by ISO week.">
+  <section class="changes-hero">
+    <div>
+      <p class="eyebrow">Changelog</p>
+      <h1>Changes by week</h1>
+      <p>{events.length} source-backed events across {weeksAll.length} weeks. Newest first.</p>
+    </div>
+    <div class="changes-links">
+      <a href="/timeline">Timeline</a>
+      <a href="/feed.xml">RSS</a>
+      <a href="/atom.xml">Atom</a>
+      <a href="/dump/events-30d.json">30d JSON</a>
+    </div>
+  </section>
 
   <h2>Last 4 weeks</h2>
   {weeksRecent.length === 0 ? (
@@ -61,10 +80,11 @@ function fmtRange(weekStart: string): string {
     <section class="week recent">
       <h3>{w.key} — {fmtRange(w.weekStart)} <span class="count">({w.events.length})</span></h3>
       <ul>
-        {w.events.map(({ event, entityName, entityKind, entityId }) => (
+        {w.events.map(({ event, entityName, entityPath }) => (
           <li>
-            <code>{event.date}</code> · <strong>{event.type}</strong> ·
-            <a href={`/${entityKind}s/${entityId}`}>{entityName}</a> — {event.summary}
+            <time datetime={event.date}>{event.date}</time>
+            <strong>{event.type.replaceAll("_", " ")}</strong>
+            <span><a href={entityPath}>{entityName}</a> — {event.summary}</span>
           </li>
         ))}
       </ul>
@@ -78,10 +98,11 @@ function fmtRange(weekStart: string): string {
         <section class="week">
           <h3>{w.key} — {fmtRange(w.weekStart)} <span class="count">({w.events.length})</span></h3>
           <ul>
-            {w.events.map(({ event, entityName, entityKind, entityId }) => (
+            {w.events.map(({ event, entityName, entityPath }) => (
               <li>
-                <code>{event.date}</code> · <strong>{event.type}</strong> ·
-                <a href={`/${entityKind}s/${entityId}`}>{entityName}</a> — {event.summary}
+                <time datetime={event.date}>{event.date}</time>
+                <strong>{event.type.replaceAll("_", " ")}</strong>
+                <span><a href={entityPath}>{entityName}</a> — {event.summary}</span>
               </li>
             ))}
           </ul>
@@ -91,9 +112,26 @@ function fmtRange(weekStart: string): string {
   ) : null}
 
   <style>
-    .week { margin: 1.5rem 0; }
-    .week h3 { font-size: 1.05rem; padding-bottom: 0.4rem; border-bottom: 1px solid #eee; }
-    .week.recent h3 { background: #f0f4ff; padding: 0.4rem 0.6rem; border-radius: 3px; border-bottom: none; }
-    .count { color: #666; font-weight: 400; font-size: 0.9rem; }
+    .changes-hero { display: flex; justify-content: space-between; gap: 1rem; align-items: end; padding: 1.5rem 0 1rem; }
+    .changes-hero p { margin-bottom: 0; }
+    .changes-links { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: flex-end; }
+    .changes-links a { padding: 0.24rem 0.55rem; border-radius: 999px; background: var(--surface-soft); color: var(--text); text-decoration: none; font-size: 0.85rem; font-weight: 700; }
+    .week { margin: 1.15rem 0 1.5rem; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+    .week h3 { display: flex; justify-content: space-between; gap: 0.75rem; align-items: baseline; margin: 0; padding: 0.72rem 0.9rem; font-size: 1rem; border-bottom: 1px solid var(--line); background: #f8fafc; }
+    .week.recent h3 { background: var(--accent-soft); color: var(--accent-strong); }
+    .week ul { list-style: none; padding: 0; margin: 0; }
+    .week li { display: grid; grid-template-columns: 104px 132px minmax(0, 1fr); gap: 0.75rem; padding: 0.78rem 0.9rem; border-top: 1px solid #edf0f5; color: #4f5a6d; }
+    .week li:first-child { border-top: 0; }
+    .week time { color: var(--muted); font-variant-numeric: tabular-nums; }
+    .week strong { color: var(--accent-strong); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.04em; }
+    .week a { color: var(--text); font-weight: 750; text-decoration: none; }
+    .week a:hover { color: var(--blue); }
+    .count { color: inherit; font-weight: 700; font-size: 0.88rem; opacity: 0.72; }
+    @media (max-width: 760px) {
+      .changes-hero { align-items: flex-start; flex-direction: column; }
+      .changes-links { justify-content: flex-start; }
+      .week h3 { align-items: flex-start; flex-direction: column; }
+      .week li { grid-template-columns: 1fr; gap: 0.2rem; }
+    }
   </style>
 </Base>

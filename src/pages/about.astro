@@ -27,9 +27,23 @@ const repoCategories = Array.from(new Set(repos.map((r) => r.category))).sort();
   <p>
     Maintained as a public good for the AI builder community — for engineers, researchers, agent
     authors, and the agents themselves. Code is MIT-licensed; data is public-domain. Anyone can
-    submit a new model / tool / repo / event via <a href="/submit">/submit</a> or open a pull request.
+    submit a new model / tool / repo / event via <a href="/submit">/submit</a>. Pull requests open
+    once the public remote exists.
     Hosted by <a href="https://zergai.com">Zerg AI</a>; submissions land in a public review queue
     and the maintainer set is open to anyone willing to do the work.
+  </p>
+
+  <h2 id="beta">Public beta contract</h2>
+  <p>
+    ai-tracker is source-backed, not exhaustive. A page means the entity has at least one
+    public source and has passed schema checks; it does not mean every price, benchmark,
+    capability, or regional availability flag is current. Use provider docs before making
+    production routing, budget, or procurement decisions.
+  </p>
+  <p>
+    Ranking views are utility cuts through tracked metadata: cheapest input, longest context,
+    most-linked models, repo stars, and similar fields. They are not global model-quality
+    rankings and should not be read as endorsements.
   </p>
 
   <h2>The wedge</h2>
@@ -40,7 +54,7 @@ const repoCategories = Array.from(new Set(repos.map((r) => r.category))).sort();
     <a href="/feed.xml">RSS</a>, <a href="/atom.xml">Atom</a>,
     <a href="/dump/all.json">/dump/all.json</a>, and <a href="/llms.txt">/llms.txt</a>.
     JSON-LD (<code>SoftwareApplication</code> or <code>SoftwareSourceCode</code>) is embedded on every detail page.
-    The companion <code>ai-tracker-mcp</code> npm package exposes the data over MCP
+    The companion <code>mcp-server/</code> package exposes the data over MCP
     for direct agent integration.
   </p>
 
@@ -61,6 +75,11 @@ const repoCategories = Array.from(new Set(repos.map((r) => r.category))).sort();
     <code>capability_added</code>, <code>benchmark_update</code>,
     <code>license_change</code>, <code>model_swap</code>, <code>shut_down</code>,
     <code>rebrand</code>, <code>acquired</code>.
+  </p>
+  <p>
+    Detail pages show a freshness label based on the latest tracked event, pricing snapshot,
+    release date, or GitHub <code>pushed_at</code> value. That label is a review signal, not
+    a guarantee that every upstream fact has changed or stayed unchanged.
   </p>
 
   <h2>Coverage today</h2>
@@ -91,7 +110,7 @@ const repoCategories = Array.from(new Set(repos.map((r) => r.category))).sort();
     <li><a href="/dump/events-30d.json">/dump/events-30d.json</a> — last 30 days of events.</li>
     <li><a href="/feed.xml">/feed.xml</a> · <a href="/atom.xml">/atom.xml</a> — every event, newest 100.</li>
     <li><a href="/sitemap-agents.xml">/sitemap-agents.xml</a> — every agent-consumable URL.</li>
-    <li><code>ai-tracker-mcp</code> — MCP server (<code>search_models</code>, <code>get_entity</code>, <code>get_timeline</code>, etc.).</li>
+    <li><code>mcp-server/</code> — local MCP server package until npm publish (<code>search_models</code>, <code>get_entity</code>, <code>get_timeline</code>, etc.).</li>
   </ul>
 
   <h2>Submitting</h2>

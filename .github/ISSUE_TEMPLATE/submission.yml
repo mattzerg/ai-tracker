@@ -1,0 +1,35 @@
+name: Submission
+description: Submit a model, tool, repo, or event for ai-tracker review.
+title: "Submission: "
+labels:
+  - submission
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Paste one JSON submission payload below. Include an authoritative source URL.
+  - type: textarea
+    id: payload
+    attributes:
+      label: Submission JSON
+      description: Use `kind: event`, `kind: model`, `kind: tool`, or `kind: repo`.
+      render: json
+      placeholder: |
+        {
+          "kind": "event",
+          "source": "https://www.anthropic.com/news/...",
+          "event": {
+            "entity": "anthropic__claude-opus-4-7",
+            "type": "price_change",
+            "date": "2026-05-11",
+            "summary": "Input price dropped from $5/M to $3/M.",
+            "delta": { "field": "pricing.input_per_mtok", "from": 5, "to": 3 }
+          }
+        }
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Optional context
+      description: Add any reviewer notes that do not belong in the canonical JSON payload.

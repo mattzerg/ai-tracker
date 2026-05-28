@@ -74,7 +74,7 @@ export const GET: APIRoute = ({ site }) => {
   lines.push(`- Human model picker + workload cost calculator: ${base}/picker`);
   lines.push(`- RSS / Atom: ${base}/feed.xml · ${base}/atom.xml`);
   lines.push(`- Agent sitemap: ${base}/sitemap-agents.xml (all machine-consumable URLs)`);
-  lines.push(`- MCP server: npm install -g ai-tracker-mcp (tools: search_models, search_tools, get_entity, get_timeline, recent_events)`);
+  lines.push(`- MCP server: local package in mcp-server/ until npm publish (tools: search_models, search_tools, search_repos, get_entity, get_timeline, recent_events)`);
   lines.push("");
 
   lines.push("## Highlights");
