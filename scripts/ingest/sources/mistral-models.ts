@@ -43,7 +43,7 @@ const KNOWN: MistralRow[] = [
     inputPerMtok: 0.4,
     outputPerMtok: 2.0,
     tags: ["mid-tier"],
-    status: "ga",
+    status: "deprecated",
   },
   {
     apiId: "codestral-2508",
@@ -79,7 +79,7 @@ const KNOWN: MistralRow[] = [
     inputPerMtok: 2.0,
     outputPerMtok: 6.0,
     tags: ["multimodal", "open-weights"],
-    status: "ga",
+    status: "retired",
   },
 ];
 

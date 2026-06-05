@@ -1,0 +1,36 @@
+{
+  "kind": "repo",
+  "id": "github__cinnamon_kotaemon",
+  "owner": "Cinnamon",
+  "name": "kotaemon",
+  "full_name": "Cinnamon/kotaemon",
+  "description": "An open-source RAG-based tool for chatting with your documents.",
+  "category": "rag",
+  "language": "Python",
+  "license": "Apache License 2.0",
+  "stars": 25385,
+  "forks": 2119,
+  "open_issues": 234,
+  "topics": [
+    "chatbot",
+    "llms",
+    "open-source",
+    "rag"
+  ],
+  "homepage": "https://cinnamon.github.io/kotaemon/",
+  "repo_url": "https://github.com/Cinnamon/kotaemon",
+  "package_urls": [],
+  "created_at": "2024-03-25",
+  "pushed_at": "2026-04-03",
+  "archived": false,
+  "tags": [
+    "rag",
+    "python",
+    "chatbot",
+    "llms",
+    "open-source"
+  ],
+  "sources": [
+    "https://github.com/Cinnamon/kotaemon"
+  ]
+}

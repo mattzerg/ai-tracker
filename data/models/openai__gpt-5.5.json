@@ -26,7 +26,18 @@
   ],
   "sources": [
     "https://openrouter.ai/api/v1/models",
-    "https://platform.openai.com/docs/models"
+    "https://platform.openai.com/docs/models",
+    "https://openai.com/index/introducing-gpt-5-5/",
+    "https://www.swfte.com/ai/leaderboard"
   ],
-  "status": "ga"
+  "status": "ga",
+  "benchmarks": {
+    "swe_bench_pro": 0.586,
+    "gpqa_diamond": 0.936,
+    "terminal_bench": 0.827,
+    "hle": 0.414,
+    "osworld": 0.787,
+    "arc_agi_2": 0.85,
+    "arena_elo": 1506
+  }
 }

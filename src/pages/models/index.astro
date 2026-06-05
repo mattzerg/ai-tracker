@@ -86,9 +86,13 @@ const tags = Array.from(tagCounts.entries()).sort((a, b) => b[1] - a[1] || a[0].
             data-tools={tu}
             data-name={m.name}
             data-id={m.id}
+            data-status={m.status}
           >
             <td class="cmp-col"><input type="checkbox" class="cmp" data-id={m.id} aria-label={`Compare ${m.name}`} /></td>
-            <td><a href={`/models/${m.id}`}>{m.name}</a></td>
+            <td>
+              <a href={`/models/${m.id}`}>{m.name}</a>
+              {m.status !== "ga" ? <span class={`status-badge status-${m.status}`}>{m.status}</span> : null}
+            </td>
             <td><ProviderMark provider={m.provider} size={18} /><a href={`/providers/${m.provider}`}>{m.provider}</a></td>
             <td>{m.released ?? "—"}</td>
             <td class="num">{m.context_window ? m.context_window.toLocaleString() : "—"}</td>
@@ -109,6 +113,10 @@ const tags = Array.from(tagCounts.entries()).sort((a, b) => b[1] - a[1] || a[0].
   </div>
 
   <style>
+    .status-badge { display: inline-flex; padding: 0.1rem 0.45rem; border-radius: 999px; font-size: 0.74rem; font-weight: 750; text-transform: uppercase; letter-spacing: 0.04em; vertical-align: middle; }
+    .status-deprecated { background: #fef3c7; color: #92400e; }
+    .status-retired { background: #e5e7eb; color: #4b5563; }
+    .status-preview { background: #dbeafe; color: #1e40af; }
     .filters { display: flex; gap: 1rem; align-items: center; margin: 1rem 0; padding: 0.75rem; background: #f6f6f6; border-radius: 4px; flex-wrap: wrap; }
     .filters label { display: inline-flex; gap: 0.4rem; align-items: center; font-size: 0.9rem; }
     .filters select { padding: 0.25rem 0.4rem; }

@@ -28,5 +28,5 @@
     "https://openrouter.ai/api/v1/models",
     "https://docs.mistral.ai/getting-started/models/models_overview/"
   ],
-  "status": "ga"
+  "status": "retired"
 }

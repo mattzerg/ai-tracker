@@ -1,6 +1,6 @@
 ---
 import Base from "../layouts/Base.astro";
-import { entityById, loadEvents, loadModels, loadRepos, loadTools } from "../lib/data.ts";
+import { dedupedEventSummary, entityById, loadEvents, loadModels, loadRepos, loadTools } from "../lib/data.ts";
 import { catalogFreshness } from "../lib/freshness.ts";
 
 const allEvents = loadEvents();
@@ -51,10 +51,11 @@ function eventTypeLabel(type: string): string {
       <p class="eyebrow">Machine-readable AI market tracker</p>
       <h1>AI models, tools, repos, and changes.</h1>
       <p class="lede">
-        A public directory, changelog, and agent-facing data feed for model releases, pricing shifts,
-        tool ecosystems, open-source repos, and source-backed metadata for agents and humans.
+        Built so an LLM agent — or you — can answer "what changed for Claude Opus 4.8 this month?"
+        without scraping HTML. Every model, tool, and repo ships with JSON and Markdown twins;
+        every release, price change, and deprecation lands in one source-backed changelog.
       </p>
-      <p class="trust-strip">Public beta · source-backed records · free · no signup · open data · <a href="/about">how this is run</a></p>
+      <p class="trust-strip">Public beta · maintained by Zerg AI, open to community submissions · free · no signup · open data · <a href="/about">how this is run</a></p>
       <div class="button-row">
         <a href="/changes" class="button primary">See changes</a>
         <a href="/models" class="button">Browse models</a>
@@ -127,7 +128,7 @@ function eventTypeLabel(type: string): string {
       </ol>
     </div>
     <div class="insight-card">
-      <h3>Most used by tools</h3>
+      <h3>Most used by tools <span class="methodology" title="Counts tracked tools that list this model in their built-on-models field — integration breadth, not a quality ranking.">ⓘ</span></h3>
       <ol>
         {mostUsed.map((x) => (
           <li>
@@ -159,7 +160,7 @@ function eventTypeLabel(type: string): string {
             <div>
               <span class="event-type">{eventTypeLabel(e.type)}</span>
               <a href={entityPath(e.entity)}>{entity?.name ?? e.entity}</a>
-              <p>{e.summary}</p>
+              <p>{dedupedEventSummary(e.summary, entity?.name)}</p>
             </div>
           </li>
         );
@@ -173,7 +174,7 @@ function eventTypeLabel(type: string): string {
     .hero-copy { min-width: 0; }
     .hero h1 { max-width: 880px; font-size: clamp(2.7rem, 7vw, 5.8rem); }
     .lede { max-width: 720px; margin: 1.1rem 0 0.85rem; font-size: clamp(1.05rem, 2vw, 1.28rem); color: #4f5a6d; }
-    .trust-strip { max-width: 720px; margin: 0 0 1.45rem; font-size: 0.92rem; color: var(--muted); }
+    .trust-strip { max-width: 720px; margin: 0 0 1.45rem; font-size: 0.92rem; color: #525d72; }
     .trust-strip a { color: inherit; text-decoration: underline; text-decoration-color: rgba(0,0,0,0.2); }
     .trust-strip a:hover { text-decoration-color: currentColor; }
     .hero-panel { padding: 1.15rem; align-self: end; }
@@ -192,6 +193,7 @@ function eventTypeLabel(type: string): string {
     .highlights { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
     .insight-card { padding: 1.05rem; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; box-shadow: 0 10px 28px rgba(24, 32, 47, 0.05); }
     .insight-card h3 { margin: 0 0 0.8rem; font-size: 0.96rem; color: #394457; }
+    .methodology { cursor: help; color: var(--muted); font-size: 0.85em; font-weight: 400; }
     .insight-card ol { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.55rem; }
     .insight-card li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0.8rem; align-items: baseline; padding-top: 0.55rem; border-top: 1px solid #edf0f5; }
     .insight-card li:first-child { border-top: 0; padding-top: 0; }

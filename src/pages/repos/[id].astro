@@ -67,7 +67,7 @@ const freshness = freshnessForEntity(repo, events);
         <a class="button" href={`/repos/${repo.id}.json`}>JSON</a>
         <a class="button" href={`/repos/${repo.id}.md`}>Markdown</a>
       </div>
-      <Votes entityId={repo.id} />
+      <Votes entityId={repo.id} entityName={repo.full_name} />
     </div>
     <dl class="facts panel">
       <div><dt>Stars</dt><dd>{compactNumber(repo.stars)}</dd></div>

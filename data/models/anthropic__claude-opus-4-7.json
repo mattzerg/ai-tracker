@@ -6,7 +6,10 @@
   "released": "2026-04-16",
   "context_window": 1000000,
   "output_window": 128000,
-  "modalities": ["text", "vision"],
+  "modalities": [
+    "text",
+    "vision"
+  ],
   "license": "proprietary",
   "pricing": {
     "input_per_mtok": 5,
@@ -18,10 +21,25 @@
     "docs": "https://platform.claude.com/docs/en/docs/about-claude/models/overview",
     "card": "https://www.anthropic.com/news/claude-opus-4-7"
   },
-  "tags": ["frontier", "long-context", "reasoning", "agentic-coding"],
+  "tags": [
+    "frontier",
+    "long-context",
+    "reasoning",
+    "agentic-coding"
+  ],
   "sources": [
     "https://platform.claude.com/docs/en/docs/about-claude/models/overview",
-    "https://www.anthropic.com/news/claude-opus-4-7"
+    "https://www.anthropic.com/news/claude-opus-4-7",
+    "https://llm-stats.com/blog/research/claude-opus-4-7-launch",
+    "https://www.swfte.com/ai/leaderboard"
   ],
-  "status": "ga"
+  "status": "ga",
+  "benchmarks": {
+    "swe_bench_verified": 0.876,
+    "gpqa_diamond": 0.942,
+    "terminal_bench": 0.694,
+    "swe_bench_pro": 0.643,
+    "osworld": 0.78,
+    "arena_elo": 1505
+  }
 }

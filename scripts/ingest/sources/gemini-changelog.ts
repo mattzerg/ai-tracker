@@ -14,16 +14,17 @@ interface GeminiRow {
   outputPerMtok: number;
   modalities: ("text" | "vision" | "audio" | "video" | "image-gen" | "embedding" | "code")[];
   released: string | null;
-  status: "ga" | "preview";
+  status: "ga" | "preview" | "deprecated";
   tags?: string[];
 }
 
 const KNOWN: GeminiRow[] = [
+  { apiId: "gemini-3.5-flash",       name: "Gemini 3.5 Flash",       contextWindow: 1_048_576, outputWindow: 65_536, inputPerMtok: 1.50, outputPerMtok: 9.00,  modalities: ["text", "vision", "audio", "video"], released: "2026-05-19", status: "ga",      tags: ["fast", "balanced", "long-context", "multimodal"] },
   { apiId: "gemini-3.1-pro",         name: "Gemini 3.1 Pro",         contextWindow: 1_048_576, outputWindow: 65_536, inputPerMtok: 2.00, outputPerMtok: 12.00, modalities: ["text", "vision", "audio", "video"], released: null,         status: "preview", tags: ["frontier", "long-context", "multimodal"] },
   { apiId: "gemini-3.1-flash-lite",  name: "Gemini 3.1 Flash-Lite",  contextWindow: 1_048_576, outputWindow: 65_536, inputPerMtok: 0.25, outputPerMtok: 1.50,  modalities: ["text", "vision", "audio", "video"], released: null,         status: "ga",      tags: ["fast", "cheap", "long-context"] },
-  { apiId: "gemini-2.5-pro",         name: "Gemini 2.5 Pro",         contextWindow: 1_048_576, outputWindow: 65_536, inputPerMtok: 1.25, outputPerMtok: 10.00, modalities: ["text", "vision", "audio", "video"], released: "2025-06-17", status: "ga",      tags: ["balanced", "long-context", "multimodal"] },
-  { apiId: "gemini-2.5-flash",       name: "Gemini 2.5 Flash",       contextWindow: 1_048_576, outputWindow: 65_536, inputPerMtok: 0.30, outputPerMtok: 2.50,  modalities: ["text", "vision", "video"],          released: "2025-06-17", status: "ga",      tags: ["fast", "high-volume", "long-context"] },
-  { apiId: "gemini-2.5-flash-lite",  name: "Gemini 2.5 Flash-Lite",  contextWindow: 1_048_576, outputWindow: 65_536, inputPerMtok: 0.10, outputPerMtok: 0.40,  modalities: ["text", "vision", "video"],          released: "2025-06-17", status: "ga",      tags: ["cheapest-tier", "fast", "long-context"] },
+  { apiId: "gemini-2.5-pro",         name: "Gemini 2.5 Pro",         contextWindow: 1_048_576, outputWindow: 65_536, inputPerMtok: 1.25, outputPerMtok: 10.00, modalities: ["text", "vision", "audio", "video"], released: "2025-06-17", status: "deprecated",      tags: ["balanced", "long-context", "multimodal"] },
+  { apiId: "gemini-2.5-flash",       name: "Gemini 2.5 Flash",       contextWindow: 1_048_576, outputWindow: 65_536, inputPerMtok: 0.30, outputPerMtok: 2.50,  modalities: ["text", "vision", "video"],          released: "2025-06-17", status: "deprecated",      tags: ["fast", "high-volume", "long-context"] },
+  { apiId: "gemini-2.5-flash-lite",  name: "Gemini 2.5 Flash-Lite",  contextWindow: 1_048_576, outputWindow: 65_536, inputPerMtok: 0.10, outputPerMtok: 0.40,  modalities: ["text", "vision", "video"],          released: "2025-06-17", status: "deprecated",      tags: ["cheapest-tier", "fast", "long-context"] },
 ];
 
 function toModel(row: GeminiRow, now: Date): Model {

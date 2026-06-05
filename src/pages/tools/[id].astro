@@ -68,7 +68,7 @@ function entityLabel(entity: NonNullable<ReturnType<typeof entityById>>): string
         <a class="button" href={`/tools/${tool.id}.json`}>JSON</a>
         <a class="button" href={`/tools/${tool.id}.md`}>Markdown</a>
       </div>
-      <Votes entityId={tool.id} />
+      <Votes entityId={tool.id} entityName={tool.name} />
     </div>
     <aside class="quick panel">
       <div>

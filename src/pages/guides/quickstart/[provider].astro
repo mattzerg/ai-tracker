@@ -1,0 +1,94 @@
+---
+import Base from "../../../layouts/Base.astro";
+import { QUICKSTARTS, QUICKSTART_SLUGS } from "../../../lib/quickstartContent.ts";
+
+export function getStaticPaths() {
+  return QUICKSTART_SLUGS.map((slug) => ({ params: { provider: slug } }));
+}
+
+const { provider } = Astro.params;
+const q = QUICKSTARTS[provider!];
+if (!q) return new Response("Not found", { status: 404 });
+---
+<Base
+  title={`${q.display_name} quickstart — ai-tracker guide`}
+  description={`60-second guide to using ${q.display_name} models — recommended model, curl + Python + Node snippets, pricing, gotchas.`}
+>
+  <p class="breadcrumb">
+    <a href="/guides/quickstart">← All quickstart guides</a>
+  </p>
+  <h1>{q.display_name} — quickstart</h1>
+  <p class="lede">{q.what_its_for}</p>
+
+  <section class="rec">
+    <span class="rec-label">Recommended starting model</span>
+    <a href={`/models/${q.recommended_model_id}`} class="rec-name">{q.recommended_model_name}</a>
+    <code class="rec-id">{q.api_id}</code>
+  </section>
+
+  <h2>Get a key</h2>
+  <ol class="steps">
+    {q.auth_steps.map((s) => <li>{s}</li>)}
+  </ol>
+
+  <h2>Make a request</h2>
+  <p class="muted small">Three equivalent ways to call the recommended model. Pick the one that matches your stack.</p>
+
+  {q.snippets.map((s) => (
+    <div class="snippet">
+      <div class="snippet-head">
+        <strong>{s.language}</strong>
+        {s.install ? <code class="install">{s.install}</code> : null}
+      </div>
+      <pre><code>{s.code}</code></pre>
+    </div>
+  ))}
+
+  <h2>Pricing</h2>
+  <p>{q.pricing_note}</p>
+
+  <h2>Alternatives in this lineup</h2>
+  <ul class="alts">
+    {q.alt_models.map((a) => (
+      <li>
+        <a href={`/models/${a.id}`}>{a.name}</a>
+        <span class="muted"> — {a.note}</span>
+      </li>
+    ))}
+  </ul>
+
+  <h2>Gotchas</h2>
+  <ul class="gotchas">
+    {q.gotchas.map((g) => (
+      <li>
+        <strong>{g.title}.</strong> {g.text}
+      </li>
+    ))}
+  </ul>
+
+  <p class="docs-link">
+    Official docs: <a href={q.docs_url} rel="nofollow">{q.docs_url}</a>
+  </p>
+
+  <style>
+    .breadcrumb { font-size: 0.88rem; margin-bottom: 0.5rem; }
+    .breadcrumb a { color: var(--muted); text-decoration: none; }
+    .lede { font-size: 1.05rem; color: #4f5a6d; line-height: 1.55; }
+    .muted { color: var(--muted); }
+    .small { font-size: 0.88rem; }
+    .rec { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.5rem 1rem; padding: 0.8rem 1rem; background: var(--surface-soft); border-left: 4px solid #1a4cff; border-radius: 4px; margin: 1.2rem 0; }
+    .rec-label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); }
+    .rec-name { font-size: 1.1rem; font-weight: 700; color: var(--text); text-decoration: none; }
+    .rec-name:hover { text-decoration: underline; }
+    .rec-id { font-family: ui-monospace, monospace; background: rgba(0,0,0,0.05); padding: 0.15rem 0.4rem; border-radius: 3px; font-size: 0.85rem; }
+    .steps li, .alts li, .gotchas li { margin: 0.5rem 0; line-height: 1.55; }
+    .snippet { margin: 1rem 0; }
+    .snippet-head { display: flex; align-items: baseline; gap: 0.75rem; margin-bottom: 0.4rem; }
+    .snippet-head strong { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.06em; color: #58637a; }
+    .snippet .install { font-family: ui-monospace, monospace; font-size: 0.78rem; background: var(--surface-soft); color: var(--text); padding: 0.1rem 0.4rem; border-radius: 3px; }
+    pre { margin: 0; padding: 1rem; overflow: auto; border-radius: 6px; background: #111827; color: #e5e7eb; font-size: 0.85rem; line-height: 1.55; }
+    pre code { color: inherit; font-family: ui-monospace, "SFMono-Regular", Menlo, monospace; }
+    .docs-link { margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--line); font-size: 0.9rem; color: var(--muted); }
+    .docs-link a { color: var(--text); }
+  </style>
+</Base>

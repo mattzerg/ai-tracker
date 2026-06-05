@@ -1,7 +1,7 @@
 {
   "kind": "model",
   "id": "alibaba__qwen3.5-plus-20260420",
-  "name": "Qwen3.5 Plus 2026-04-20",
+  "name": "Qwen3.5 Plus",
   "provider": "alibaba",
   "released": "2026-04-27",
   "context_window": 1000000,
@@ -26,7 +26,12 @@
   "sources": [
     "https://openrouter.ai/api/v1/models",
     "https://qwenlm.github.io/",
-    "https://help.aliyun.com/zh/dashscope/developer-reference/api-details"
+    "https://help.aliyun.com/zh/dashscope/developer-reference/api-details",
+    "https://codersera.com/blog/qwen-3-5-complete-guide-2026/"
   ],
-  "status": "ga"
+  "status": "ga",
+  "benchmarks": {
+    "gpqa_diamond": 0.884,
+    "aime_2025": 0.913
+  }
 }

@@ -1,0 +1,13 @@
+{
+  "date": "2026-05-22",
+  "entity": "mistral__mistral-medium-3.1",
+  "type": "deprecated",
+  "summary": "Mistral Medium 3.1 marked deprecated \u2014 retirement scheduled August 31, 2026. Recommended replacement: Mistral Medium 3.5.",
+  "delta": {
+    "field": "status",
+    "from": "ga",
+    "to": "deprecated"
+  },
+  "source": "https://docs.mistral.ai/getting-started/models/models_overview/",
+  "submitted_by": "matt"
+}

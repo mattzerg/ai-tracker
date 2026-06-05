@@ -1,0 +1,125 @@
+---
+import Base from "../layouts/Base.astro";
+import ProviderMark from "../components/ProviderMark.astro";
+import { loadConcordSummary, loadModels } from "../lib/data.ts";
+
+const summary = loadConcordSummary();
+const models = loadModels();
+
+function providerOf(trackerId: string | null): string | null {
+  if (!trackerId) return null;
+  const m = models.find((x) => x.id === trackerId);
+  return m?.provider ?? null;
+}
+
+// Sort: models with most matches first within bands of confidence.
+// Showing all even at low N, but distinguish high-confidence from low-N rows.
+const rows = (summary?.models ?? [])
+  .slice()
+  .sort((a, b) => b.matches_played - a.matches_played);
+---
+<Base
+  title="Concord — strategic-game benchmark — ai-tracker"
+  description="Per-model results from Concord, Zerg's internal LLM-vs-LLM strategic-bargaining game. Tracks victory rate, survival, and territory-control across multi-agent matches."
+>
+  <h1>Concord benchmark</h1>
+  {summary ? (
+    <>
+      <p>
+        Per-model results from <strong>Concord</strong>, Zerg's internal
+        strategic-bargaining game played BETWEEN LLM agents. Six houses with persona-specific
+        victory conditions, four rounds per match, models compete for territory and coalitions.
+        Different from single-agent benchmarks (MMLU, GPQA, etc.) — this measures how a model
+        plays WHEN OTHER MODELS ARE OPPOSING IT.
+      </p>
+      <p class="muted small">
+        {summary.matches_total} matches · {summary.models.length} models · rule version {summary.rule_version} · machine-readable: <a href="/concord.json">/concord.json</a>
+      </p>
+
+      <div class="legend">
+        <strong>Metrics:</strong>
+        <span><code>victory_rate</code> = matches where this model achieved its assigned victory condition</span>
+        <span><code>survival_rate</code> = matches where this model held ≥1 territory at end</span>
+        <span><code>avg territories</code> = mean territory count at match end</span>
+        <span class="caveat"><code>n</code> = matches played; low-N rows are noisy</span>
+      </div>
+
+      <table class="board">
+        <thead>
+          <tr>
+            <th>Model</th>
+            <th class="num">n</th>
+            <th class="num">Victory</th>
+            <th class="num">Survival</th>
+            <th class="num">Avg territories</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((r) => {
+            const provider = providerOf(r.tracker_model_id);
+            const trustedN = r.matches_played >= 5;
+            const linkHref = r.tracker_model_id ? `/models/${r.tracker_model_id}` : null;
+            return (
+              <tr class:list={[!trustedN && "low-n"]}>
+                <td>
+                  <div class="model-cell">
+                    {provider ? <ProviderMark provider={provider} /> : null}
+                    {linkHref ? (
+                      <a href={linkHref}>{r.concord_model_id}</a>
+                    ) : (
+                      <span class="untracked">{r.concord_model_id}</span>
+                    )}
+                    {!r.tracker_model_id ? <span class="badge">untracked</span> : null}
+                  </div>
+                </td>
+                <td class="num">{r.matches_played}</td>
+                <td class="num">{(r.victory_rate * 100).toFixed(0)}%</td>
+                <td class="num">{(r.survival_rate * 100).toFixed(0)}%</td>
+                <td class="num">{r.avg_territories_at_end.toFixed(1)}</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+
+      <h2>Why this matters</h2>
+      <p>
+        Single-agent benchmarks measure how a model performs on a fixed task with no adversary.
+        Concord measures multi-agent equilibria: when does a model hold a coalition, when does it
+        defect, when does its persona drive different play than its capability would suggest.
+        Useful when picking a model for systems where several agents talk to each other — which
+        is where production LLM agent stacks are headed.
+      </p>
+
+      <h2>Methodology caveats</h2>
+      <ul>
+        <li>The current corpus is {summary.matches_total} matches with uneven model coverage. Several rows are low-N (≤3 matches) and have wide error bars; treat them as directional only.</li>
+        <li>Concord persona assignments are randomized but the persona shapes incentive — a model assigned <code>Kingmaker</code> (win by helping someone else win) plays differently than one assigned <code>Expansionist</code>. The aggregate masks per-persona performance.</li>
+        <li>Victory rate is harsh: a model can play strong strategic moves and not win because of pre-assigned win conditions or rolls. Survival rate + territory count are softer continuous measures.</li>
+        <li>Some Concord-tracked models aren't in the ai-tracker main catalog (older versions, local dev endpoints). They show as "untracked" — the data is real but no detail page exists.</li>
+      </ul>
+    </>
+  ) : (
+    <p><em>No Concord summary file present (data/concord-summary.json). Run <code>pnpm tsx scripts/aggregate-concord-scores.ts</code> to generate.</em></p>
+  )}
+
+  <style>
+    .muted { color: var(--muted); }
+    .small { font-size: 0.88rem; }
+    .legend { display: flex; flex-wrap: wrap; gap: 0.6rem 1.2rem; align-items: baseline; margin: 1.2rem 0; padding: 0.7rem 0.9rem; background: var(--surface-soft); border-radius: 6px; font-size: 0.86rem; }
+    .legend strong { width: 100%; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); }
+    .legend code { background: rgba(0,0,0,0.04); padding: 0 0.25rem; border-radius: 3px; }
+    .caveat { color: var(--muted); }
+    .board { border-collapse: collapse; width: 100%; max-width: 720px; margin: 1.2rem 0; }
+    .board th, .board td { padding: 0.55rem 0.8rem; border-bottom: 1px solid #eef0f4; text-align: left; }
+    .board th { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); }
+    .board td.num, .board th.num { text-align: right; font-variant-numeric: tabular-nums; }
+    .model-cell { display: flex; align-items: center; gap: 0.5rem; }
+    .model-cell a { color: var(--text); text-decoration: none; font-weight: 600; }
+    .model-cell a:hover { text-decoration: underline; }
+    .untracked { color: var(--muted); font-family: ui-monospace, monospace; font-size: 0.9rem; }
+    .badge { background: #fff8e0; color: #a87000; font-size: 0.7rem; padding: 0.1rem 0.4rem; border-radius: 3px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+    tr.low-n td { color: var(--muted); }
+    tr.low-n .model-cell a { color: var(--muted); }
+  </style>
+</Base>

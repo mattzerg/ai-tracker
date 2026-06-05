@@ -1,7 +1,7 @@
 ---
 import Base from "../layouts/Base.astro";
 import ProviderMark from "../components/ProviderMark.astro";
-import { entityById, eventSlug, loadEvents } from "../lib/data.ts";
+import { dedupedEventSummary, entityById, eventSlug, loadEvents } from "../lib/data.ts";
 
 const events = loadEvents();
 const today = new Date().toISOString().slice(0, 10);
@@ -72,7 +72,7 @@ function renderEvent(e: typeof events[number]) {
             return (
               <li>
                 <strong>{e.type}</strong> · <a href={path}>{ent?.name ?? e.entity}</a>
-                — {e.summary} <a href={`/events/${slug}`} class="more">↗</a>
+                — {dedupedEventSummary(e.summary, ent?.name)} <a href={`/events/${slug}`} class="more">↗</a>
               </li>
             );
           })}
@@ -89,7 +89,7 @@ function renderEvent(e: typeof events[number]) {
             return (
               <li>
                 <code>{e.date}</code> · <strong>{e.type}</strong> · <a href={path}>{ent?.name ?? e.entity}</a>
-                — {e.summary} <a href={`/events/${slug}`} class="more">↗</a>
+                — {dedupedEventSummary(e.summary, ent?.name)} <a href={`/events/${slug}`} class="more">↗</a>
               </li>
             );
           })}
@@ -136,7 +136,7 @@ function renderEvent(e: typeof events[number]) {
               const { ent, path, slug } = renderEvent(e);
               return (
                 <li>
-                  <code>{e.date}</code> · <a href={path}>{ent?.name ?? e.entity}</a> — {e.summary}
+                  <code>{e.date}</code> · <a href={path}>{ent?.name ?? e.entity}</a> — {dedupedEventSummary(e.summary, ent?.name)}
                   {" "}<a href={`/events/${slug}`} class="more">↗</a>
                 </li>
               );

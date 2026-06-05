@@ -60,6 +60,41 @@ const TOPICS = [
 const MIN_STARS = 1000;
 const PER_TOPIC_LIMIT = 35;
 
+// Educational / list-style repos rank high on stars but aren't AI infrastructure —
+// awesome-lists, tutorials, interview prep, and курс-style content pollute the
+// candidate queue (docs/follow-ups.md "Repo candidate category mis-classification").
+// Conservative: name patterns are anchored where possible so real infra
+// (e.g. "langchain", "guidance") doesn't false-match.
+const JUNK_NAME_PATTERN = new RegExp(
+  [
+    /^awesome[-_]/, /[-_]awesome$/,
+    /^learn[-_]/, /[-_]learn$/,
+    /tutorial/, /for[-_]beginners/, /best[-_]practices?$/,
+    /checklist/, /^course[-_]/, /[-_]course$/, /interview/,
+    /roadmap/, /cheat[-_]?sheets?$/, /[-_]examples?$/, /[-_]guide$/, /^guide[-_]/,
+  ].map((r) => r.source).join("|"),
+  "i",
+);
+
+const JUNK_DESCRIPTION_PATTERN = new RegExp(
+  [
+    /curated list/, /awesome list/, /list of awesome/,
+    /collection of (links|resources|tutorials|examples|papers)/,
+    /step[- ]by[- ]step (guide|tutorial)/,
+    /interview (questions|prep)/,
+    /learning (path|roadmap)/,
+    /\bcourse\b.*\b(beginners|lessons)\b/,
+  ].map((r) => r.source).join("|"),
+  "i",
+);
+
+/** True when a repo is educational/list-style content rather than AI infrastructure. */
+export function isJunkRepo(name: string, description: string | null): boolean {
+  if (JUNK_NAME_PATTERN.test(name)) return true;
+  if (description && JUNK_DESCRIPTION_PATTERN.test(description)) return true;
+  return false;
+}
+
 function dateOnly(value: string | null): string | null {
   return value ? value.slice(0, 10) : null;
 }
@@ -181,6 +216,7 @@ export const githubRepos: Source = {
         if (r.isArchived) continue;
         if (r.stargazersCount < MIN_STARS) continue;
         if (!r.description?.trim()) continue;
+        if (isJunkRepo(r.name, r.description)) continue;
         let repo = toRepo(r, topic);
         if (seen.has(repo.id)) continue;
         try {

@@ -1,5 +1,5 @@
 ---
-import { entityById, eventSlug, loadEvents } from "../lib/data.ts";
+import { dedupedEventSummary, entityById, eventSlug, loadEvents } from "../lib/data.ts";
 import { BUILD_TIME } from "../lib/build-info.ts";
 
 interface Props {
@@ -46,6 +46,13 @@ const navLinks = [
   { href: "/tools", label: "Tools" },
   { href: "/repos", label: "Repos" },
   { href: "/changes", label: "Changes" },
+  { href: "/leaderboards", label: "Leaderboards" },
+  { href: "/explorer", label: "Explorer" },
+  { href: "/concord", label: "Concord" },
+  { href: "/guides", label: "Guides" },
+  { href: "/picker", label: "Picker" },
+  { href: "/compare", label: "Compare" },
+  { href: "/timeline", label: "Timeline" },
   { href: "/search", label: "Search" },
 ];
 const actionLinks = [
@@ -103,14 +110,14 @@ function activeFor(href: string): boolean {
       </nav>
     </header>
     {latest && latestPath && !hideLatestBanner ? (
-      <div class="latest-bar">
+      <aside class="latest-bar" aria-label="Latest tracked change">
         <span class="latest-label">Latest change</span>
         <a href={latestPath} class="latest-link">
           <strong>{latest.type.replaceAll("_", " ")}</strong>
-          <span>{latestName}: {latest.summary}</span>
+          <span>{latestName}: {dedupedEventSummary(latest.summary, latestName)}</span>
         </a>
         <span class="latest-age">{latestAge}</span>
-      </div>
+      </aside>
     ) : null}
     <div class="beta-bar">
       <strong>Public beta.</strong>
@@ -121,7 +128,7 @@ function activeFor(href: string): boolean {
       <slot />
     </main>
     <footer>
-      <p>Public data. <a href="/providers">Providers</a> · <a href="/categories">Categories</a> · <a href="/picker">Picker</a> · <a href="/compare">Compare</a> · <a href="/timeline">Timeline</a> · <a href="/llms.txt">/llms.txt</a> · <a href="/dump/all.json">/dump/all.json</a> · <a href="/feed.xml">RSS</a> · <a href="/atom.xml">Atom</a></p>
+      <p>Public data. <a href="/providers">Providers</a> · <a href="/categories">Categories</a> · <a href="/picker">Picker</a> · <a href="/compare">Compare</a> · <a href="/timeline">Timeline</a> · <a href="/llms.txt" data-agent-endpoint="llms.txt">/llms.txt</a> · <a href="/dump/all.json" data-agent-endpoint="dump">/dump/all.json</a> · <a href="/feed.xml" data-agent-endpoint="rss">RSS</a> · <a href="/atom.xml" data-agent-endpoint="atom">Atom</a></p>
       <p class="build-time">Built {buildTime} UTC.</p>
     </footer>
     <style is:global>
@@ -165,7 +172,7 @@ function activeFor(href: string): boolean {
       .latest-link span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
       .latest-link:hover { color: var(--accent-strong); }
       .latest-link strong { color: var(--accent-strong); white-space: nowrap; }
-      .latest-age { color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+      .latest-age { color: #525d72; font-variant-numeric: tabular-nums; white-space: nowrap; }
       .beta-bar { max-width: 1180px; margin: 0 auto; padding: 0.62rem 1.5rem; display: flex; gap: 0.65rem; align-items: center; color: #4f5a6d; font-size: 0.88rem; border-bottom: 1px solid var(--line); }
       .beta-bar strong { color: var(--text); white-space: nowrap; }
       .beta-bar span { flex: 1; min-width: 0; }
@@ -202,5 +209,11 @@ function activeFor(href: string): boolean {
         .beta-bar a { white-space: normal; }
       }
     </style>
+    <script>
+      // Privacy-first, agent-aware analytics. No-op unless PUBLIC_ANALYTICS_ENDPOINT
+      // is set; honors DNT + an opt-out flag. See src/lib/analytics.ts.
+      import { initAnalytics } from "../lib/analytics-client.ts";
+      initAnalytics();
+    </script>
   </body>
 </html>

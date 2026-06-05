@@ -1,0 +1,13 @@
+{
+  "date": "2026-05-15",
+  "entity": "xai__grok-code-fast-1",
+  "type": "shut_down",
+  "summary": "Grok Code Fast 1 retired by xAI \u2014 requests redirect to Grok 4.3; xAI recommends grok-build-0.1 for agentic coding.",
+  "delta": {
+    "field": "status",
+    "from": "ga",
+    "to": "retired"
+  },
+  "source": "https://docs.x.ai/developers/migration/may-15-retirement",
+  "submitted_by": "matt"
+}

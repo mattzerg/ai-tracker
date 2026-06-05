@@ -1,0 +1,44 @@
+{
+  "kind": "repo",
+  "id": "github__chromedevtools_chrome-devtools-mcp",
+  "owner": "ChromeDevTools",
+  "name": "chrome-devtools-mcp",
+  "full_name": "ChromeDevTools/chrome-devtools-mcp",
+  "description": "Chrome DevTools for coding agents",
+  "category": "mcp",
+  "language": "TypeScript",
+  "license": "Apache License 2.0",
+  "stars": 42665,
+  "forks": 2738,
+  "open_issues": 86,
+  "topics": [
+    "browser",
+    "chrome",
+    "chrome-devtools",
+    "debugging",
+    "devtools",
+    "mcp",
+    "mcp-server",
+    "puppeteer"
+  ],
+  "homepage": "https://npmjs.org/package/chrome-devtools-mcp",
+  "repo_url": "https://github.com/ChromeDevTools/chrome-devtools-mcp",
+  "package_urls": [],
+  "created_at": "2025-09-11",
+  "pushed_at": "2026-06-02",
+  "archived": false,
+  "tags": [
+    "mcp-server",
+    "typescript",
+    "browser",
+    "chrome",
+    "chrome-devtools",
+    "debugging",
+    "devtools",
+    "mcp",
+    "puppeteer"
+  ],
+  "sources": [
+    "https://github.com/ChromeDevTools/chrome-devtools-mcp"
+  ]
+}

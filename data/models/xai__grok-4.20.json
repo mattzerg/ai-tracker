@@ -25,7 +25,11 @@
   ],
   "sources": [
     "https://docs.x.ai/docs/models",
-    "https://openrouter.ai/api/v1/models"
+    "https://openrouter.ai/api/v1/models",
+    "https://www.swfte.com/ai/leaderboard"
   ],
-  "status": "ga"
+  "status": "ga",
+  "benchmarks": {
+    "arena_elo": 1496
+  }
 }

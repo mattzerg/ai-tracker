@@ -3,8 +3,8 @@ import Base from "../layouts/Base.astro";
 import { loadModels, loadRepos, loadTools } from "../lib/data.ts";
 
 // Worker endpoint resolves at runtime via PUBLIC_API_BASE; if unset, the form
-// degrades to "preview only" + GitHub-issue fallback. This means the page is
-// useful before Phase 4 ships and seamlessly upgrades after.
+// degrades to "validate + copy JSON" + a GitHub-issue fallback. The page is fully
+// useful before the submission Worker is deployed and seamlessly upgrades after.
 const apiBase = import.meta.env.PUBLIC_API_BASE ?? "";
 const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITEKEY ?? "";
 const ghIssuesUrl = import.meta.env.PUBLIC_GITHUB_ISSUES_URL ?? "";
@@ -30,9 +30,10 @@ const repoCategories = Array.from(new Set([...loadRepos().map((r) => r.category)
   </p>
   {!apiBase ? (
     <p class="banner">
-      <strong>Phase 4 in progress</strong> — the live submission API is not configured
-      for this build. The form still validates and packages the same JSON that the
-      API will receive.
+      <strong>Submissions are reviewed by hand right now.</strong> Fill in the form below —
+      it validates your entry and builds the exact JSON a reviewer needs. Then send it
+      {ghIssuesUrl ? " via the pre-filled GitHub issue" : " with the Copy JSON button"} (below).
+      Every accepted record needs an authoritative source URL.
     </p>
   ) : null}
   {submitConfigGap ? (
@@ -196,7 +197,7 @@ const repoCategories = Array.from(new Set([...loadRepos().map((r) => r.category)
     .preview { background: #0e1116; color: #d4d8e0; padding: 0.8rem 1rem; border-radius: 8px; font-size: 0.85rem; overflow-x: auto; }
     .banner { background: #fff8e0; padding: 0.6rem 0.8rem; border-left: 3px solid #d4a02a; border-radius: 6px; }
     .turnstile-stub { background: #f6f6f6; padding: 0.6rem; border: 1px dashed #ccc; border-radius: 3px; font-size: 0.8rem; color: #666; text-align: center; }
-    .turnstile-stub::before { content: "[Turnstile widget — Phase 4]"; }
+    .turnstile-stub::before { content: "Spam check appears here once live submission is enabled."; }
     .errors { background: #fff0f0; border-left: 3px solid #c33; padding: 0.5rem 0.8rem; border-radius: 3px; font-size: 0.88rem; margin-top: 0.5rem; }
     .errors ul { margin: 0; padding-left: 1.2rem; }
     .actions { display: flex; gap: 0.8rem; align-items: center; margin-top: 1rem; flex-wrap: wrap; }
@@ -365,7 +366,9 @@ const repoCategories = Array.from(new Set([...loadRepos().map((r) => r.category)
         if (errs.length === 0) {
           errBox.hidden = true;
           submitBtn.disabled = !apiBase || (apiBase && !turnstileSiteKey);
-          submitBtn.textContent = apiBase && turnstileSiteKey ? "Submit" : "Submit (Phase 4 only)";
+          submitBtn.textContent = apiBase && turnstileSiteKey
+            ? "Submit"
+            : (ghIssuesUrl ? "Use GitHub issue →" : "Copy JSON to submit →");
         } else {
           errBox.hidden = false;
           renderErrors(errs);

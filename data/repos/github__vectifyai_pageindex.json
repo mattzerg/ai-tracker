@@ -1,0 +1,52 @@
+{
+  "kind": "repo",
+  "id": "github__vectifyai_pageindex",
+  "owner": "VectifyAI",
+  "name": "PageIndex",
+  "full_name": "VectifyAI/PageIndex",
+  "description": "📑 PageIndex: Document Index for Vectorless, Reasoning-based RAG",
+  "category": "agent-framework",
+  "language": "Python",
+  "license": "MIT License",
+  "stars": 32484,
+  "forks": 2803,
+  "open_issues": 175,
+  "topics": [
+    "agentic-ai",
+    "agents",
+    "ai",
+    "ai-agents",
+    "context-engineering",
+    "information-retrieval",
+    "llm",
+    "rag",
+    "reasoning",
+    "retrieval",
+    "retrieval-augmented-generation",
+    "vector-database"
+  ],
+  "homepage": "https://pageindex.ai",
+  "repo_url": "https://github.com/VectifyAI/PageIndex",
+  "package_urls": [],
+  "created_at": "2025-04-01",
+  "pushed_at": "2026-06-02",
+  "archived": false,
+  "tags": [
+    "agentic-ai",
+    "python",
+    "agents",
+    "ai",
+    "ai-agents",
+    "context-engineering",
+    "information-retrieval",
+    "llm",
+    "rag",
+    "reasoning",
+    "retrieval",
+    "retrieval-augmented-generation",
+    "vector-database"
+  ],
+  "sources": [
+    "https://github.com/VectifyAI/PageIndex"
+  ]
+}

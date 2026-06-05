@@ -1,0 +1,13 @@
+{
+  "date": "2026-06-02",
+  "entity": "google__gemini-2.5-flash",
+  "type": "deprecated",
+  "summary": "Gemini 2.5 Flash marked deprecated \u2014 shutdown scheduled October 16, 2026. Recommended replacement: Gemini 3.5 Flash.",
+  "delta": {
+    "field": "status",
+    "from": "ga",
+    "to": "deprecated"
+  },
+  "source": "https://ai.google.dev/gemini-api/docs/deprecations",
+  "submitted_by": "matt"
+}

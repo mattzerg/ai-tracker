@@ -1,6 +1,6 @@
 # ai-tracker
 
-Public-beta, community-maintained directory + changelog for AI models, tools, and developer repos. Designed to be consumed by agents. Free to use, no signup, no ads, no SaaS pitch — contributions welcome via [SUBMITTING.md](./SUBMITTING.md).
+Public-beta directory + changelog for AI models, tools, and developer repos — designed to be consumed by agents. Free to use, no signup, no ads, no SaaS pitch. Maintained by [Zerg AI](https://zergai.com), open to community contributions via [SUBMITTING.md](./SUBMITTING.md).
 
 **Live**: <https://ai-tracker-dxu.pages.dev> · **Repo**: <https://github.com/mattzerg/ai-tracker> · **Code of Conduct**: [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md)
 
@@ -8,7 +8,7 @@ Current counts are generated on the live site and in `/llms.txt`; see `/about` f
 
 ## What it is
 
-Other directories list AI products. ai-tracker is built so an LLM agent can answer *"what changed for Claude Opus 4.7 in the last month"* or *"which agent repos should I inspect?"* without scraping HTML. Every entity has HTML, JSON, and Markdown twins; every event flows through RSS, Atom, `/dump/all.json`, `/llms.txt`, JSON-LD, and an MCP server. Auth-free, signup-free, ad-free.
+Other directories list AI products. ai-tracker is built so an LLM agent can answer *"what changed for Claude Opus 4.8 in the last month"* or *"which agent repos should I inspect?"* without scraping HTML. Every entity has HTML, JSON, and Markdown twins; every event flows through RSS, Atom, `/dump/all.json`, `/llms.txt`, JSON-LD, and an MCP server. Auth-free, signup-free, ad-free.
 
 Public beta means source-backed, not exhaustive. Ranking views are metadata slices from tracked pricing, context windows, repo stats, and cross-links; they are not universal quality benchmarks. Production decisions should still verify current provider docs.
 
@@ -101,10 +101,10 @@ See [SUBMITTING.md](./SUBMITTING.md). The `/submit` form accepts events, new mod
 | Phase | Scope | State |
 |---|---|---|
 | 0 | Repo skeleton, Astro, schemas, CF Pages | ✅ shipped |
-| 1 | Seed ~30 frontier models hand-curated | ✅ shipped (41) |
+| 1 | Seed ~30 frontier models hand-curated | ✅ shipped (44) |
 | 2 | Seed ~50 tools hand-curated, cross-ref | ✅ shipped (35) |
 | 3 | 12 ingest sources, rolling PR, source verification | ✅ shipped |
-| 4 | Worker `/submit` + `/upvote`, watchdog | ▶ code-complete, awaiting GH remote + CF Worker deploy + KV/Turnstile secrets |
+| 4 | Worker `/submit` + `/upvote`, watchdog | code-complete, awaiting CF Worker deploy + KV/Turnstile secrets |
 | 5 | `/llms.txt`, MCP, bulk dumps, robots.txt | ✅ shipped |
 | 6 | Domain + launch | pending domain pick |
 

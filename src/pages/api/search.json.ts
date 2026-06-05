@@ -24,6 +24,8 @@ export const GET: APIRoute = () => {
     license: m.license,
     input_price: m.pricing?.input_per_mtok ?? null,
     output_price: m.pricing?.output_per_mtok ?? null,
+    // Recency hint so search can rank newer models first
+    released: m.released ?? null,
   }));
   const tools = loadTools().map((t) => ({
     kind: "tool" as const,
@@ -48,6 +50,8 @@ export const GET: APIRoute = () => {
     stars: r.stars,
     archived: r.archived,
     tags: Array.from(new Set([...r.tags, ...r.topics])),
+    // Recency hint so search can rank recently-active repos first
+    pushed_at: r.pushed_at ?? null,
   }));
   const events = loadEvents().map((e) => {
     const ent = entityById(e.entity);

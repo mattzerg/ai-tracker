@@ -15,12 +15,27 @@ interface QwenRow {
   inputPerMtok: number;
   outputPerMtok: number;
   tags: string[];
+  // Qwen Max-tier models are API-only (proprietary); the numbered checkpoints
+  // are open-weights. Default stays "open-weights" when unset.
+  license?: Model["license"];
 }
 
 const KNOWN: QwenRow[] = [
   {
+    apiId: "qwen3.7-max",
+    name: "Qwen3.7 Max",
+    released: "2026-05-20",
+    contextWindow: 1_000_000,
+    outputWindow: 65_536,
+    modalities: ["text"],
+    inputPerMtok: 2.5,
+    outputPerMtok: 7.5,
+    tags: ["frontier", "long-context", "agentic-coding"],
+    license: "proprietary",
+  },
+  {
     apiId: "qwen3.5-plus-20260420",
-    name: "Qwen3.5 Plus 2026-04-20",
+    name: "Qwen3.5 Plus",
     released: "2026-04-27",
     contextWindow: 1_000_000,
     outputWindow: 65_536,
@@ -85,7 +100,7 @@ function toModel(row: QwenRow, now: Date): Model {
     context_window: row.contextWindow,
     output_window: row.outputWindow,
     modalities: row.modalities,
-    license: "open-weights",
+    license: row.license ?? "open-weights",
     pricing: {
       input_per_mtok: row.inputPerMtok,
       output_per_mtok: row.outputPerMtok,

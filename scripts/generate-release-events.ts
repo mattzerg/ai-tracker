@@ -4,7 +4,7 @@
 
 import { writeFileSync, existsSync, mkdirSync } from "node:fs";
 import { join, resolve } from "node:path";
-import { loadEvents, loadModels, loadTools } from "../src/lib/data.ts";
+import { loadEvents, loadModels, loadRepos, loadTools } from "../src/lib/data.ts";
 
 const ROOT = resolve(import.meta.dirname, "..");
 const EVENTS_DIR = join(ROOT, "data", "events");
@@ -19,6 +19,11 @@ function toolSummary(name: string, vendor: string, category: string): string {
   return `${name} released by ${vendor} (${category}).`;
 }
 
+function repoSummary(fullName: string, category: string, language: string | null): string {
+  const lang = language ? `, ${language}` : "";
+  return `${fullName} first published on GitHub (${category}${lang}).`;
+}
+
 function sourceFor(model: { sources: string[] }): string {
   // Prefer first authoritative-looking URL: provider docs, blog, or homepage.
   const auth = model.sources.find(
@@ -30,6 +35,7 @@ function sourceFor(model: { sources: string[] }): string {
 function main() {
   const models = loadModels();
   const tools = loadTools();
+  const repos = loadRepos();
   const events = loadEvents();
   const existingKeys = new Set(events.map((e) => `${e.date}__${e.entity}__${e.type}`));
 
@@ -53,6 +59,12 @@ function main() {
       released: t.released ?? null,
       sources: t.sources,
       summary: toolSummary(t.name, t.vendor, t.category),
+    })),
+    ...repos.map((r) => ({
+      id: r.id,
+      released: r.created_at ?? null,
+      sources: r.sources,
+      summary: repoSummary(r.full_name, r.category, r.language),
     })),
   ];
 
@@ -94,7 +106,7 @@ function main() {
   }
 
   console.log(`\ngenerate-release-events ${dryRun ? "(dry-run)" : ""}`);
-  console.log(`  models: ${models.length} · tools: ${tools.length}`);
+  console.log(`  models: ${models.length} · tools: ${tools.length} · repos: ${repos.length}`);
   console.log(`  ${dryRun ? "would write" : "wrote"}: ${written}`);
   console.log(`  skipped (already had event): ${skipped}`);
   console.log(`  skipped (no released date): ${skippedNoRelease}`);

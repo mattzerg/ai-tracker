@@ -1,0 +1,43 @@
+---
+import Base from "../../layouts/Base.astro";
+
+const boards = [
+  { slug: "cheapest-input", title: "Cheapest input pricing", subtitle: "Lowest $/M input tokens", icon: "💵" },
+  { slug: "longest-context", title: "Longest context window", subtitle: "Most tokens per request", icon: "📜" },
+  { slug: "most-used-by-tools", title: "Most-used models", subtitle: "By tool-ecosystem adoption", icon: "🔧" },
+  { slug: "most-active-repos", title: "Most-active repos", subtitle: "Recency-weighted star score", icon: "📦" },
+  { slug: "most-shipping-providers", title: "Most-shipping providers", subtitle: "Event count, last 90 days", icon: "🚀" },
+  { slug: "influencers", title: "AI influencers", subtitle: "Curated public voices in AI", icon: "🗣️" },
+];
+---
+<Base title="Leaderboards — ai-tracker" description="Top-N rankings derived from the ai-tracker corpus: cheapest pricing, longest context, most-used models, most-active repos, most-shipping providers.">
+  <h1>Leaderboards</h1>
+  <p>
+    Top-N rankings derived from the ai-tracker corpus. All metrics computed at build time from the
+    canonical data. Machine-readable: <a href="/leaderboards.json">/leaderboards.json</a>.
+  </p>
+
+  <ul class="board-list">
+    {boards.map((b) => (
+      <li class="board-card">
+        <a href={`/leaderboards/${b.slug}`} class="card-link">
+          <span class="icon" aria-hidden="true">{b.icon}</span>
+          <div>
+            <h2>{b.title}</h2>
+            <p>{b.subtitle}</p>
+          </div>
+        </a>
+      </li>
+    ))}
+  </ul>
+
+  <style>
+    .board-list { list-style: none; padding: 0; margin: 1.5rem 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 0.8rem; }
+    .board-card { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; }
+    .card-link { display: flex; align-items: center; gap: 1rem; padding: 1rem 1.1rem; color: inherit; text-decoration: none; }
+    .card-link:hover { background: var(--surface-soft); border-radius: 8px; }
+    .icon { font-size: 1.8rem; line-height: 1; }
+    .board-card h2 { margin: 0; font-size: 1.05rem; }
+    .board-card p { margin: 0.2rem 0 0; color: var(--muted); font-size: 0.9rem; }
+  </style>
+</Base>

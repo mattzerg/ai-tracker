@@ -18,7 +18,8 @@
   "links": {},
   "tags": [],
   "sources": [
-    "https://openrouter.ai/api/v1/models"
+    "https://openrouter.ai/api/v1/models",
+    "https://docs.x.ai/developers/migration/may-15-retirement"
   ],
-  "status": "ga"
+  "status": "retired"
 }

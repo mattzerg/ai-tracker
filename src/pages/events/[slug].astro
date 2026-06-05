@@ -77,6 +77,16 @@ const isLatest = newest && eventSlug(newest) === eventSlug(event);
 
   <p class="summary">{event.summary}</p>
 
+  {event.analyst_note ? (
+    <aside class="analyst-note">
+      <header class="analyst-head">
+        <span class="analyst-label">Analyst take</span>
+        <span class="analyst-meta">{event.analyst_note.author} · <code>{event.analyst_note.date}</code></span>
+      </header>
+      <p>{event.analyst_note.text}</p>
+    </aside>
+  ) : null}
+
   {event.delta ? (
     <p class="delta">
       <strong>Change:</strong>
@@ -130,5 +140,10 @@ const isLatest = newest && eventSlug(newest) === eventSlug(event);
     nav.adjacent { display: flex; justify-content: space-between; gap: 1rem; margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #eee; font-size: 0.92rem; }
     nav.adjacent .prev { margin-right: auto; }
     nav.adjacent .next { margin-left: auto; }
+    .analyst-note { background: #fffaf2; border-left: 4px solid #d18b1f; border-radius: 4px; padding: 0.8rem 1rem; margin: 1rem 0; }
+    .analyst-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.4rem; flex-wrap: wrap; gap: 0.6rem; }
+    .analyst-label { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #d18b1f; }
+    .analyst-meta { font-size: 0.82rem; color: #6c6c6c; }
+    .analyst-note p { margin: 0; line-height: 1.55; font-size: 0.97rem; }
   </style>
 </Base>

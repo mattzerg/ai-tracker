@@ -8,8 +8,9 @@
   "category": "browser-automation",
   "language": "Python",
   "license": "MIT License",
-  "stars": 93664,
-  "forks": 10600,
+  "stars": 96862,
+  "forks": 10841,
+  "open_issues": 253,
   "topics": [
     "browser-automation",
     "agents",
@@ -26,7 +27,7 @@
     "https://pypi.org/project/browser-use/"
   ],
   "created_at": "2024-10-31",
-  "pushed_at": "2026-05-11",
+  "pushed_at": "2026-06-01",
   "archived": false,
   "tags": [
     "browser",
@@ -42,6 +43,5 @@
   ],
   "sources": [
     "https://github.com/browser-use/browser-use"
-  ],
-  "open_issues": 229
+  ]
 }

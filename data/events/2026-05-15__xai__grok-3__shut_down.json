@@ -1,0 +1,18 @@
+{
+  "date": "2026-05-15",
+  "entity": "xai__grok-3",
+  "type": "shut_down",
+  "summary": "Grok 3 retired by xAI \u2014 the slug still resolves but requests now redirect to and are billed as Grok 4.3.",
+  "delta": {
+    "field": "status",
+    "from": "ga",
+    "to": "retired"
+  },
+  "source": "https://docs.x.ai/developers/migration/may-15-retirement",
+  "submitted_by": "matt",
+  "analyst_note": {
+    "author": "Zerg AI",
+    "date": "2026-06-02",
+    "text": "xAI's retirement cycle is the most aggressive of any major provider \u2014 Grok 3 lived roughly 11 months, and the redirect-instead-of-error approach means dependents silently start paying Grok 4.3 prices. Compare Anthropic's policy of a one-year retirement floor announced in advance. If your stack pins xAI models, treat every release announcement as a deprecation notice for the previous generation."
+  }
+}

@@ -53,6 +53,8 @@ const FIELDS = [
     table.compare td.num { text-align: right; font-variant-numeric: tabular-nums; }
     table.compare th.field { width: 12rem; color: #555; font-weight: 500; }
     table.compare th.model { background: #f0f4ff; }
+    table.compare th.section { background: #f6f6f6; color: #333; font-weight: 600; padding-top: 0.9rem; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.04em; }
+    table.compare th.bench { font-family: ui-monospace, monospace; font-size: 0.85rem; font-weight: 500; color: #555; }
     .remove { background: none; border: none; color: #c33; cursor: pointer; font-size: 0.85rem; padding: 0; margin-left: 0.4rem; }
     .best { background: #f0fff4; font-weight: 600; }
   </style>
@@ -117,6 +119,30 @@ const FIELDS = [
         return bi;
       }
 
+      // Benchmark formatting matches the model detail page: fractions (≤1) render as
+      // percentages, raw scores (Arena Elo etc.) as integers, missing as em-dash.
+      function fmtBench(value) {
+        if (value == null) return "—";
+        const n = Number(value);
+        if (Number.isNaN(n)) return "—";
+        return n <= 1 ? `${(n * 100).toFixed(1)}%` : Math.round(n).toLocaleString();
+      }
+
+      // Union of benchmark keys across the selected models, ordered by how many
+      // of them publish each key (ties broken alphabetically) — the most
+      // comparable rows float to the top.
+      function benchmarkKeys(picked) {
+        const counts = new Map();
+        for (const m of picked) {
+          for (const k of Object.keys(m.benchmarks ?? {})) {
+            counts.set(k, (counts.get(k) ?? 0) + 1);
+          }
+        }
+        return [...counts.keys()].sort((a, b) =>
+          (counts.get(b) - counts.get(a)) || a.localeCompare(b)
+        );
+      }
+
       function render() {
         const ids = readUrl();
         if (!ids.length) { wrap.innerHTML = ""; empty.style.display = ""; return; }
@@ -132,7 +158,26 @@ const FIELDS = [
             `<td class="${f.num ? "num" : ""}${i === bi ? " best" : ""}">${fmt(v, f)}</td>`
           ).join("")}</tr>`;
         }).join("");
-        wrap.innerHTML = `<table class="compare">${head}<tbody>${body}</tbody></table>`;
+
+        // Benchmarks section: one aligned row per benchmark key any selected model publishes
+        const benchKeys = benchmarkKeys(picked);
+        const benchRows = benchKeys.length
+          ? `<tr><th class="section" colspan="${picked.length + 1}">Benchmarks</th></tr>` +
+            benchKeys.map((key) => {
+              const values = picked.map((m) => (m.benchmarks ?? {})[key] ?? null);
+              // Higher is always better for benchmark scores
+              let bi = -1;
+              let bv = -Infinity;
+              values.forEach((v, i) => {
+                if (v != null && Number(v) > bv) { bv = Number(v); bi = i; }
+              });
+              return `<tr><th class="field bench">${esc(key)}</th>${values.map((v, i) =>
+                `<td class="num${i === bi && values.filter((x) => x != null).length > 1 ? " best" : ""}">${fmtBench(v)}</td>`
+              ).join("")}</tr>`;
+            }).join("")
+          : "";
+
+        wrap.innerHTML = `<table class="compare">${head}<tbody>${body}${benchRows}</tbody></table>`;
         wrap.querySelectorAll(".remove").forEach((btn) => {
           btn.addEventListener("click", () => {
             const i = Number(btn.dataset.i);
@@ -148,7 +193,10 @@ const FIELDS = [
         const cur = readUrl();
         if (cur.includes(v)) { picker.value = ""; return; }
         if (cur.length >= 6) { alert("Max 6 models. Remove one first."); picker.value = ""; return; }
-        writeUrl([...cur, v]); render(); picker.value = "";
+        const next = [...cur, v];
+        writeUrl(next); render(); picker.value = "";
+        // Measure comparison usage — count of models being compared (no PII)
+        if (window.aitrack) window.aitrack("compare_view", { models: next.length });
       });
       clearBtn.addEventListener("click", () => { writeUrl([]); render(); });
       window.addEventListener("popstate", render);

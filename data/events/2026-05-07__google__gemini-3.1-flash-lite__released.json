@@ -4,5 +4,10 @@
   "type": "released",
   "summary": "Gemini 3.1 Flash-Lite released by google. 1,048,576-token context.",
   "source": "https://ai.google.dev/gemini-api/docs/pricing",
-  "submitted_by": "ingest-bot"
+  "submitted_by": "ingest-bot",
+  "analyst_note": {
+    "author": "Zerg AI",
+    "date": "2026-05-19",
+    "text": "Flash-Lite is the cheapest 1M-context model in the tracked corpus by a wide margin — Google is pricing the long-context tier as commodity, which puts pressure on the OpenAI nano line and the Anthropic Haiku tier. If your workload is high-volume + long-context (RAG over big docs, web-corpus summarization, batch indexing), Flash-Lite is the new default. If your workload needs reasoning depth, it isn't."
+  }
 }

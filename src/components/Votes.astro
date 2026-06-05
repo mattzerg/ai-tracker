@@ -9,15 +9,17 @@
 
 interface Props {
   entityId: string;
+  /** Human-readable name for screen-reader labels; falls back to the id. */
+  entityName?: string;
 }
-const { entityId } = Astro.props;
+const { entityId, entityName } = Astro.props;
 const apiBase = import.meta.env.PUBLIC_API_BASE ?? "";
 const turnstileSiteKey = import.meta.env.PUBLIC_TURNSTILE_SITEKEY ?? "";
 ---
 <div class="votes" data-entity={entityId}>
-  <button class="vote-btn" type="button" disabled aria-label={`Upvote ${entityId}`}>
-    <span class="arrow">▲</span>
-    <span class="count">—</span>
+  <button class="vote-btn" type="button" disabled aria-label={`Upvote ${entityName ?? entityId}`}>
+    <span class="arrow" aria-hidden="true">▲</span>
+    <span class="count" aria-live="polite">—</span>
   </button>
   <span class="status muted">votes</span>
 </div>

@@ -1,0 +1,45 @@
+{
+  "kind": "model",
+  "id": "google__gemini-3.5-flash",
+  "name": "Gemini 3.5 Flash",
+  "provider": "google",
+  "released": "2026-05-19",
+  "context_window": 1048576,
+  "output_window": 65536,
+  "modalities": [
+    "text",
+    "vision",
+    "audio",
+    "video"
+  ],
+  "license": "proprietary",
+  "pricing": {
+    "input_per_mtok": 1.5,
+    "output_per_mtok": 9,
+    "as_of": "2026-06-02"
+  },
+  "links": {
+    "homepage": "https://deepmind.google/technologies/gemini/",
+    "docs": "https://ai.google.dev/gemini-api/docs/models"
+  },
+  "tags": [
+    "fast",
+    "balanced",
+    "long-context",
+    "multimodal"
+  ],
+  "sources": [
+    "https://ai.google.dev/gemini-api/docs/pricing",
+    "https://ai.google.dev/gemini-api/docs/models",
+    "https://ai.google.dev/gemini-api/docs/changelog",
+    "https://deepmind.google/models/model-cards/gemini-3-5-flash/"
+  ],
+  "status": "ga",
+  "benchmarks": {
+    "swe_bench_pro": 0.551,
+    "gpqa_diamond": 0.922,
+    "terminal_bench": 0.762,
+    "hle": 0.402,
+    "arc_agi_2": 0.721
+  }
+}

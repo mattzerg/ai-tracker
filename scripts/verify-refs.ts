@@ -97,6 +97,34 @@ for (const t of tools) {
   }
 }
 
+// Soft-warn on tool/repo overlap. Tools and repos are different entity kinds —
+// a tool is a productized surface (signup, pricing, UX); a repo is the code
+// itself. They can legitimately coexist (e.g., `claude-code` the product +
+// `anthropic/claude-code` the repo). But during initial corpus growth, many
+// repos start life duplicating an existing tool — surface those for review.
+function repoToolSlug(fullName: string): string[] {
+  // Normalize "owner/name" into the tool-id slugs that might collide.
+  const [owner, name] = fullName.toLowerCase().split("/");
+  return [
+    `${owner}-${name}`.replace(/_/g, "-"),
+    name.replace(/_/g, "-"),
+  ];
+}
+const toolIds = new Set(tools.map((t) => t.id));
+const overlaps: string[] = [];
+for (const r of repos) {
+  for (const slug of repoToolSlug(r.full_name)) {
+    if (toolIds.has(slug)) {
+      overlaps.push(`repos/${r.file} (${r.full_name}) ↔ tools/${slug}.json`);
+      break;
+    }
+  }
+}
+if (overlaps.length > 0) {
+  console.warn(`\n⚠ tool/repo overlap (${overlaps.length}) — repos that share a slug with an existing tool. Each entity is valid in isolation; flagged for review:`);
+  for (const o of overlaps) console.warn(`  · ${o}`);
+}
+
 if (errors > 0) {
   console.error(`\n${errors} reference error(s).`);
   process.exit(1);

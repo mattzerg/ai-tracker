@@ -4,5 +4,10 @@
   "type": "released",
   "summary": "Claude Opus 4.7 generally available — step-change improvement in agentic coding over Opus 4.6.",
   "source": "https://www.anthropic.com/news/claude-opus-4-7",
-  "submitted_by": "matt"
+  "submitted_by": "matt",
+  "analyst_note": {
+    "author": "Zerg AI",
+    "date": "2026-05-19",
+    "text": "The 1M-context tier matters more than the headline benchmark gains. Most production agent codebases that previously chunked or summarized can stop doing that work, which collapses an entire class of plumbing. Pricing held steady from Opus 4.6 — Anthropic is letting throughput improvements absorb the per-token cost rather than passing them through, which is the same playbook OpenAI ran on the 4o → 4.1 transition. If you're picking a model for multi-turn agent loops with long histories, this is the new default."
+  }
 }

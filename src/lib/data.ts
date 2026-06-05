@@ -1,13 +1,18 @@
 import { readdirSync, readFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { existsSync } from "node:fs";
 import {
+  concordSummarySchema,
   eventSchema,
+  influencerListSchema,
   modelSchema,
   repoCandidateQueueSchema,
   repoSchema,
   toolSchema,
+  type ConcordSummary,
   type Event,
+  type InfluencerList,
   type Model,
   type RepoCandidateQueue,
   type Repo,
@@ -63,6 +68,37 @@ export function loadTools(): Tool[] {
   });
   if (CACHE_DATA) _tools = tools;
   return [...tools];
+}
+
+let _concordSummary: ConcordSummary | null | undefined = undefined;
+let _influencerList: InfluencerList | null | undefined = undefined;
+
+export function loadInfluencers(): InfluencerList | null {
+  if (CACHE_DATA && _influencerList !== undefined) return _influencerList;
+  const path = resolve(DATA_ROOT, "influencers.json");
+  if (!existsSync(path)) {
+    if (CACHE_DATA) _influencerList = null;
+    return null;
+  }
+  const raw = JSON.parse(readFileSync(path, "utf8")) as unknown;
+  const r = influencerListSchema.safeParse(raw);
+  if (!r.success) throw new Error(`influencers.json: ${r.error.message}`);
+  if (CACHE_DATA) _influencerList = r.data;
+  return r.data;
+}
+
+export function loadConcordSummary(): ConcordSummary | null {
+  if (CACHE_DATA && _concordSummary !== undefined) return _concordSummary;
+  const path = resolve(DATA_ROOT, "concord-summary.json");
+  if (!existsSync(path)) {
+    if (CACHE_DATA) _concordSummary = null;
+    return null;
+  }
+  const raw = JSON.parse(readFileSync(path, "utf8")) as unknown;
+  const r = concordSummarySchema.safeParse(raw);
+  if (!r.success) throw new Error(`concord-summary.json: ${r.error.message}`);
+  if (CACHE_DATA) _concordSummary = r.data;
+  return r.data;
 }
 
 export function loadRepos(): Repo[] {
@@ -128,4 +164,20 @@ export function eventSlug(e: Event): string {
 
 export function entityById(id: string): Model | Tool | Repo | undefined {
   return loadModels().find((m) => m.id === id) ?? loadTools().find((t) => t.id === id) ?? loadRepos().find((r) => r.id === id);
+}
+
+/**
+ * Event summaries conventionally start with the entity name ("Claude Opus 4.8
+ * generally available — ..." / "Gemini 3.5 Flash released by google. ...").
+ * Pages that already render the entity name next to the summary should use this
+ * to strip the redundant prefix, otherwise the name appears twice in a row.
+ */
+export function dedupedEventSummary(summary: string, entityName?: string): string {
+  if (!entityName || !summary.startsWith(entityName)) return summary;
+  let rest = summary.slice(entityName.length);
+  // Strip joining phrases that restate the event type / provider, which the
+  // surrounding row already communicates via the type chip + entity link.
+  rest = rest.replace(/^\s*(released by \w+\.|generally available)?\s*[—:–-]*\s*/i, "");
+  if (!rest) return summary;
+  return rest.charAt(0).toUpperCase() + rest.slice(1);
 }

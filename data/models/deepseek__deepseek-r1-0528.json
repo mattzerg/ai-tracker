@@ -24,7 +24,13 @@
   ],
   "sources": [
     "https://openrouter.ai/api/v1/models",
-    "https://api-docs.deepseek.com/quick_start/pricing"
+    "https://api-docs.deepseek.com/quick_start/pricing",
+    "https://huggingface.co/deepseek-ai/DeepSeek-R1-0528"
   ],
-  "status": "ga"
+  "status": "ga",
+  "benchmarks": {
+    "gpqa_diamond": 0.81,
+    "aime_2025": 0.875,
+    "swe_bench_verified": 0.576
+  }
 }

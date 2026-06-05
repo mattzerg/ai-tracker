@@ -1,0 +1,13 @@
+{
+  "date": "2026-05-19",
+  "entity": "google__gemini-3.5-flash",
+  "type": "released",
+  "summary": "Gemini 3.5 Flash GA at Google I/O 2026 — near-Pro coding and reasoning at Flash-tier cost ($1.50/$9.00 per Mtok).",
+  "source": "https://ai.google.dev/gemini-api/docs/changelog",
+  "submitted_by": "matt",
+  "analyst_note": {
+    "author": "Zerg AI",
+    "date": "2026-06-02",
+    "text": "The Flash tier keeps absorbing the Pro tier's capabilities one release at a time. At $1.50/$9.00 it is 5x cheaper than Gemini 3.1 Pro on input while claiming near-Pro coding — the same compression dynamic that played out between GPT-5.4 and its mini variant. The practical effect: the 'mid-tier workhorse' price band ($1–3 input) is now the most competitive segment of the market, with Gemini 3.5 Flash, Sonnet 4.6, and Qwen3.7 Max all fighting for the same workloads."
+  }
+}

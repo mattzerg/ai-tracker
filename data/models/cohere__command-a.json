@@ -26,7 +26,12 @@
   "sources": [
     "https://openrouter.ai/api/v1/models",
     "https://docs.cohere.com/docs/models",
-    "https://cohere.com/pricing"
+    "https://cohere.com/pricing",
+    "https://cohere.com/research/papers/command-a-technical-report.pdf"
   ],
-  "status": "ga"
+  "status": "ga",
+  "benchmarks": {
+    "mmlu": 0.855,
+    "mmlu_pro": 0.712
+  }
 }

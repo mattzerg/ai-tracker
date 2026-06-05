@@ -1,0 +1,182 @@
+---
+import Base from "../layouts/Base.astro";
+import { loadModels } from "../lib/data.ts";
+import type { Model } from "../../schemas/index.ts";
+
+// Server-rendered SVG scatter plot — no client-side chart lib needed.
+// Each model gets one dot; provider determines color; click navigates to detail page.
+
+const PROVIDER_COLORS: Record<string, string> = {
+  anthropic: "#cc785c",
+  openai: "#10a37f",
+  google: "#4285f4",
+  xai: "#1a1a1a",
+  mistral: "#ff7000",
+  deepseek: "#4d6bfe",
+  meta: "#0668e1",
+  alibaba: "#ff6a00",
+  cohere: "#39594d",
+};
+
+function colorFor(provider: string): string {
+  return PROVIDER_COLORS[provider.toLowerCase()] ?? "#888";
+}
+
+const models = loadModels();
+
+// Eligible models: have both pricing.input_per_mtok and context_window.
+interface Plotted {
+  model: Model;
+  x: number; // log10 price
+  y: number; // log10 context
+}
+
+const plotted: Plotted[] = models
+  .filter((m) => m.pricing?.input_per_mtok != null && m.context_window != null)
+  .map((m) => ({
+    model: m,
+    x: Math.log10(Math.max(0.001, m.pricing!.input_per_mtok!)),
+    y: Math.log10(m.context_window!),
+  }));
+
+// Plot bounds with padding
+const W = 880;
+const H = 520;
+const PAD = { top: 20, right: 30, bottom: 60, left: 70 };
+const innerW = W - PAD.left - PAD.right;
+const innerH = H - PAD.top - PAD.bottom;
+
+const xs = plotted.map((p) => p.x);
+const ys = plotted.map((p) => p.y);
+const xMin = Math.min(...xs) - 0.3;
+const xMax = Math.max(...xs) + 0.3;
+const yMin = Math.min(...ys) - 0.2;
+const yMax = Math.max(...ys) + 0.2;
+
+function xScale(v: number): number {
+  return PAD.left + ((v - xMin) / (xMax - xMin)) * innerW;
+}
+function yScale(v: number): number {
+  return PAD.top + innerH - ((v - yMin) / (yMax - yMin)) * innerH;
+}
+
+// X-axis ticks at $0.01, $0.10, $1, $10, $100
+const xTicks = [-2, -1, 0, 1, 2]
+  .filter((t) => t >= xMin && t <= xMax)
+  .map((t) => ({ pos: xScale(t), label: t < 0 ? `$${Math.pow(10, t).toFixed(2)}` : `$${Math.pow(10, t)}` }));
+// Y-axis ticks at 10K, 100K, 1M, 10M
+const yTicks = [4, 5, 6, 7]
+  .filter((t) => t >= yMin && t <= yMax)
+  .map((t) => {
+    const v = Math.pow(10, t);
+    let label = v.toString();
+    if (v >= 1_000_000) label = `${v / 1_000_000}M`;
+    else if (v >= 1000) label = `${v / 1000}K`;
+    return { pos: yScale(t), label };
+  });
+
+const providers = Array.from(new Set(plotted.map((p) => p.model.provider))).sort();
+---
+<Base
+  title="Explorer — ai-tracker"
+  description="2D scatter plot of tracked AI models: input price (log) vs context window (log), color-coded by provider. Click any dot to open the model detail page."
+>
+  <h1>Explorer</h1>
+  <p>
+    Every model with both published pricing and a known context window, plotted on log–log axes.
+    Cheaper-to-the-left, longer-context-up. Hover for the name; click to open. Helpful for
+    spotting the price/context Pareto frontier and seeing which providers cluster where.
+  </p>
+  <p class="muted small">
+    {plotted.length} of {models.length} models shown ({models.length - plotted.length} excluded
+    for missing pricing or context). Axes: <code>log10(input $/M tokens)</code> ×
+    <code>log10(context window tokens)</code>.
+  </p>
+
+  <div class="explorer-wrap">
+    <svg viewBox={`0 0 ${W} ${H}`} class="explorer" role="img" aria-label="Models scatter plot">
+      <!-- gridlines -->
+      {xTicks.map((t) => (
+        <line x1={t.pos} y1={PAD.top} x2={t.pos} y2={PAD.top + innerH} stroke="#eef0f4" stroke-width="1" />
+      ))}
+      {yTicks.map((t) => (
+        <line x1={PAD.left} y1={t.pos} x2={PAD.left + innerW} y2={t.pos} stroke="#eef0f4" stroke-width="1" />
+      ))}
+
+      <!-- axes -->
+      <line x1={PAD.left} y1={PAD.top + innerH} x2={PAD.left + innerW} y2={PAD.top + innerH} stroke="#999" stroke-width="1" />
+      <line x1={PAD.left} y1={PAD.top} x2={PAD.left} y2={PAD.top + innerH} stroke="#999" stroke-width="1" />
+
+      <!-- x ticks + labels -->
+      {xTicks.map((t) => (
+        <>
+          <line x1={t.pos} y1={PAD.top + innerH} x2={t.pos} y2={PAD.top + innerH + 5} stroke="#999" stroke-width="1" />
+          <text x={t.pos} y={PAD.top + innerH + 20} text-anchor="middle" font-size="11" fill="#666">{t.label}</text>
+        </>
+      ))}
+      <text x={PAD.left + innerW / 2} y={H - 18} text-anchor="middle" font-size="12" fill="#555" font-weight="600">Input price per million tokens (log scale)</text>
+
+      <!-- y ticks + labels -->
+      {yTicks.map((t) => (
+        <>
+          <line x1={PAD.left - 5} y1={t.pos} x2={PAD.left} y2={t.pos} stroke="#999" stroke-width="1" />
+          <text x={PAD.left - 10} y={t.pos + 4} text-anchor="end" font-size="11" fill="#666">{t.label}</text>
+        </>
+      ))}
+      <text x={20} y={PAD.top + innerH / 2} text-anchor="middle" font-size="12" fill="#555" font-weight="600" transform={`rotate(-90, 20, ${PAD.top + innerH / 2})`}>Context window tokens (log scale)</text>
+
+      <!-- dots -->
+      {plotted.map((p) => (
+        <a href={`/models/${p.model.id}`}>
+          <circle
+            cx={xScale(p.x)}
+            cy={yScale(p.y)}
+            r="6"
+            fill={colorFor(p.model.provider)}
+            fill-opacity="0.75"
+            stroke="#fff"
+            stroke-width="1.5"
+          >
+            <title>{p.model.name} — {p.model.provider} — ${p.model.pricing!.input_per_mtok!.toFixed(2)}/M in, {p.model.context_window!.toLocaleString()} tok</title>
+          </circle>
+        </a>
+      ))}
+    </svg>
+
+    <div class="legend">
+      {providers.map((p) => (
+        <span class="legend-item">
+          <span class="swatch" style={`background: ${colorFor(p)}`} aria-hidden="true"></span>
+          {p}
+        </span>
+      ))}
+    </div>
+  </div>
+
+  <h2>How to read the plot</h2>
+  <ul>
+    <li><strong>Lower-left dots are cheapest with smallest context</strong> — fine for narrow tasks where neither price nor context window matters.</li>
+    <li><strong>Lower-right dots are the cheap long-context tier</strong> — most-shipped recently (Gemini Flash-Lite, GPT-5.5 nano).</li>
+    <li><strong>Upper-right is the frontier tier</strong> — premium pricing AND huge context (Claude Opus 4.7, GPT-5.5 Pro). Pick here when you need both reasoning depth and document scale.</li>
+    <li><strong>Upper-left is the historical "good but small" zone</strong> — small context window at modest price, mostly older models.</li>
+  </ul>
+
+  <p class="muted small">
+    Limitations: log–log scale compresses big differences. Output pricing not shown. No quality
+    or capability axis. For richer comparison: <a href="/picker">/picker</a> (axis-based
+    decision tool) · <a href="/compare">/compare</a> (side-by-side) ·
+    <a href="/leaderboards">/leaderboards</a> (top-N by single axes).
+  </p>
+
+  <style>
+    .muted { color: var(--muted); }
+    .small { font-size: 0.88rem; }
+    .explorer-wrap { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 1rem; margin: 1.5rem 0; }
+    .explorer { width: 100%; height: auto; display: block; }
+    .explorer circle { cursor: pointer; transition: r 0.12s ease; }
+    .explorer circle:hover { r: 9; }
+    .legend { display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; padding-top: 0.8rem; border-top: 1px solid #eef0f4; margin-top: 0.6rem; font-size: 0.85rem; }
+    .legend-item { display: inline-flex; align-items: center; gap: 0.35rem; }
+    .swatch { width: 0.85rem; height: 0.85rem; border-radius: 50%; display: inline-block; border: 1px solid rgba(0,0,0,0.1); }
+  </style>
+</Base>

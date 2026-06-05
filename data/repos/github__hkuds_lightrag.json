@@ -1,0 +1,46 @@
+{
+  "kind": "repo",
+  "id": "github__hkuds_lightrag",
+  "owner": "HKUDS",
+  "name": "LightRAG",
+  "full_name": "HKUDS/LightRAG",
+  "description": "[EMNLP2025] \"LightRAG: Simple and Fast Retrieval-Augmented Generation\"",
+  "category": "rag",
+  "language": "Python",
+  "license": "MIT License",
+  "stars": 36106,
+  "forks": 5105,
+  "open_issues": 224,
+  "topics": [
+    "genai",
+    "gpt",
+    "gpt-4",
+    "graphrag",
+    "knowledge-graph",
+    "large-language-models",
+    "llm",
+    "rag",
+    "retrieval-augmented-generation"
+  ],
+  "homepage": "https://arxiv.org/abs/2410.05779",
+  "repo_url": "https://github.com/HKUDS/LightRAG",
+  "package_urls": [],
+  "created_at": "2024-10-02",
+  "pushed_at": "2026-06-03",
+  "archived": false,
+  "tags": [
+    "rag",
+    "python",
+    "genai",
+    "gpt",
+    "gpt-4",
+    "graphrag",
+    "knowledge-graph",
+    "large-language-models",
+    "llm",
+    "retrieval-augmented-generation"
+  ],
+  "sources": [
+    "https://github.com/HKUDS/LightRAG"
+  ]
+}

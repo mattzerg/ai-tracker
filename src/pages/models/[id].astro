@@ -3,7 +3,7 @@ import Base from "../../layouts/Base.astro";
 import JsonLd from "../../components/JsonLd.astro";
 import ProviderMark from "../../components/ProviderMark.astro";
 import Votes from "../../components/Votes.astro";
-import { eventsForEntity, loadModels, loadTools } from "../../lib/data.ts";
+import { eventsForEntity, loadConcordSummary, loadModels, loadTools } from "../../lib/data.ts";
 import { freshnessForEntity } from "../../lib/freshness.ts";
 import { requireSite } from "../../lib/site.ts";
 
@@ -13,6 +13,8 @@ export function getStaticPaths() {
 
 const { model } = Astro.props;
 const events = eventsForEntity(model.id);
+const concordSummary = loadConcordSummary();
+const concordEntry = concordSummary?.models.find((m) => m.tracker_model_id === model.id) ?? null;
 const usedBy = loadTools()
   .filter((t) => t.built_on_models.includes(model.id))
   .sort((a, b) => a.name.localeCompare(b.name));
@@ -20,7 +22,7 @@ const site = requireSite(Astro.site);
 const canonicalUrl = new URL(`/models/${model.id}`, site).toString();
 const priceBit =
   model.pricing?.input_per_mtok != null && model.pricing?.output_per_mtok != null
-    ? ` $${model.pricing.input_per_mtok}/M in · $${model.pricing.output_per_mtok}/M out.`
+    ? ` $${model.pricing.input_per_mtok}/Mtok input · $${model.pricing.output_per_mtok}/Mtok output.`
     : "";
 const ctxBit = model.context_window ? ` ${(model.context_window / 1000).toLocaleString()}K context.` : "";
 const description = `${model.name} by ${model.provider}.${ctxBit}${priceBit}`.trim();
@@ -168,14 +170,14 @@ const freshness = freshnessForEntity(model, events);
         <ProviderMark provider={model.provider} />
         <strong><a href={`/providers/${model.provider}`}>{model.provider}</a></strong>
         · {model.released ? `released ${model.released}` : "release date n/a"}
-        · {model.status}
+        · {model.status === "ga" ? "ga" : <span class={`status-badge status-${model.status}`}>{model.status}</span>}
         · {model.license}
       </p>
       <div class="tag-row">
         {model.modalities.map((m) => <span>{m}</span>)}
         {model.tags.slice(0, 8).map((t) => <span>{t}</span>)}
       </div>
-      <Votes entityId={model.id} />
+      <Votes entityId={model.id} entityName={model.name} />
     </div>
     <aside class="quick panel">
       <div>
@@ -194,9 +196,9 @@ const freshness = freshnessForEntity(model, events);
         <div>
           <span>Price</span>
           <strong>
-            {model.pricing.input_per_mtok != null ? `$${model.pricing.input_per_mtok}/M in` : "input n/a"}
+            {model.pricing.input_per_mtok != null ? `$${model.pricing.input_per_mtok}/Mtok in` : "input n/a"}
             {" · "}
-            {model.pricing.output_per_mtok != null ? `$${model.pricing.output_per_mtok}/M out` : "output n/a"}
+            {model.pricing.output_per_mtok != null ? `$${model.pricing.output_per_mtok}/Mtok out` : "output n/a"}
           </strong>
           <small>as of {model.pricing.as_of}</small>
         </div>
@@ -241,12 +243,50 @@ const freshness = freshnessForEntity(model, events);
     </div>
   </section>
 
+  {concordEntry ? (
+    <section class="panel content-panel">
+      <h2>Concord benchmark</h2>
+      <p class="muted small">
+        Multi-agent strategic-game performance from <a href="/concord">Concord</a> ({concordEntry.matches_played} matches as <code>{concordEntry.concord_model_id}</code>). Different from single-agent benchmarks — measures how this model plays against other LLMs.
+      </p>
+      <div class="concord-grid">
+        <div class="concord-stat">
+          <span class="concord-label">Victory rate</span>
+          <strong>{(concordEntry.victory_rate * 100).toFixed(0)}%</strong>
+        </div>
+        <div class="concord-stat">
+          <span class="concord-label">Survival rate</span>
+          <strong>{(concordEntry.survival_rate * 100).toFixed(0)}%</strong>
+        </div>
+        <div class="concord-stat">
+          <span class="concord-label">Avg territories</span>
+          <strong>{concordEntry.avg_territories_at_end.toFixed(1)}</strong>
+        </div>
+      </div>
+      {concordEntry.matches_played < 5 ? (
+        <p class="caveat">Low-N caveat: {concordEntry.matches_played} matches isn't enough for high confidence. Treat as directional.</p>
+      ) : null}
+    </section>
+  ) : null}
+
   {model.benchmarks && Object.keys(model.benchmarks).length > 0 ? (
     <section class="panel content-panel">
       <h2>Benchmarks</h2>
-      <ul class="benchmarks">
-        {Object.entries(model.benchmarks).map(([k, v]) => <li>{k}: {v}</li>)}
-      </ul>
+      <p class="muted small">Per-benchmark scores as reported by the provider or independent evaluators. Fractions (≤1) shown as percentages; raw scores shown as-is. Arena Elo is an integer.</p>
+      <table class="benchmarks-table">
+        <thead><tr><th scope="col">Benchmark</th><th scope="col">Score</th></tr></thead>
+        <tbody>
+          {Object.entries(model.benchmarks).map(([k, v]) => {
+            const display = v > 1 ? v.toLocaleString() : `${(v * 100).toFixed(1)}%`;
+            return (
+              <tr>
+                <td><code>{k}</code></td>
+                <td class="bench-score">{display}</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
     </section>
   ) : null}
 
@@ -303,6 +343,20 @@ const freshness = freshnessForEntity(model, events);
   </script>
 
   <style>
+    .status-badge { display: inline-flex; padding: 0.1rem 0.45rem; border-radius: 999px; font-size: 0.74rem; font-weight: 750; text-transform: uppercase; letter-spacing: 0.04em; vertical-align: middle; }
+    .status-deprecated { background: #fef3c7; color: #92400e; }
+    .status-retired { background: #e5e7eb; color: #4b5563; }
+    .status-preview { background: #dbeafe; color: #1e40af; }
+    .concord-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.7rem; margin: 0.8rem 0; }
+    .concord-stat { padding: 0.7rem 0.9rem; border: 1px solid var(--line); border-radius: 6px; background: var(--surface-soft); }
+    .concord-stat .concord-label { display: block; color: var(--muted); font-size: 0.74rem; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 700; margin-bottom: 0.25rem; }
+    .concord-stat strong { font-size: 1.4rem; font-variant-numeric: tabular-nums; color: var(--text); }
+    .caveat { color: var(--muted); font-size: 0.85rem; font-style: italic; }
+    .benchmarks-table { border-collapse: collapse; margin-top: 0.6rem; min-width: 280px; }
+    .benchmarks-table th, .benchmarks-table td { padding: 0.4rem 0.8rem; border-bottom: 1px solid #eef0f4; text-align: left; }
+    .benchmarks-table th { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); font-weight: 700; }
+    .benchmarks-table .bench-score { font-variant-numeric: tabular-nums; font-weight: 600; }
+    .small { font-size: 0.85rem; }
     .back { margin: 0 0 1rem; }
     .model-hero { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 1.25rem; align-items: start; padding: 1rem 0 1.5rem; }
     .model-hero > *, .dev-grid > * { min-width: 0; }

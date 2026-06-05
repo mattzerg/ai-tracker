@@ -8,8 +8,9 @@
   "category": "agent-framework",
   "language": "Python",
   "license": "Creative Commons Attribution 4.0 International",
-  "stars": 57991,
-  "forks": 8744,
+  "stars": 58655,
+  "forks": 8855,
+  "open_issues": 878,
   "topics": [
     "agents",
     "multi-agent",
@@ -47,6 +48,5 @@
   ],
   "sources": [
     "https://github.com/microsoft/autogen"
-  ],
-  "open_issues": 821
+  ]
 }

@@ -1,0 +1,150 @@
+---
+import Base from "../../layouts/Base.astro";
+import { loadInfluencers } from "../../lib/data.ts";
+
+const list = loadInfluencers();
+const influencers = list?.influencers ?? [];
+
+// Group by category for the secondary view.
+const byCategory = new Map<string, typeof influencers>();
+for (const inf of influencers) {
+  if (!byCategory.has(inf.category)) byCategory.set(inf.category, []);
+  byCategory.get(inf.category)!.push(inf);
+}
+
+// Sort by twitter_followers desc for the main leaderboard (null → bottom).
+const sortedByFollowers = [...influencers].sort(
+  (a, b) => (b.twitter_followers ?? -1) - (a.twitter_followers ?? -1),
+);
+
+function fmtFollowers(n: number | null | undefined): string {
+  if (n == null) return "—";
+  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
+  if (n >= 1_000) return `${Math.round(n / 1_000)}K`;
+  return n.toLocaleString();
+}
+
+const CATEGORY_LABEL: Record<string, string> = {
+  builder: "Builders",
+  researcher: "Researchers",
+  founder: "Founders",
+  operator: "Operators",
+  commentator: "Commentators",
+  educator: "Educators",
+};
+---
+<Base
+  title="AI influencers — ai-tracker leaderboard"
+  description="Curated list of widely-cited public voices in AI: founders, researchers, builders, educators, commentators. v0 — opinionated starting list, follower counts are point-in-time estimates."
+>
+  <p class="breadcrumb"><a href="/leaderboards">← All leaderboards</a></p>
+  <h1>AI influencers</h1>
+  <p>
+    A starting curation of widely-cited public voices in AI — founders shipping frontier models,
+    researchers publishing the substrate work, builders making practical tooling, educators
+    teaching the craft, and commentators framing the debate.
+  </p>
+  <p class="muted small">
+    <strong>v0 caveats:</strong> This is an opinionated starting list of {influencers.length} names,
+    not a definitive ranking. Twitter follower counts are point-in-time estimates
+    ({influencers[0]?.followers_as_of ?? "2026-05-19"}) and shouldn't be read as a quality
+    signal — they reflect audience scale, not influence-per-thought. Curation by Zerg; corrections
+    welcomed via <a href="/submit">/submit</a>. Machine-readable: <a href="/influencers.json">/influencers.json</a>.
+  </p>
+
+  <h2>By audience scale</h2>
+  <p class="muted small">Sorted by Twitter follower count. Categories color-coded.</p>
+  <ol class="board">
+    {sortedByFollowers.map((inf, i) => (
+      <li class="row">
+        <span class="rank">{i + 1}</span>
+        <div class="primary-block">
+          <div class="name-line">
+            <strong>{inf.name}</strong>
+            {inf.handle ? <span class="handle">@{inf.handle}</span> : null}
+          </div>
+          <div class="role-line">
+            <span class="category" data-cat={inf.category}>{inf.category}</span>
+            <span class="role">{inf.role}</span>
+          </div>
+          <p class="known-for">{inf.known_for}</p>
+        </div>
+        <div class="metrics">
+          <div class="metric">
+            <strong>{fmtFollowers(inf.twitter_followers)}</strong>
+            <span>X</span>
+          </div>
+          {inf.github_followers != null ? (
+            <div class="metric">
+              <strong>{fmtFollowers(inf.github_followers)}</strong>
+              <span>GH</span>
+            </div>
+          ) : null}
+        </div>
+      </li>
+    ))}
+  </ol>
+
+  <h2>By category</h2>
+  <div class="cat-grid">
+    {Array.from(byCategory.entries()).sort((a, b) => b[1].length - a[1].length).map(([cat, group]) => (
+      <section class="cat-block">
+        <h3>
+          <span class="category" data-cat={cat}>{cat}</span>
+          {CATEGORY_LABEL[cat] ?? cat}
+          <span class="count">{group.length}</span>
+        </h3>
+        <ul>
+          {group.sort((a, b) => (b.twitter_followers ?? -1) - (a.twitter_followers ?? -1)).map((inf) => (
+            <li>
+              <strong>{inf.name}</strong>
+              {inf.handle ? <span class="handle"> · @{inf.handle}</span> : null}
+              {" — "}<span class="muted">{inf.role}</span>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))}
+  </div>
+
+  <h2>Notes on methodology</h2>
+  <ul>
+    <li><strong>Inclusion criterion (v0):</strong> public-facing AI voice that a working AI builder or researcher would plausibly already follow. Bias toward English-language Twitter/X presence — significant blind spot for Chinese AI ecosystem and non-Twitter platforms.</li>
+    <li><strong>Follower counts are scale indicators, not quality.</strong> A 1M-follower podcaster and a 30K-follower lead engineer at a frontier lab can have very different signal-to-noise ratios.</li>
+    <li><strong>Category boundaries are fuzzy.</strong> Many people fit multiple categories (Karpathy is a builder AND educator AND ex-researcher); we picked the primary one for current output.</li>
+    <li><strong>Big known gaps:</strong> founders of newer labs (Inflection, Mistral, Cohere founders not listed), DeepSeek + Qwen lead authors, Chinese-ecosystem voices, OSS-maintainer-only voices (e.g., specific LangChain / vLLM maintainers).</li>
+  </ul>
+
+  <style>
+    .breadcrumb { font-size: 0.88rem; margin-bottom: 0.5rem; }
+    .breadcrumb a { color: var(--muted); text-decoration: none; }
+    .muted { color: var(--muted); }
+    .small { font-size: 0.88rem; }
+    .board { list-style: none; padding: 0; margin: 1.5rem 0; display: flex; flex-direction: column; gap: 0.5rem; }
+    .row { display: grid; grid-template-columns: 2.4rem minmax(0, 1fr) auto; gap: 1rem; align-items: start; padding: 0.85rem 1rem; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); }
+    .rank { font-variant-numeric: tabular-nums; font-weight: 700; color: var(--muted); text-align: right; padding-top: 0.1rem; }
+    .name-line { display: flex; align-items: baseline; gap: 0.5rem; flex-wrap: wrap; }
+    .name-line strong { font-size: 1.02rem; }
+    .handle { font-family: ui-monospace, monospace; color: var(--muted); font-size: 0.88rem; }
+    .role-line { display: flex; gap: 0.5rem; align-items: baseline; flex-wrap: wrap; margin-top: 0.25rem; }
+    .role { color: var(--muted); font-size: 0.9rem; }
+    .known-for { margin: 0.45rem 0 0; font-size: 0.9rem; line-height: 1.5; color: #4f5a6d; }
+    .category { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.1rem 0.4rem; border-radius: 3px; background: #eef0f4; color: #45516a; }
+    .category[data-cat="founder"] { background: #fff0e6; color: #b3530a; }
+    .category[data-cat="researcher"] { background: #e9f0ff; color: #1c3d8f; }
+    .category[data-cat="builder"] { background: #e8f6ed; color: #1a7f37; }
+    .category[data-cat="educator"] { background: #f7eaff; color: #6f2f9e; }
+    .category[data-cat="commentator"] { background: #fff8e0; color: #a87000; }
+    .category[data-cat="operator"] { background: #e6f5f5; color: #266060; }
+    .metrics { display: flex; gap: 0.6rem; }
+    .metric { padding: 0.3rem 0.5rem; border-radius: 4px; background: var(--surface-soft); text-align: center; min-width: 3rem; }
+    .metric strong { display: block; font-variant-numeric: tabular-nums; font-size: 0.95rem; }
+    .metric span { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+    .cat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; margin: 1.2rem 0; }
+    .cat-block { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 0.9rem 1rem; }
+    .cat-block h3 { margin: 0 0 0.6rem; font-size: 0.95rem; display: flex; align-items: center; gap: 0.5rem; }
+    .cat-block h3 .count { background: #1a4cff; color: #fff; font-size: 0.7rem; padding: 0.05rem 0.42rem; border-radius: 999px; font-weight: 600; }
+    .cat-block ul { padding-left: 1.1rem; margin: 0; font-size: 0.9rem; }
+    .cat-block li { margin: 0.35rem 0; }
+  </style>
+</Base>

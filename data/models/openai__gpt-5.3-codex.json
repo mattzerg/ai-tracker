@@ -26,7 +26,14 @@
   ],
   "sources": [
     "https://openrouter.ai/api/v1/models",
-    "https://platform.openai.com/docs/models"
+    "https://platform.openai.com/docs/models",
+    "https://openai.com/index/introducing-gpt-5-3-codex/"
   ],
-  "status": "ga"
+  "status": "ga",
+  "benchmarks": {
+    "swe_bench_verified": 0.8,
+    "swe_bench_pro": 0.568,
+    "terminal_bench": 0.773,
+    "osworld": 0.647
+  }
 }

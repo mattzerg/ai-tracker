@@ -1,0 +1,43 @@
+{
+  "kind": "repo",
+  "id": "github__lightpanda-io_browser",
+  "owner": "lightpanda-io",
+  "name": "browser",
+  "full_name": "lightpanda-io/browser",
+  "description": "Lightpanda: the headless browser designed for AI and automation",
+  "category": "browser-automation",
+  "language": "Zig",
+  "license": "GNU Affero General Public License v3.0",
+  "stars": 30757,
+  "forks": 1365,
+  "open_issues": 96,
+  "topics": [
+    "browser",
+    "browser-automation",
+    "cdp",
+    "headless",
+    "playwright",
+    "puppeteer",
+    "zig",
+    "lightpanda"
+  ],
+  "homepage": "https://lightpanda.io",
+  "repo_url": "https://github.com/lightpanda-io/browser",
+  "package_urls": [],
+  "created_at": "2023-02-07",
+  "pushed_at": "2026-06-03",
+  "archived": false,
+  "tags": [
+    "browser-automation",
+    "zig",
+    "browser",
+    "cdp",
+    "headless",
+    "playwright",
+    "puppeteer",
+    "lightpanda"
+  ],
+  "sources": [
+    "https://github.com/lightpanda-io/browser"
+  ]
+}

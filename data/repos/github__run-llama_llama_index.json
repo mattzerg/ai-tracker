@@ -8,8 +8,9 @@
   "category": "rag",
   "language": "Python",
   "license": "MIT License",
-  "stars": 49374,
-  "forks": 7399,
+  "stars": 49866,
+  "forks": 7500,
+  "open_issues": 415,
   "topics": [
     "llm",
     "rag",
@@ -28,7 +29,7 @@
     "https://pypi.org/project/llama-index/"
   ],
   "created_at": "2022-11-02",
-  "pushed_at": "2026-05-11",
+  "pushed_at": "2026-05-29",
   "archived": false,
   "tags": [
     "rag",
@@ -45,6 +46,5 @@
   ],
   "sources": [
     "https://github.com/run-llama/llama_index"
-  ],
-  "open_issues": 351
+  ]
 }

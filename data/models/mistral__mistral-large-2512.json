@@ -25,7 +25,11 @@
   ],
   "sources": [
     "https://openrouter.ai/api/v1/models",
-    "https://docs.mistral.ai/getting-started/models/models_overview/"
+    "https://docs.mistral.ai/getting-started/models/models_overview/",
+    "https://docs.mistral.ai/getting-started/models/benchmark/"
   ],
-  "status": "ga"
+  "status": "ga",
+  "benchmarks": {
+    "gpqa_diamond": 0.439
+  }
 }

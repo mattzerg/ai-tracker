@@ -1,137 +1,163 @@
 ---
 import Base from "../layouts/Base.astro";
-import { entityById, loadEvents } from "../lib/data.ts";
+import ProviderMark from "../components/ProviderMark.astro";
+import { dedupedEventSummary, entityById, eventSlug, loadEvents } from "../lib/data.ts";
 
-// ISO week computation: returns "YYYY-Www" + the Monday-anchored start date.
-function isoWeekKey(dateStr: string): { key: string; weekStart: string } {
-  const d = new Date(dateStr + "T00:00:00Z");
-  const day = d.getUTCDay() || 7; // Mon=1..Sun=7
-  // Anchor to Monday of the week.
-  const monday = new Date(d);
-  monday.setUTCDate(d.getUTCDate() - (day - 1));
-  // Compute ISO week per https://en.wikipedia.org/wiki/ISO_week_date
-  const target = new Date(d.valueOf());
-  target.setUTCDate(target.getUTCDate() + 4 - day);
-  const yearStart = new Date(Date.UTC(target.getUTCFullYear(), 0, 1));
-  const week = Math.ceil(((target.valueOf() - yearStart.valueOf()) / 86400000 + 1) / 7);
-  const key = `${target.getUTCFullYear()}-W${String(week).padStart(2, "0")}`;
-  return { key, weekStart: monday.toISOString().slice(0, 10) };
+const events = loadEvents();
+
+// ISO-week bucketing: a "week" is Mon-Sun, labeled by its Monday's YYYY-MM-DD.
+function isoWeekStart(dateStr: string): string {
+  const d = new Date(`${dateStr}T00:00:00Z`);
+  const dayOfWeek = d.getUTCDay(); // 0=Sun, 1=Mon, ..., 6=Sat
+  const offsetToMonday = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+  d.setUTCDate(d.getUTCDate() + offsetToMonday);
+  return d.toISOString().slice(0, 10);
+}
+
+function isoWeekEnd(weekStart: string): string {
+  const d = new Date(`${weekStart}T00:00:00Z`);
+  d.setUTCDate(d.getUTCDate() + 6);
+  return d.toISOString().slice(0, 10);
 }
 
 interface WeekBucket {
-  key: string;
   weekStart: string;
-  events: Array<{ event: ReturnType<typeof loadEvents>[number]; entityName: string; entityPath: string }>;
+  weekEnd: string;
+  events: typeof events;
+  byType: Map<string, typeof events>;
+  byProvider: Map<string, typeof events>;
 }
 
-function entityPath(id: string): string {
+function entityProvider(id: string): string {
   const ent = entityById(id);
-  if (ent?.kind === "tool") return `/tools/${id}`;
-  if (ent?.kind === "repo") return `/repos/${id}`;
-  if (ent?.kind === "model") return `/models/${id}`;
-  console.warn(`event references unknown entity: ${id}`);
-  return `#${id}`;
+  if (!ent) return "—";
+  if (ent.kind === "model") return (ent as { provider: string }).provider;
+  if (ent.kind === "tool") return (ent as { vendor: string }).vendor;
+  return (ent as { owner: string }).owner ?? "—";
 }
 
-const events = loadEvents(); // newest first
-const buckets = new Map<string, WeekBucket>();
+function pathFor(entityId: string): string {
+  const ent = entityById(entityId);
+  if (ent?.kind === "tool") return `/tools/${entityId}`;
+  if (ent?.kind === "repo") return `/repos/${entityId}`;
+  return `/models/${entityId}`;
+}
+
+const weekMap = new Map<string, WeekBucket>();
 for (const e of events) {
-  const { key, weekStart } = isoWeekKey(e.date);
-  if (!buckets.has(key)) buckets.set(key, { key, weekStart, events: [] });
-  const ent = entityById(e.entity);
-  buckets.get(key)!.events.push({
-    event: e,
-    entityName: ent?.name ?? e.entity,
-    entityPath: entityPath(e.entity),
-  });
+  const ws = isoWeekStart(e.date);
+  if (!weekMap.has(ws)) {
+    weekMap.set(ws, { weekStart: ws, weekEnd: isoWeekEnd(ws), events: [], byType: new Map(), byProvider: new Map() });
+  }
+  const bucket = weekMap.get(ws)!;
+  bucket.events.push(e);
+  if (!bucket.byType.has(e.type)) bucket.byType.set(e.type, []);
+  bucket.byType.get(e.type)!.push(e);
+  const p = entityProvider(e.entity);
+  if (!bucket.byProvider.has(p)) bucket.byProvider.set(p, []);
+  bucket.byProvider.get(p)!.push(e);
 }
 
-const weeksAll = Array.from(buckets.values()).sort((a, b) => b.weekStart.localeCompare(a.weekStart));
-const weeksRecent = weeksAll.slice(0, 4);
-const weeksRest = weeksAll.slice(4);
+const weeks = Array.from(weekMap.values()).sort((a, b) => b.weekStart.localeCompare(a.weekStart));
 
-function fmtRange(weekStart: string): string {
-  const start = new Date(weekStart + "T00:00:00Z");
-  const end = new Date(start);
-  end.setUTCDate(start.getUTCDate() + 6);
-  const m = (d: Date) => d.toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "UTC" });
-  return `${m(start)} – ${m(end)}, ${end.getUTCFullYear()}`;
-}
+// Cap displayed weeks; rest available via /timeline + /feed.xml
+const VISIBLE_WEEKS = 16;
+const visible = weeks.slice(0, VISIBLE_WEEKS);
+const totalEventsVisible = visible.reduce((acc, w) => acc + w.events.length, 0);
 ---
-<Base title="Changes by week — ai-tracker" description="Every tracked AI model, tool, and repo event, grouped by ISO week.">
-  <section class="changes-hero">
-    <div>
-      <p class="eyebrow">Changelog</p>
-      <h1>Changes by week</h1>
-      <p>{events.length} source-backed events across {weeksAll.length} weeks. Newest first.</p>
-    </div>
-    <div class="changes-links">
-      <a href="/timeline">Timeline</a>
-      <a href="/feed.xml">RSS</a>
-      <a href="/atom.xml">Atom</a>
-      <a href="/dump/events-30d.json">30d JSON</a>
-    </div>
-  </section>
+<Base
+  title="Changes — ai-tracker"
+  description="Weekly ISO-week buckets of every tracked change in AI models, tools, and developer repos."
+>
+  <h1>Changes</h1>
+  <p>
+    Every tracked change grouped by ISO week (Mon–Sun). Different from
+    <a href="/news">/news</a> (today / 7d / 30d snapshot) and
+    <a href="/timeline">/timeline</a> (flat chronology) — this view answers
+    <em>"how much shipped in week W, and what shape was the activity?"</em>
+  </p>
+  <p class="muted">
+    Showing the last {visible.length} weeks ({totalEventsVisible} events) of {events.length} total across {weeks.length} weeks.
+    Older history: <a href="/timeline">/timeline</a> · machine-readable: <a href="/changes.json">/changes.json</a> · <a href="/feed.xml">RSS</a> · <a href="/atom.xml">Atom</a>.
+  </p>
 
-  <h2>Last 4 weeks</h2>
-  {weeksRecent.length === 0 ? (
-    <p><em>No events yet.</em></p>
-  ) : weeksRecent.map((w) => (
-    <section class="week recent">
-      <h3>{w.key} — {fmtRange(w.weekStart)} <span class="count">({w.events.length})</span></h3>
-      <ul>
-        {w.events.map(({ event, entityName, entityPath }) => (
-          <li>
-            <time datetime={event.date}>{event.date}</time>
-            <strong>{event.type.replaceAll("_", " ")}</strong>
-            <span><a href={entityPath}>{entityName}</a> — {event.summary}</span>
-          </li>
-        ))}
-      </ul>
-    </section>
-  ))}
-
-  {weeksRest.length > 0 ? (
-    <>
-      <h2>Earlier</h2>
-      {weeksRest.map((w) => (
+  <div class="weeks">
+    {visible.map((w) => {
+      const typeEntries = Array.from(w.byType.entries()).sort((a, b) => b[1].length - a[1].length);
+      const providerEntries = Array.from(w.byProvider.entries()).sort((a, b) => b[1].length - a[1].length);
+      return (
         <section class="week">
-          <h3>{w.key} — {fmtRange(w.weekStart)} <span class="count">({w.events.length})</span></h3>
-          <ul>
-            {w.events.map(({ event, entityName, entityPath }) => (
-              <li>
-                <time datetime={event.date}>{event.date}</time>
-                <strong>{event.type.replaceAll("_", " ")}</strong>
-                <span><a href={entityPath}>{entityName}</a> — {event.summary}</span>
-              </li>
-            ))}
+          <header class="week-head">
+            <h2>
+              <code>{w.weekStart}</code> → <code>{w.weekEnd}</code>
+              <span class="count">{w.events.length}</span>
+            </h2>
+            <div class="week-summary">
+              <span class="summary-label">types</span>
+              {typeEntries.map(([type, group]) => (
+                <span class="chip">{type} <strong>{group.length}</strong></span>
+              ))}
+            </div>
+            <div class="week-summary">
+              <span class="summary-label">providers</span>
+              {providerEntries.map(([provider, group]) => (
+                <span class="chip provider-chip">
+                  <ProviderMark provider={provider} />
+                  {provider} <strong>{group.length}</strong>
+                </span>
+              ))}
+            </div>
+          </header>
+          <ul class="event-list">
+            {w.events.map((e) => {
+              const ent = entityById(e.entity);
+              return (
+                <li>
+                  <code class="date">{e.date}</code>
+                  <span class="type-tag" data-type={e.type}>{e.type}</span>
+                  <a href={pathFor(e.entity)} class="entity">{ent?.name ?? e.entity}</a>
+                  <span class="summary">{dedupedEventSummary(e.summary, ent?.name)}</span>
+                  <a href={`/events/${eventSlug(e)}`} class="more">↗</a>
+                </li>
+              );
+            })}
           </ul>
         </section>
-      ))}
-    </>
+      );
+    })}
+  </div>
+
+  {weeks.length > VISIBLE_WEEKS ? (
+    <p class="muted">
+      … {weeks.length - VISIBLE_WEEKS} earlier weeks not shown. See <a href="/timeline">timeline</a> for the full history.
+    </p>
   ) : null}
 
   <style>
-    .changes-hero { display: flex; justify-content: space-between; gap: 1rem; align-items: end; padding: 1.5rem 0 1rem; }
-    .changes-hero p { margin-bottom: 0; }
-    .changes-links { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: flex-end; }
-    .changes-links a { padding: 0.24rem 0.55rem; border-radius: 999px; background: var(--surface-soft); color: var(--text); text-decoration: none; font-size: 0.85rem; font-weight: 700; }
-    .week { margin: 1.15rem 0 1.5rem; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
-    .week h3 { display: flex; justify-content: space-between; gap: 0.75rem; align-items: baseline; margin: 0; padding: 0.72rem 0.9rem; font-size: 1rem; border-bottom: 1px solid var(--line); background: #f8fafc; }
-    .week.recent h3 { background: var(--accent-soft); color: var(--accent-strong); }
-    .week ul { list-style: none; padding: 0; margin: 0; }
-    .week li { display: grid; grid-template-columns: 104px 132px minmax(0, 1fr); gap: 0.75rem; padding: 0.78rem 0.9rem; border-top: 1px solid #edf0f5; color: #4f5a6d; }
-    .week li:first-child { border-top: 0; }
-    .week time { color: var(--muted); font-variant-numeric: tabular-nums; }
-    .week strong { color: var(--accent-strong); font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.04em; }
-    .week a { color: var(--text); font-weight: 750; text-decoration: none; }
-    .week a:hover { color: var(--blue); }
-    .count { color: inherit; font-weight: 700; font-size: 0.88rem; opacity: 0.72; }
-    @media (max-width: 760px) {
-      .changes-hero { align-items: flex-start; flex-direction: column; }
-      .changes-links { justify-content: flex-start; }
-      .week h3 { align-items: flex-start; flex-direction: column; }
-      .week li { grid-template-columns: 1fr; gap: 0.2rem; }
-    }
+    .weeks { display: flex; flex-direction: column; gap: 1.4rem; margin-top: 1.5rem; }
+    .week { border: 1px solid var(--line); border-radius: 8px; padding: 0.9rem 1rem; background: var(--surface); }
+    .week-head h2 { margin: 0 0 0.5rem; font-size: 1rem; font-variant-numeric: tabular-nums; display: flex; align-items: center; gap: 0.6rem; }
+    .week-head h2 code { color: var(--text); font-weight: 600; }
+    .count { display: inline-block; background: #1a4cff; color: #fff; font-size: 0.72rem; padding: 0.05rem 0.5rem; border-radius: 999px; font-weight: 600; }
+    .week-summary { display: flex; flex-wrap: wrap; gap: 0.35rem; align-items: center; margin: 0.3rem 0; font-size: 0.85rem; }
+    .summary-label { color: var(--muted); font-weight: 700; min-width: 4.2rem; text-transform: uppercase; font-size: 0.72rem; letter-spacing: 0.05em; }
+    .chip { background: var(--surface-soft); border: 1px solid var(--line); padding: 0.1rem 0.5rem; border-radius: 4px; font-size: 0.82rem; }
+    .chip strong { color: var(--text); }
+    .provider-chip { display: inline-flex; align-items: center; gap: 0.3rem; }
+    .event-list { list-style: none; padding: 0; margin: 0.8rem 0 0; display: flex; flex-direction: column; gap: 0.35rem; }
+    .event-list li { display: grid; grid-template-columns: 6.5rem 6.5rem minmax(0, max-content) minmax(0, 1fr) auto; gap: 0.7rem; align-items: baseline; padding: 0.3rem 0; border-top: 1px solid #eef0f4; font-size: 0.88rem; }
+    .event-list li:first-child { border-top: 0; }
+    .date { color: var(--muted); font-variant-numeric: tabular-nums; }
+    .type-tag { font-size: 0.74rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #58637a; }
+    .type-tag[data-type="released"] { color: #1a7f37; }
+    .type-tag[data-type="price_change"] { color: #cf222e; }
+    .type-tag[data-type="deprecated"] { color: #8c4400; }
+    .type-tag[data-type="capability_added"] { color: #1a4cff; }
+    .entity { color: var(--text); text-decoration: none; font-weight: 600; }
+    .entity:hover { text-decoration: underline; }
+    .summary { color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .more { color: #999; text-decoration: none; }
+    .more:hover { color: #1a4cff; }
+    .muted { color: var(--muted); }
   </style>
 </Base>

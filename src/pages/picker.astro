@@ -256,6 +256,7 @@ const licenses = Array.from(new Set(models.map((m) => m.license))).sort();
         els.modality.value = preset.modality;
       }
 
+      let pickerTrackTimer = null;
       function render() {
         const preset = presets[els.preset.value];
         const requests = numberValue(els.requests);
@@ -284,6 +285,20 @@ const licenses = Array.from(new Set(models.map((m) => m.license))).sort();
 
         els.count.textContent = `${rows.length} shown`;
         els.empty.hidden = rows.length > 0;
+
+        // Measure picker usage (debounced so settled recommendations are counted,
+        // not every keystroke). Records preset + result count + top pick provider.
+        if (pickerTrackTimer) clearTimeout(pickerTrackTimer);
+        pickerTrackTimer = setTimeout(() => {
+          if (window.aitrack) {
+            window.aitrack("picker_recommend", {
+              preset: els.preset.value || "custom",
+              results: rows.length,
+              top_provider: rows[0]?.model?.provider || "none",
+            });
+          }
+        }, 900);
+
         els.body.innerHTML = rows.map(({ model: m, cost, score }) => `
           <tr>
             <td class="model-cell">

@@ -26,7 +26,12 @@
   ],
   "sources": [
     "https://openrouter.ai/api/v1/models",
-    "https://platform.openai.com/docs/models"
+    "https://platform.openai.com/docs/models",
+    "https://openai.com/index/introducing-gpt-5-4-mini-and-nano/"
   ],
-  "status": "ga"
+  "status": "ga",
+  "benchmarks": {
+    "swe_bench_pro": 0.544,
+    "gpqa_diamond": 0.88
+  }
 }

@@ -1,0 +1,13 @@
+{
+  "date": "2026-05-28",
+  "entity": "anthropic__claude-opus-4-8",
+  "type": "released",
+  "summary": "Claude Opus 4.8 generally available — faster and higher-effort modes over Opus 4.7, same $5/$25 rate card.",
+  "source": "https://platform.claude.com/docs/en/about-claude/models/whats-new-claude-4-8",
+  "submitted_by": "matt",
+  "analyst_note": {
+    "author": "Zerg AI",
+    "date": "2026-06-02",
+    "text": "Third Opus release in seven weeks holding the same price — Anthropic keeps converting efficiency gains into capability instead of margin. The notable addition is fast mode at a separate $10/$50 rate: paying 2x per token for lower latency formalizes a latency-price axis that until now only existed informally via model-class downgrades. If your agent stack routes by task, fast mode is effectively a new routing target, not a new model."
+  }
+}

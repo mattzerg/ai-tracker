@@ -8,8 +8,9 @@
   "category": "agent-framework",
   "language": "Python",
   "license": "MIT License",
-  "stars": 136593,
-  "forks": 22591,
+  "stars": 138375,
+  "forks": 22923,
+  "open_issues": 605,
   "topics": [
     "llm",
     "agents",
@@ -39,7 +40,7 @@
     "https://www.npmjs.com/package/langchain"
   ],
   "created_at": "2022-10-17",
-  "pushed_at": "2026-05-13",
+  "pushed_at": "2026-06-02",
   "archived": false,
   "tags": [
     "agents",
@@ -65,6 +66,5 @@
   ],
   "sources": [
     "https://github.com/langchain-ai/langchain"
-  ],
-  "open_issues": 574
+  ]
 }

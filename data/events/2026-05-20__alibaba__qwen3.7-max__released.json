@@ -1,0 +1,13 @@
+{
+  "date": "2026-05-20",
+  "entity": "alibaba__qwen3.7-max",
+  "type": "released",
+  "summary": "Qwen3.7 Max announced at Alibaba Cloud Summit — 1M context (up from 256K), $2.50/$7.50 per Mtok, API-only.",
+  "source": "https://qwenlm.github.io/",
+  "submitted_by": "matt",
+  "analyst_note": {
+    "author": "Zerg AI",
+    "date": "2026-06-02",
+    "text": "The context-window jump from 256K to 1M brings Qwen's flagship in line with Claude Opus and GPT-5.5, at roughly half the input price of either. Unlike the numbered Qwen checkpoints, Max stays closed-weight and API-only — Alibaba is running the same split strategy as Meta abandoned: open weights for the community tier, proprietary for the frontier tier. Worth watching whether the 35-hour continuous agent run claim from the launch demo holds up under independent testing."
+  }
+}

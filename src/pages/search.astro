@@ -112,10 +112,13 @@ import Base from "../layouts/Base.astro";
         for (const t of DATA.tools) namesById.set(t.id, t.name);
         for (const r of DATA.repos) namesById.set(r.id, r.full_name);
 
-        const ms = DATA.models.filter((m) => modelMatches(m, q)).slice(0, MAX_PER_BUCKET);
+        // Recency-weighted: within each bucket, newer entries rank first
+        // (models by release date, repos by last push, events by date).
+        const byDateDesc = (key) => (a, b) => String(b[key] || "").localeCompare(String(a[key] || ""));
+        const ms = DATA.models.filter((m) => modelMatches(m, q)).sort(byDateDesc("released")).slice(0, MAX_PER_BUCKET);
         const ts = DATA.tools.filter((t) => toolMatches(t, q)).slice(0, MAX_PER_BUCKET);
-        const rs = DATA.repos.filter((r) => repoMatches(r, q)).slice(0, MAX_PER_BUCKET);
-        const es = DATA.events.filter((e) => eventMatches(e, q, namesById)).slice(0, MAX_PER_BUCKET);
+        const rs = DATA.repos.filter((r) => repoMatches(r, q)).sort(byDateDesc("pushed_at")).slice(0, MAX_PER_BUCKET);
+        const es = DATA.events.filter((e) => eventMatches(e, q, namesById)).sort(byDateDesc("date")).slice(0, MAX_PER_BUCKET);
 
         counts.models.textContent = ms.length === MAX_PER_BUCKET ? ms.length + "+" : ms.length;
         counts.tools.textContent = ts.length === MAX_PER_BUCKET ? ts.length + "+" : ts.length;
@@ -157,9 +160,21 @@ import Base from "../layouts/Base.astro";
       }
 
       let timer = null;
+      let trackTimer = null;
       q.addEventListener("input", () => {
         if (timer) clearTimeout(timer);
-        timer = setTimeout(() => { writeUrl(); render(q.value); }, 80);
+        timer = setTimeout(() => { writeUrl(); render(q.value); }, 80); // snappy render
+        // Separate, longer debounce so analytics counts settled searches, not keystrokes.
+        if (trackTimer) clearTimeout(trackTimer);
+        trackTimer = setTimeout(() => {
+          const term = q.value.trim();
+          if (term.length >= 2 && window.aitrack) {
+            const total = ["models", "tools", "repos", "events"].reduce(
+              (n, b) => n + results.querySelectorAll(`#bucket-${b} li`).length, 0);
+            // length + result count only — never the raw query text
+            window.aitrack("search_query", { len: term.length, results: total, zero: total === 0 });
+          }
+        }, 900);
       });
 
       fetch("/api/search.json").then((r) => r.json()).then((d) => {

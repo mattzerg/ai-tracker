@@ -17,6 +17,7 @@ interface AnthropicRow {
 }
 
 const KNOWN: AnthropicRow[] = [
+  { apiId: "claude-opus-4-8",   name: "Claude Opus 4.8",   contextWindow: 1_000_000, outputWindow: 128_000, inputPerMtok: 5, outputPerMtok: 25, released: "2026-05-28" },
   { apiId: "claude-opus-4-7",   name: "Claude Opus 4.7",   contextWindow: 1_000_000, outputWindow: 128_000, inputPerMtok: 5, outputPerMtok: 25, released: "2026-04-16" },
   { apiId: "claude-sonnet-4-6", name: "Claude Sonnet 4.6", contextWindow: 1_000_000, outputWindow: 64_000,  inputPerMtok: 3, outputPerMtok: 15, released: "2026-02-17" },
   { apiId: "claude-haiku-4-5",  name: "Claude Haiku 4.5",  contextWindow: 200_000,   outputWindow: 64_000,  inputPerMtok: 1, outputPerMtok: 5,  released: "2025-10-15" },

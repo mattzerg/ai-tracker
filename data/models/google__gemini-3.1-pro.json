@@ -32,7 +32,13 @@
     "https://openrouter.ai/api/v1/models",
     "https://ai.google.dev/gemini-api/docs/pricing",
     "https://ai.google.dev/gemini-api/docs/models",
-    "https://ai.google.dev/gemini-api/docs/changelog"
+    "https://ai.google.dev/gemini-api/docs/changelog",
+    "https://www.swfte.com/ai/leaderboard"
   ],
-  "status": "preview"
+  "status": "preview",
+  "benchmarks": {
+    "gpqa_diamond": 0.943,
+    "swe_bench_pro": 0.542,
+    "arena_elo": 1505
+  }
 }

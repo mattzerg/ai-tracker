@@ -1,0 +1,42 @@
+{
+  "kind": "repo",
+  "id": "github__microsoft_graphrag",
+  "owner": "microsoft",
+  "name": "graphrag",
+  "full_name": "microsoft/graphrag",
+  "description": "A modular graph-based Retrieval-Augmented Generation (RAG) system",
+  "category": "rag",
+  "language": "Python",
+  "license": "MIT License",
+  "stars": 33417,
+  "forks": 3537,
+  "open_issues": 138,
+  "topics": [
+    "gpt",
+    "gpt-4",
+    "gpt4",
+    "graphrag",
+    "llm",
+    "llms",
+    "rag"
+  ],
+  "homepage": "https://microsoft.github.io/graphrag/",
+  "repo_url": "https://github.com/microsoft/graphrag",
+  "package_urls": [],
+  "created_at": "2024-03-27",
+  "pushed_at": "2026-05-28",
+  "archived": false,
+  "tags": [
+    "rag",
+    "python",
+    "gpt",
+    "gpt-4",
+    "gpt4",
+    "graphrag",
+    "llm",
+    "llms"
+  ],
+  "sources": [
+    "https://github.com/microsoft/graphrag"
+  ]
+}

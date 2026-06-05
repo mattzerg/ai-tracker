@@ -1,0 +1,18 @@
+{
+  "date": "2026-06-02",
+  "entity": "google__gemini-2.5-pro",
+  "type": "deprecated",
+  "summary": "Gemini 2.5 Pro marked deprecated \u2014 shutdown scheduled October 16, 2026. Recommended replacement: Gemini 3.1 Pro.",
+  "delta": {
+    "field": "status",
+    "from": "ga",
+    "to": "deprecated"
+  },
+  "source": "https://ai.google.dev/gemini-api/docs/deprecations",
+  "submitted_by": "matt",
+  "analyst_note": {
+    "author": "Zerg AI",
+    "date": "2026-06-02",
+    "text": "The whole 2.5 generation gets the same October 16 shutdown date \u2014 Google retires by generation, not by model. Anyone still on 2.5 Pro has a four-month migration window, and the replacement path crosses a pricing boundary: 3.1 Pro costs more per token than 2.5 Pro did. Budget owners should re-run cost projections, not just swap the model string."
+  }
+}

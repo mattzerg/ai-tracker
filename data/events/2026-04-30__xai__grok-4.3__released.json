@@ -4,5 +4,10 @@
   "type": "released",
   "summary": "Grok 4.3 released by xai. 1,000,000-token context.",
   "source": "https://docs.x.ai/docs/models",
-  "submitted_by": "ingest-bot"
+  "submitted_by": "ingest-bot",
+  "analyst_note": {
+    "author": "Zerg AI",
+    "date": "2026-05-19",
+    "text": "xAI is shipping aggressively but still trails on adoption — only a handful of tracked tools list Grok in their built_on_models. The 1M context puts it nominally on par with Claude Opus 4.7 and GPT-5.5 Pro, but the integration story (no Anthropic/OpenAI-equivalent SDKs maintained by partner ecosystems) keeps it niche. Worth tracking the gap between technical capability and ecosystem adoption — Grok has the former, not the latter."
+  }
 }

@@ -1,0 +1,231 @@
+---
+import Base from "../../layouts/Base.astro";
+import ProviderMark from "../../components/ProviderMark.astro";
+import { loadEvents, loadModels, loadRepos, loadTools } from "../../lib/data.ts";
+
+interface Row {
+  href: string;
+  primary: string;
+  secondary?: string;
+  value: string;
+  rawValue: number | null;
+  provider?: string;
+}
+
+interface Board {
+  slug: string;
+  title: string;
+  description: string;
+  metric: string;
+  rows: Row[];
+}
+
+function fmtUsd(v: number): string {
+  if (v < 0.01) return `$${v.toFixed(4)}/M`;
+  if (v < 1) return `$${v.toFixed(3)}/M`;
+  return `$${v.toFixed(2)}/M`;
+}
+
+function fmtTokens(n: number): string {
+  if (n >= 1_000_000) return `${(n / 1_000_000).toLocaleString(undefined, { maximumFractionDigits: 1 })}M`;
+  if (n >= 1_000) return `${Math.round(n / 1_000).toLocaleString()}K`;
+  return n.toLocaleString();
+}
+
+function relativeAge(dateStr: string): string {
+  const ms = Date.now() - new Date(`${dateStr}T00:00:00Z`).getTime();
+  const days = Math.floor(ms / 86400000);
+  if (days < 1) return "today";
+  if (days < 30) return `${days}d ago`;
+  if (days < 365) return `${Math.floor(days / 30)}mo ago`;
+  return `${Math.floor(days / 365)}y ago`;
+}
+
+function buildBoards(): Board[] {
+  const models = loadModels();
+  const tools = loadTools();
+  const repos = loadRepos();
+  const events = loadEvents();
+
+  const cheapestInput: Row[] = models
+    .filter((m) => m.pricing?.input_per_mtok != null)
+    .sort((a, b) => (a.pricing!.input_per_mtok! - b.pricing!.input_per_mtok!))
+    .slice(0, 25)
+    .map((m) => ({
+      href: `/models/${m.id}`,
+      primary: m.name,
+      secondary: m.provider,
+      value: fmtUsd(m.pricing!.input_per_mtok!),
+      rawValue: m.pricing!.input_per_mtok!,
+      provider: m.provider,
+    }));
+
+  const longestContext: Row[] = models
+    .filter((m) => m.context_window != null)
+    .sort((a, b) => (b.context_window! - a.context_window!))
+    .slice(0, 25)
+    .map((m) => ({
+      href: `/models/${m.id}`,
+      primary: m.name,
+      secondary: m.provider,
+      value: `${fmtTokens(m.context_window!)} tok`,
+      rawValue: m.context_window!,
+      provider: m.provider,
+    }));
+
+  const usageCount = new Map<string, number>();
+  for (const t of tools) for (const id of t.built_on_models) usageCount.set(id, (usageCount.get(id) ?? 0) + 1);
+  const mostUsedByTools: Row[] = Array.from(usageCount.entries())
+    .map(([id, count]) => ({ model: models.find((m) => m.id === id), count }))
+    .filter((x): x is { model: NonNullable<typeof x.model>; count: number } => Boolean(x.model))
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 25)
+    .map(({ model, count }) => ({
+      href: `/models/${model.id}`,
+      primary: model.name,
+      secondary: model.provider,
+      value: `${count} tool${count === 1 ? "" : "s"}`,
+      rawValue: count,
+      provider: model.provider,
+    }));
+
+  const mostActiveRepos: Row[] = repos
+    .filter((r) => r.pushed_at && r.stars != null)
+    .map((r) => {
+      const ageDays = Math.max(1, Math.floor((Date.now() - new Date(`${r.pushed_at}T00:00:00Z`).getTime()) / 86400000));
+      const activityScore = (r.stars ?? 0) / Math.log10(ageDays + 9); // recency-weighted
+      return { repo: r, activityScore, ageDays };
+    })
+    .sort((a, b) => b.activityScore - a.activityScore)
+    .slice(0, 25)
+    .map(({ repo, ageDays }) => ({
+      href: `/repos/${repo.id}`,
+      primary: repo.full_name,
+      secondary: `${(repo.stars ?? 0).toLocaleString()} stars`,
+      value: ageDays === 0 ? "pushed today" : `pushed ${relativeAge(repo.pushed_at!)}`,
+      rawValue: repo.stars ?? 0,
+      provider: repo.owner,
+    }));
+
+  // Last 90 days of events grouped by provider/vendor/owner.
+  const ninetyDaysAgo = new Date(Date.now() - 90 * 86400000).toISOString().slice(0, 10);
+  const recentEvents = events.filter((e) => e.date >= ninetyDaysAgo);
+  const providerCounts = new Map<string, number>();
+  function providerOf(entityId: string): string {
+    const m = models.find((x) => x.id === entityId);
+    if (m) return m.provider;
+    const t = tools.find((x) => x.id === entityId);
+    if (t) return t.vendor;
+    const r = repos.find((x) => x.id === entityId);
+    if (r) return r.owner;
+    return "—";
+  }
+  for (const e of recentEvents) {
+    const p = providerOf(e.entity);
+    providerCounts.set(p, (providerCounts.get(p) ?? 0) + 1);
+  }
+  const mostShippingProviders: Row[] = Array.from(providerCounts.entries())
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 25)
+    .map(([provider, count]) => ({
+      href: `/providers/${encodeURIComponent(provider)}`,
+      primary: provider,
+      value: `${count} event${count === 1 ? "" : "s"}`,
+      rawValue: count,
+      provider,
+    }));
+
+  return [
+    {
+      slug: "cheapest-input",
+      title: "Cheapest input pricing",
+      description: "Models ranked by input price per million tokens. Lower = cheaper. Excludes models without published pricing.",
+      metric: "$/M input tokens",
+      rows: cheapestInput,
+    },
+    {
+      slug: "longest-context",
+      title: "Longest context window",
+      description: "Models ranked by maximum context window size. Higher = more tokens fit in one request.",
+      metric: "Tokens",
+      rows: longestContext,
+    },
+    {
+      slug: "most-used-by-tools",
+      title: "Most-used models",
+      description: "Models ranked by how many tracked tools list them in `built_on_models`. Proxy for ecosystem adoption.",
+      metric: "Tool count",
+      rows: mostUsedByTools,
+    },
+    {
+      slug: "most-active-repos",
+      title: "Most-active repos",
+      description: "AI repos ranked by recency-weighted activity (stars adjusted by days-since-last-push). Surfaces repos that are both popular AND alive.",
+      metric: "Activity score",
+      rows: mostActiveRepos,
+    },
+    {
+      slug: "most-shipping-providers",
+      title: "Most-shipping providers (90d)",
+      description: "Providers ranked by event count over the last 90 days. Counts releases, price changes, deprecations, capability adds.",
+      metric: "Events (last 90d)",
+      rows: mostShippingProviders,
+    },
+  ];
+}
+
+const boards = buildBoards();
+
+export function getStaticPaths() {
+  // Run the same builder so paths know which slugs exist.
+  // Astro requires getStaticPaths to be self-contained (no closures over module-level functions),
+  // so re-import inside.
+  return [
+    "cheapest-input",
+    "longest-context",
+    "most-used-by-tools",
+    "most-active-repos",
+    "most-shipping-providers",
+  ].map((slug) => ({ params: { slug } }));
+}
+
+const { slug } = Astro.params;
+const board = boards.find((b) => b.slug === slug);
+if (!board) return new Response("Not found", { status: 404 });
+---
+<Base title={`${board.title} — ai-tracker leaderboard`} description={board.description}>
+  <p class="breadcrumb"><a href="/leaderboards">← All leaderboards</a></p>
+  <h1>{board.title}</h1>
+  <p class="muted">{board.description}</p>
+  <p class="muted small">Top {board.rows.length}. Machine-readable: <a href="/leaderboards.json">/leaderboards.json</a></p>
+
+  <ol class="board">
+    {board.rows.map((row, i) => (
+      <li class="row">
+        <span class="rank">{i + 1}</span>
+        <div class="primary-block">
+          {row.provider ? <ProviderMark provider={row.provider} /> : null}
+          <a href={row.href} class="primary">{row.primary}</a>
+          {row.secondary ? <span class="secondary">{row.secondary}</span> : null}
+        </div>
+        <span class="value">{row.value}</span>
+      </li>
+    ))}
+  </ol>
+
+  <style>
+    .breadcrumb { font-size: 0.88rem; margin-bottom: 0.5rem; }
+    .breadcrumb a { color: var(--muted); text-decoration: none; }
+    .breadcrumb a:hover { color: var(--text); }
+    .muted { color: var(--muted); }
+    .muted.small { font-size: 0.85rem; }
+    .board { list-style: none; padding: 0; margin: 1.5rem 0 0; display: flex; flex-direction: column; gap: 0.4rem; }
+    .row { display: grid; grid-template-columns: 2.4rem minmax(0, 1fr) auto; gap: 1rem; align-items: center; padding: 0.7rem 1rem; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); }
+    .rank { font-variant-numeric: tabular-nums; font-weight: 700; color: var(--muted); text-align: right; }
+    .primary-block { display: flex; align-items: center; gap: 0.5rem; min-width: 0; }
+    .primary { color: var(--text); text-decoration: none; font-weight: 600; }
+    .primary:hover { text-decoration: underline; }
+    .secondary { color: var(--muted); font-size: 0.86rem; }
+    .value { font-variant-numeric: tabular-nums; font-weight: 600; color: var(--text); white-space: nowrap; }
+  </style>
+</Base>

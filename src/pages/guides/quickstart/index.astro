@@ -1,0 +1,44 @@
+---
+import Base from "../../../layouts/Base.astro";
+import { QUICKSTARTS } from "../../../lib/quickstartContent.ts";
+
+const guides = Object.values(QUICKSTARTS);
+---
+<Base
+  title="Quickstart guides — ai-tracker"
+  description="60-second per-provider quickstart guides: get a key, make your first request in curl, Python, and Node. Plus alternatives, pricing, and gotchas per provider."
+>
+  <p class="breadcrumb"><a href="/guides">← All guides</a></p>
+  <h1>Quickstart guides</h1>
+  <p>
+    Get making API calls in under a minute. One guide per provider — same shape every time:
+    pick a model, get a key, run curl / Python / Node, read the gotchas.
+  </p>
+
+  <ul class="guide-list">
+    {guides.map((g) => (
+      <li class="guide-card">
+        <a href={`/guides/quickstart/${g.slug}`} class="card-link">
+          <div class="card-body">
+            <h2>{g.display_name}</h2>
+            <p class="reco">Recommended: <strong>{g.recommended_model_name}</strong></p>
+            <p class="desc">{g.what_its_for}</p>
+          </div>
+        </a>
+      </li>
+    ))}
+  </ul>
+
+  <style>
+    .breadcrumb { font-size: 0.88rem; margin-bottom: 0.5rem; }
+    .breadcrumb a { color: var(--muted); text-decoration: none; }
+    .guide-list { list-style: none; padding: 0; margin: 1.5rem 0; display: grid; gap: 0.8rem; }
+    .guide-card { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; }
+    .card-link { display: block; padding: 1rem 1.1rem; color: inherit; text-decoration: none; }
+    .card-link:hover { background: var(--surface-soft); border-radius: 8px; }
+    .guide-card h2 { margin: 0; font-size: 1.1rem; }
+    .reco { margin: 0.3rem 0; color: var(--muted); font-size: 0.92rem; }
+    .reco strong { color: var(--text); }
+    .desc { margin: 0.4rem 0 0; font-size: 0.92rem; line-height: 1.5; color: #4f5a6d; }
+  </style>
+</Base>

@@ -1,0 +1,13 @@
+{
+  "date": "2026-05-31",
+  "entity": "mistral__pixtral-large-2411",
+  "type": "shut_down",
+  "summary": "Pixtral Large 2411 retired by Mistral (deprecated February 27, retired May 31). Recommended replacement: Mistral Medium 3.5.",
+  "delta": {
+    "field": "status",
+    "from": "ga",
+    "to": "retired"
+  },
+  "source": "https://docs.mistral.ai/getting-started/models/models_overview/",
+  "submitted_by": "matt"
+}

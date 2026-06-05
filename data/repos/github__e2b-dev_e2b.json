@@ -8,8 +8,9 @@
   "category": "coding-agent",
   "language": "Python",
   "license": "Apache License 2.0",
-  "stars": 12163,
-  "forks": 904,
+  "stars": 12455,
+  "forks": 930,
+  "open_issues": 55,
   "topics": [
     "sandbox",
     "code-interpreter",
@@ -36,7 +37,7 @@
   "repo_url": "https://github.com/e2b-dev/e2b",
   "package_urls": [],
   "created_at": "2023-03-04",
-  "pushed_at": "2026-05-11",
+  "pushed_at": "2026-06-03",
   "archived": false,
   "tags": [
     "sandbox",
@@ -64,6 +65,5 @@
   "sources": [
     "https://github.com/e2b-dev/e2b",
     "https://github.com/e2b-dev/E2B"
-  ],
-  "open_issues": 79
+  ]
 }

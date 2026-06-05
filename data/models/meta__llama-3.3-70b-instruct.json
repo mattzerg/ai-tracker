@@ -25,7 +25,12 @@
   ],
   "sources": [
     "https://openrouter.ai/api/v1/models",
-    "https://www.llama.com/"
+    "https://www.llama.com/",
+    "https://huggingface.co/meta-llama/Llama-3.3-70B-Instruct"
   ],
-  "status": "ga"
+  "status": "ga",
+  "benchmarks": {
+    "mmlu_pro": 0.689,
+    "gpqa_diamond": 0.505
+  }
 }

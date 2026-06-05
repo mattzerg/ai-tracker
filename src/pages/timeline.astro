@@ -1,6 +1,6 @@
 ---
 import Base from "../layouts/Base.astro";
-import { entityById, eventSlug, loadEvents, loadModels } from "../lib/data.ts";
+import { dedupedEventSummary, entityById, eventSlug, loadEvents, loadModels } from "../lib/data.ts";
 
 const events = loadEvents();
 const providers = Array.from(new Set(loadModels().map((m) => m.provider))).sort();
@@ -52,7 +52,7 @@ const maxDate = events.length ? events[0].date : "";
           <li data-provider={provider} data-type={e.type} data-date={e.date}>
             <code>{e.date}</code> · <strong>{e.type}</strong> ·
             <a href={path}>{entity?.name ?? e.entity}</a>
-            — {e.summary}
+            — {dedupedEventSummary(e.summary, entity?.name)}
             {" "}<a href={`/events/${eventSlug(e)}`}>[details]</a>
             {" "}<a href={e.source} rel="nofollow noopener">[source]</a>
           </li>

@@ -17,20 +17,20 @@ const repoCategories = Array.from(new Set(repos.map((r) => r.category))).sort();
   <h1>About</h1>
 
   <p>
-    <strong>ai-tracker</strong> is a community-maintained, public-utility directory and changelog for AI
-    models, tools, and developer repos. It tracks {models.length} models from {providers.length} providers
-    and {tools.length} tools, {repos.length} repos, plus {events.length} events on the timeline. Free to
+    <strong>ai-tracker</strong> is a public-utility directory and changelog for AI models, tools, and
+    developer repos. It tracks {models.length} models from {providers.length} providers and
+    {tools.length} tools, {repos.length} repos, plus {events.length} events on the timeline. Free to
     use, no signup, no ads, no SaaS pitch.
   </p>
 
   <h2>How this is run</h2>
   <p>
-    Maintained as a public good for the AI builder community — for engineers, researchers, agent
-    authors, and the agents themselves. Code is MIT-licensed; data is public-domain. Anyone can
-    submit a new model / tool / repo / event via <a href="/submit">/submit</a>. Pull requests open
-    once the public remote exists.
-    Hosted by <a href="https://zergai.com">Zerg AI</a>; submissions land in a public review queue
-    and the maintainer set is open to anyone willing to do the work.
+    Maintained by <a href="https://zergai.com">Zerg AI</a> as a public good for the AI builder
+    community — for engineers, researchers, agent authors, and the agents themselves. Code is
+    MIT-licensed; data is public-domain; the source corpus is curated from authoritative provider
+    documentation plus aggregator readers, with every claim sourced. Anyone can submit a new model /
+    tool / repo / event via <a href="/submit">/submit</a>; submissions land in a moderated review
+    queue and a watchdog pings if a queue sits unreviewed past 24h.
   </p>
 
   <h2 id="beta">Public beta contract</h2>
@@ -49,13 +49,21 @@ const repoCategories = Array.from(new Set(repos.map((r) => r.category))).sort();
   <h2>The wedge</h2>
   <p>
     Other directories list AI products. This one is built so an LLM agent can answer
-    <em>what's changed for Claude Opus 4.7 in the last month</em> without scraping HTML.
+    <em>what's changed for Claude Opus 4.8 in the last month</em> without scraping HTML.
     Every model, tool, and repo has HTML, JSON, and Markdown twins; every event is in
     <a href="/feed.xml">RSS</a>, <a href="/atom.xml">Atom</a>,
     <a href="/dump/all.json">/dump/all.json</a>, and <a href="/llms.txt">/llms.txt</a>.
     JSON-LD (<code>SoftwareApplication</code> or <code>SoftwareSourceCode</code>) is embedded on every detail page.
     The companion <code>mcp-server/</code> package exposes the data over MCP
     for direct agent integration.
+  </p>
+
+  <h2>What Concord is</h2>
+  <p>
+    <a href="/concord">Concord</a> is our strategic-game benchmark: tracked models play a
+    multi-agent negotiation game against each other, and the leaderboard reports victory and
+    survival rates. It's a behavioral signal — how models negotiate, bluff, and cooperate —
+    not a capability ranking. Low-match-count rows are directional only.
   </p>
 
   <h2>Where the data comes from</h2>
@@ -98,7 +106,7 @@ const repoCategories = Array.from(new Set(repos.map((r) => r.category))).sort();
   <h2>What share cards look like</h2>
   <p>Every model and tool detail page emits a 1200×630 OG card. Sample:</p>
   <div class="og-samples">
-    <a href="/models/anthropic__claude-opus-4-7"><img src="/og/models/anthropic__claude-opus-4-7.png" alt="Sample model card — Claude Opus 4.7" width="600" height="315" /></a>
+    <a href="/models/anthropic__claude-opus-4-8"><img src="/og/models/anthropic__claude-opus-4-8.png" alt="Sample model card — Claude Opus 4.8" width="600" height="315" /></a>
     <a href="/tools/cursor"><img src="/og/tools/cursor.png" alt="Sample tool card — Cursor" width="600" height="315" /></a>
   </div>
 

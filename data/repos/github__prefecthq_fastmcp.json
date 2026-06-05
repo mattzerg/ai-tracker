@@ -1,0 +1,45 @@
+{
+  "kind": "repo",
+  "id": "github__prefecthq_fastmcp",
+  "owner": "PrefectHQ",
+  "name": "fastmcp",
+  "full_name": "PrefectHQ/fastmcp",
+  "description": "🚀 The fast, Pythonic way to build MCP servers and clients.",
+  "category": "mcp",
+  "language": "Python",
+  "license": "Apache License 2.0",
+  "stars": 25451,
+  "forks": 2048,
+  "open_issues": 241,
+  "topics": [
+    "agents",
+    "fastmcp",
+    "llms",
+    "mcp",
+    "mcp-clients",
+    "mcp-servers",
+    "mcp-tools",
+    "model-context-protocol",
+    "python"
+  ],
+  "homepage": "https://gofastmcp.com",
+  "repo_url": "https://github.com/PrefectHQ/fastmcp",
+  "package_urls": [],
+  "created_at": "2024-11-30",
+  "pushed_at": "2026-06-03",
+  "archived": false,
+  "tags": [
+    "model-context-protocol",
+    "python",
+    "agents",
+    "fastmcp",
+    "llms",
+    "mcp",
+    "mcp-clients",
+    "mcp-servers",
+    "mcp-tools"
+  ],
+  "sources": [
+    "https://github.com/PrefectHQ/fastmcp"
+  ]
+}

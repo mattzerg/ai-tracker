@@ -20,6 +20,12 @@ const deltaSchema = z.object({
   to: z.unknown().nullable(),
 });
 
+const analystNoteSchema = z.object({
+  author: z.string().min(1),
+  date: isoDate,
+  text: z.string().min(1).max(800),
+});
+
 export const eventSchema = z.object({
   date: isoDate,
   entity: entityId,
@@ -30,6 +36,9 @@ export const eventSchema = z.object({
   submitted_by: z
     .string()
     .regex(/^(ingest-bot|user:[a-f0-9]{8,}|matt)$/, "ingest-bot | user:<hash> | matt"),
+  // Optional 1-paragraph editorial take. Filled by hand for major events only.
+  // Distinguishes ai-tracker from auto-aggregated competitors.
+  analyst_note: analystNoteSchema.optional(),
 });
 
 export type Event = z.infer<typeof eventSchema>;
