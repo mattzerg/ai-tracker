@@ -16,6 +16,11 @@
     "output_per_mtok": 4.5,
     "as_of": "2026-05-09"
   },
+  "benchmarks": {
+    "swe_bench_pro": 0.544,
+    "gpqa_diamond": 0.88,
+    "quality_index": 0.83
+  },
   "links": {
     "homepage": "https://openai.com",
     "docs": "https://platform.openai.com/docs/models"
@@ -27,11 +32,8 @@
   "sources": [
     "https://openrouter.ai/api/v1/models",
     "https://platform.openai.com/docs/models",
-    "https://openai.com/index/introducing-gpt-5-4-mini-and-nano/"
+    "https://openai.com/index/introducing-gpt-5-4-mini-and-nano/",
+    "https://www.swfte.com/ai/leaderboard"
   ],
-  "status": "ga",
-  "benchmarks": {
-    "swe_bench_pro": 0.544,
-    "gpqa_diamond": 0.88
-  }
+  "status": "ga"
 }

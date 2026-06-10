@@ -15,7 +15,8 @@
   "pricing_tiers": [
     {
       "name": "Free",
-      "monthly_usd": 0
+      "monthly_usd": 0,
+      "per_seat": false
     },
     {
       "name": "Plus",
@@ -35,6 +36,7 @@
     {
       "name": "Enterprise",
       "monthly_usd": null,
+      "per_seat": false,
       "notes": "Contact sales"
     }
   ],
@@ -57,5 +59,39 @@
     "https://chatgpt.com",
     "https://openai.com/index/chatgpt/"
   ],
-  "status": "ga"
+  "status": "ga",
+  "signals": {
+    "signal_score": 77,
+    "counts": {
+      "newsletter": 5
+    },
+    "mentions": [
+      {
+        "source": "newsletter:the-neuron",
+        "type": "newsletter",
+        "ts": "2026-06-08"
+      },
+      {
+        "source": "newsletter:the-neuron",
+        "type": "newsletter",
+        "ts": "2026-06-09"
+      },
+      {
+        "source": "newsletter:the-ai-corner",
+        "type": "newsletter",
+        "ts": "2026-06-07"
+      },
+      {
+        "source": "newsletter:the-neuron",
+        "type": "newsletter",
+        "ts": "2026-06-07"
+      },
+      {
+        "source": "newsletter:the-neuron",
+        "type": "newsletter",
+        "ts": "2026-06-05"
+      }
+    ],
+    "updated_at": "2026-06-09"
+  }
 }

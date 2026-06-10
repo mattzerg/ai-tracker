@@ -26,7 +26,15 @@
   ],
   "sources": [
     "https://api-docs.deepseek.com/quick_start/pricing",
-    "https://openrouter.ai/api/v1/models"
+    "https://openrouter.ai/api/v1/models",
+    "https://www.swfte.com/ai/leaderboard"
   ],
-  "status": "ga"
+  "status": "ga",
+  "benchmarks": {
+    "mmlu": 0.804,
+    "humaneval": 0.842,
+    "math": 0.768,
+    "arena_elo": 1410,
+    "quality_index": 0.8
+  }
 }

@@ -1,0 +1,197 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-06-09T00:00:00.000Z",
+  "entities": {
+    "chatgpt": {
+      "signal_score": 77,
+      "counts": {
+        "newsletter": 5
+      },
+      "mentions": [
+        {
+          "source": "newsletter:the-neuron",
+          "type": "newsletter",
+          "ts": "2026-06-08"
+        },
+        {
+          "source": "newsletter:the-neuron",
+          "type": "newsletter",
+          "ts": "2026-06-09"
+        },
+        {
+          "source": "newsletter:the-ai-corner",
+          "type": "newsletter",
+          "ts": "2026-06-07"
+        },
+        {
+          "source": "newsletter:the-neuron",
+          "type": "newsletter",
+          "ts": "2026-06-07"
+        },
+        {
+          "source": "newsletter:the-neuron",
+          "type": "newsletter",
+          "ts": "2026-06-05"
+        }
+      ],
+      "updated_at": "2026-06-09"
+    },
+    "claude-code": {
+      "signal_score": 39,
+      "counts": {
+        "newsletter": 4
+      },
+      "mentions": [
+        {
+          "source": "newsletter:the-neuron",
+          "type": "newsletter",
+          "ts": "2026-06-08"
+        },
+        {
+          "source": "newsletter:the-ai-corner",
+          "type": "newsletter",
+          "ts": "2026-06-08"
+        },
+        {
+          "source": "newsletter:the-ai-corner",
+          "type": "newsletter",
+          "ts": "2026-06-07"
+        },
+        {
+          "source": "newsletter:the-neuron",
+          "type": "newsletter",
+          "ts": "2026-05-18"
+        }
+      ],
+      "updated_at": "2026-06-09"
+    },
+    "notebooklm": {
+      "signal_score": 18,
+      "counts": {
+        "newsletter": 2
+      },
+      "mentions": [
+        {
+          "source": "newsletter:the-neuron",
+          "type": "newsletter",
+          "ts": "2026-06-08"
+        },
+        {
+          "source": "newsletter:the-neuron",
+          "type": "newsletter",
+          "ts": "2026-06-09"
+        }
+      ],
+      "updated_at": "2026-06-09"
+    },
+    "openai-codex": {
+      "signal_score": 75,
+      "counts": {
+        "newsletter": 6
+      },
+      "mentions": [
+        {
+          "source": "newsletter:the-neuron",
+          "type": "newsletter",
+          "ts": "2026-06-08"
+        },
+        {
+          "source": "newsletter:the-ai-corner",
+          "type": "newsletter",
+          "ts": "2026-06-07"
+        },
+        {
+          "source": "newsletter:the-neuron",
+          "type": "newsletter",
+          "ts": "2026-06-07"
+        },
+        {
+          "source": "newsletter:the-neuron",
+          "type": "newsletter",
+          "ts": "2026-06-03"
+        },
+        {
+          "source": "newsletter:the-neuron",
+          "type": "newsletter",
+          "ts": "2026-05-18"
+        },
+        {
+          "source": "newsletter:the-neuron",
+          "type": "newsletter",
+          "ts": "2026-05-15"
+        }
+      ],
+      "updated_at": "2026-06-09"
+    },
+    "microsoft-agent-framework": {
+      "signal_score": 9,
+      "counts": {
+        "newsletter": 1
+      },
+      "mentions": [
+        {
+          "source": "newsletter:the-ai-corner",
+          "type": "newsletter",
+          "ts": "2026-06-08"
+        }
+      ],
+      "updated_at": "2026-06-09"
+    },
+    "github__daytonaio_daytona": {
+      "signal_score": 9,
+      "counts": {
+        "newsletter": 1
+      },
+      "mentions": [
+        {
+          "source": "newsletter:the-ai-corner",
+          "type": "newsletter",
+          "ts": "2026-06-08"
+        }
+      ],
+      "updated_at": "2026-06-09"
+    },
+    "github__langchain-ai_langgraph": {
+      "signal_score": 9,
+      "counts": {
+        "newsletter": 1
+      },
+      "mentions": [
+        {
+          "source": "newsletter:the-ai-corner",
+          "type": "newsletter",
+          "ts": "2026-06-08"
+        }
+      ],
+      "updated_at": "2026-06-09"
+    },
+    "lovable": {
+      "signal_score": 9,
+      "counts": {
+        "newsletter": 1
+      },
+      "mentions": [
+        {
+          "source": "newsletter:the-ai-corner",
+          "type": "newsletter",
+          "ts": "2026-05-29"
+        }
+      ],
+      "updated_at": "2026-06-09"
+    },
+    "anthropic__claude-opus-4-8": {
+      "signal_score": 9,
+      "counts": {
+        "newsletter": 1
+      },
+      "mentions": [
+        {
+          "source": "newsletter:the-neuron",
+          "type": "newsletter",
+          "ts": "2026-05-28"
+        }
+      ],
+      "updated_at": "2026-06-09"
+    }
+  }
+}

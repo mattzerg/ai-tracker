@@ -15,6 +15,16 @@
     "output_per_mtok": 7.5,
     "as_of": "2026-06-02"
   },
+  "benchmarks": {
+    "swe_bench_verified": 0.804,
+    "gpqa_diamond": 0.924,
+    "terminal_bench": 0.697,
+    "mmlu": 0.888,
+    "humaneval": 0.924,
+    "math": 0.946,
+    "arena_elo": 1488,
+    "quality_index": 0.94
+  },
   "links": {
     "homepage": "https://qwenlm.github.io",
     "docs": "https://qwenlm.github.io/"
@@ -28,12 +38,8 @@
     "https://qwenlm.github.io/",
     "https://help.aliyun.com/zh/dashscope/developer-reference/api-details",
     "https://openrouter.ai/qwen/qwen3.7-max",
-    "https://llm-stats.com/models/qwen3.7-max"
+    "https://llm-stats.com/models/qwen3.7-max",
+    "https://www.swfte.com/ai/leaderboard"
   ],
-  "status": "ga",
-  "benchmarks": {
-    "swe_bench_verified": 0.804,
-    "gpqa_diamond": 0.924,
-    "terminal_bench": 0.697
-  }
+  "status": "ga"
 }

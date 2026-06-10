@@ -2,6 +2,7 @@ import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node
 import { join } from "node:path";
 import { repoCandidateQueueSchema, type Event, type Model, type Repo, type Tool } from "../../schemas/index.ts";
 import type { EventDiff, ModelDiff, RepoDiff, ToolDiff } from "./diff.ts";
+import { partitionAutoPromote } from "./auto-promote.ts";
 
 export interface WriteTarget {
   /** Absolute path to the data root (with subdirs models/, tools/, repos/, events/). */
@@ -9,8 +10,12 @@ export interface WriteTarget {
   /** True = clear & rewrite; false = additive (added writes only, updated entries get overwritten in place). */
   fresh?: boolean;
   /** True = skip new entries (added.*), only write updated.* + events. Use when supplementary sources
-   * propose new entities that should require human review before being added to the curated set. */
+   * propose new entities that should require human review before being added to the curated set.
+   * EXCEPTION: newly-discovered repos that clear the strict auto-promotion bar
+   * (see auto-promote.ts) are still written, to widen coverage without manual gating. */
   updatesOnly?: boolean;
+  /** Clock for auto-promotion recency checks (defaults to now). */
+  now?: Date;
 }
 
 export interface WriteResult {
@@ -87,12 +92,15 @@ export function writeDiff(
   }
 
   const mergedRepoById = new Map(mergedRepos.map((r) => [r.id, r]));
-  if (!target.updatesOnly) {
-    for (const r of repoDiff.added) {
-      const path = join(root, "repos", `${r.id}.json`);
-      writeJson(path, r);
-      paths.push(path);
-    }
+  // In updatesOnly mode, new repos normally require human review — but those that
+  // clear the strict auto-promotion bar are written straight in to widen coverage.
+  const reposToAdd = target.updatesOnly
+    ? partitionAutoPromote(repoDiff.added, { now: target.now }).promote
+    : repoDiff.added;
+  for (const r of reposToAdd) {
+    const path = join(root, "repos", `${r.id}.json`);
+    writeJson(path, r);
+    paths.push(path);
   }
   for (const u of repoDiff.updated) {
     const merged = mergedRepoById.get(u.id);
@@ -113,7 +121,7 @@ export function writeDiff(
     modelsUpdated: modelDiff.updated.length,
     toolsAdded: target.updatesOnly ? 0 : toolDiff.added.length,
     toolsUpdated: toolDiff.updated.length,
-    reposAdded: target.updatesOnly ? 0 : repoDiff.added.length,
+    reposAdded: reposToAdd.length,
     reposUpdated: repoDiff.updated.length,
     eventsAdded: eventDiff.added.length,
     paths,

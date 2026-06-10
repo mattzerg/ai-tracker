@@ -16,6 +16,15 @@
     "output_per_mtok": 0.3,
     "as_of": "2026-05-11"
   },
+  "benchmarks": {
+    "mmlu_pro": 0.743,
+    "gpqa_diamond": 0.572,
+    "mmlu": 0.825,
+    "humaneval": 0.812,
+    "math": 0.684,
+    "arena_elo": 1195,
+    "quality_index": 0.71
+  },
   "links": {
     "homepage": "https://www.llama.com",
     "docs": "https://www.llama.com/"
@@ -28,11 +37,8 @@
   "sources": [
     "https://www.llama.com/",
     "https://ai.meta.com/blog/llama-4-multimodal-intelligence/",
-    "https://openrouter.ai/api/v1/models"
+    "https://openrouter.ai/api/v1/models",
+    "https://www.swfte.com/ai/leaderboard"
   ],
-  "status": "ga",
-  "benchmarks": {
-    "mmlu_pro": 0.743,
-    "gpqa_diamond": 0.572
-  }
+  "status": "ga"
 }

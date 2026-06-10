@@ -40,5 +40,19 @@
   ],
   "sources": [
     "https://github.com/daytonaio/daytona"
-  ]
+  ],
+  "signals": {
+    "signal_score": 9,
+    "counts": {
+      "newsletter": 1
+    },
+    "mentions": [
+      {
+        "source": "newsletter:the-ai-corner",
+        "type": "newsletter",
+        "ts": "2026-06-08"
+      }
+    ],
+    "updated_at": "2026-06-09"
+  }
 }

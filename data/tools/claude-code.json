@@ -15,11 +15,13 @@
     {
       "name": "Pay-per-use (API)",
       "monthly_usd": null,
+      "per_seat": false,
       "notes": "Token-metered via Anthropic API"
     },
     {
       "name": "Max Plan",
       "monthly_usd": 200,
+      "per_seat": false,
       "notes": "Includes Claude Code usage"
     }
   ],
@@ -40,5 +42,34 @@
   "sources": [
     "https://www.anthropic.com/claude-code"
   ],
-  "status": "ga"
+  "status": "ga",
+  "signals": {
+    "signal_score": 39,
+    "counts": {
+      "newsletter": 4
+    },
+    "mentions": [
+      {
+        "source": "newsletter:the-neuron",
+        "type": "newsletter",
+        "ts": "2026-06-08"
+      },
+      {
+        "source": "newsletter:the-ai-corner",
+        "type": "newsletter",
+        "ts": "2026-06-08"
+      },
+      {
+        "source": "newsletter:the-ai-corner",
+        "type": "newsletter",
+        "ts": "2026-06-07"
+      },
+      {
+        "source": "newsletter:the-neuron",
+        "type": "newsletter",
+        "ts": "2026-05-18"
+      }
+    ],
+    "updated_at": "2026-06-09"
+  }
 }

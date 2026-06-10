@@ -4,6 +4,7 @@ import { loadEvents, loadModels, loadRepos, loadTools } from "../src/lib/data.ts
 import { diffEvents, diffModels, diffRepos, diffTools } from "./ingest/diff.ts";
 import { mergeModel, mergeRepo, mergeTool } from "./ingest/merge.ts";
 import { writeDiff, writeRepoCandidateQueue } from "./ingest/writer.ts";
+import { partitionAutoPromote } from "./ingest/auto-promote.ts";
 import { alibabaQwenModels } from "./ingest/sources/alibaba-qwen-models.ts";
 import { anthropicChangelog } from "./ingest/sources/anthropic-changelog.ts";
 import { cohereModels } from "./ingest/sources/cohere-models.ts";
@@ -15,6 +16,8 @@ import { metaLlamaModels } from "./ingest/sources/meta-llama-models.ts";
 import { mistralModels } from "./ingest/sources/mistral-models.ts";
 import { openaiModels } from "./ingest/sources/openai-models.ts";
 import { openrouter } from "./ingest/sources/openrouter.ts";
+import { benchmarkAggregator } from "./ingest/sources/benchmark-aggregator.ts";
+import { signals } from "./ingest/sources/signals.ts";
 import { xaiModels } from "./ingest/sources/xai-models.ts";
 import type { Event, Model, Repo, Tool } from "../schemas/index.ts";
 import type { Source, SourceContext, SourceTrust } from "./ingest/types.ts";
@@ -34,6 +37,10 @@ const SOURCES: Source[] = [
   metaLlamaModels,
   alibabaQwenModels,
   cohereModels,
+  // Supplementary: fills benchmark scores after authoritative provider data lands.
+  benchmarkAggregator,
+  // Supplementary: attaches reference/quality signals from the committed index.
+  signals,
   openrouter,
   githubRepos,
   githubTrending,
@@ -183,9 +190,70 @@ async function main() {
       });
     }
   }
+
+  // Synthesize benchmark_update + capability_added events from model diffs. Same
+  // attribution pattern as price_change; dated to the ingest run (benchmarks have
+  // no intrinsic as_of). Only emitted on real change, so the changelog stays
+  // meaningful rather than noisy.
+  const runDate = ctx.now.toISOString().slice(0, 10);
+  let benchEventCount = 0;
+  let capEventCount = 0;
+  for (const u of modelDiff.updated) {
+    const merged = mergedById.get(u.id);
+    if (!merged) continue;
+    const source = merged.sources.find((s) => !s.includes("openrouter.ai") && s.startsWith("http")) ?? merged.sources[0];
+    if (!source) continue;
+
+    if (u.fields.includes("benchmarks")) {
+      const from = (u.from.benchmarks ?? {}) as Record<string, number>;
+      const to = (u.to.benchmarks ?? {}) as Record<string, number>;
+      for (const [key, b] of Object.entries(to)) {
+        const a = from[key];
+        if (a === b) continue; // unchanged
+        synthesizedEvents.push({
+          date: runDate,
+          entity: u.id,
+          type: "benchmark_update",
+          summary:
+            a == null
+              ? `${merged.name}: new ${key} benchmark recorded (${b}).`
+              : `${merged.name}: ${key} benchmark ${b > a ? "rose" : "fell"} from ${a} to ${b}.`,
+          delta: { field: `benchmarks.${key}`, from: a ?? null, to: b },
+          source,
+          submitted_by: "ingest-bot",
+        });
+        benchEventCount++;
+      }
+    }
+
+    if (u.fields.includes("modalities")) {
+      const fromM = new Set((u.from.modalities ?? []) as string[]);
+      const added = ((u.to.modalities ?? []) as string[]).filter((m) => !fromM.has(m));
+      if (added.length) {
+        synthesizedEvents.push({
+          date: runDate,
+          entity: u.id,
+          type: "capability_added",
+          summary: `${merged.name}: added ${added.join(", ")} ${added.length === 1 ? "modality" : "modalities"}.`,
+          delta: { field: "modalities", from: [...fromM].join(",") || null, to: (u.to.modalities ?? []).join(",") },
+          source,
+          submitted_by: "ingest-bot",
+        });
+        capEventCount++;
+      }
+    }
+  }
+
   const allEvents = [...proposed.events, ...synthesizedEvents];
   if (synthesizedEvents.length) {
-    console.log(`  ingest-events [synthesized]: ${synthesizedEvents.length} price_change events from pricing diffs`);
+    const parts = [
+      synthesizedEvents.length - benchEventCount - capEventCount > 0
+        ? `${synthesizedEvents.length - benchEventCount - capEventCount} price_change`
+        : "",
+      benchEventCount ? `${benchEventCount} benchmark_update` : "",
+      capEventCount ? `${capEventCount} capability_added` : "",
+    ].filter(Boolean);
+    console.log(`  ingest-events [synthesized]: ${parts.join(", ")} from model diffs`);
   }
   const eventDiff = diffEvents(currentEvents, allEvents);
 
@@ -228,18 +296,21 @@ async function main() {
 
   if (writeStaging || apply) {
     const target = apply
-      ? { dataRoot: join(ROOT, "data"), updatesOnly }
-      : { dataRoot: join(TMP, "proposed"), fresh: true };
+      ? { dataRoot: join(ROOT, "data"), updatesOnly, now: ctx.now }
+      : { dataRoot: join(TMP, "proposed"), fresh: true, now: ctx.now };
     const result = writeDiff(modelDiff, toolDiff, repoDiff, eventDiff, mergedModels, mergedTools, mergedRepos, target);
+    // Under updatesOnly, repos split into auto-promoted (written) vs. queued (review).
+    const { promote, queue } = partitionAutoPromote(repoDiff.added, { now: ctx.now });
     const skipped = apply && updatesOnly
-      ? ` (skipped ${modelDiff.added.length} new models, ${toolDiff.added.length} new tools, ${repoDiff.added.length} new repos — review-required)`
+      ? ` (skipped ${modelDiff.added.length} new models, ${toolDiff.added.length} new tools; repos: ${promote.length} auto-promoted, ${queue.length} queued for review)`
       : "";
     console.log(
       `\nwrote ${result.paths.length} files to ${target.dataRoot}: +${result.modelsAdded}/${result.toolsAdded}/${result.reposAdded}/${result.eventsAdded} new, ~${result.modelsUpdated}/${result.toolsUpdated}/${result.reposUpdated} updated${skipped}`,
     );
     if (apply && updatesOnly && selectedSources.some((s) => s.id === "github-repos")) {
-      const path = writeRepoCandidateQueue(join(ROOT, "data"), "github-repos", ctx.now.toISOString(), repoDiff.added);
-      console.log(`repo candidate queue: ${path} (${repoDiff.added.length} candidates)`);
+      // Only the non-promoted repos go to the human-review candidate queue.
+      const path = writeRepoCandidateQueue(join(ROOT, "data"), "github-repos", ctx.now.toISOString(), queue);
+      console.log(`repo candidate queue: ${path} (${queue.length} candidates; ${promote.length} auto-promoted directly)`);
     }
   }
 }

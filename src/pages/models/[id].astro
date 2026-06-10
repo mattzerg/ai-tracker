@@ -5,6 +5,7 @@ import ProviderMark from "../../components/ProviderMark.astro";
 import Votes from "../../components/Votes.astro";
 import { eventsForEntity, loadConcordSummary, loadModels, loadTools } from "../../lib/data.ts";
 import { freshnessForEntity } from "../../lib/freshness.ts";
+import { qualityForModel } from "../../lib/quality.ts";
 import { requireSite } from "../../lib/site.ts";
 
 export function getStaticPaths() {
@@ -12,6 +13,8 @@ export function getStaticPaths() {
 }
 
 const { model } = Astro.props;
+const quality = qualityForModel(model, new Date());
+const signals = model.signals ?? null;
 const events = eventsForEntity(model.id);
 const concordSummary = loadConcordSummary();
 const concordEntry = concordSummary?.models.find((m) => m.tracker_model_id === model.id) ?? null;
@@ -291,6 +294,33 @@ const freshness = freshnessForEntity(model, events);
   ) : null}
 
   <section class="panel content-panel">
+    <h2>Quality &amp; signal</h2>
+    <p class="muted small">Composite quality score (0-100) blends benchmark strength, reference signal, and recency — components renormalize when one is missing. Signal reflects how often this model is cited in tracked AI sources.</p>
+    <div class="qs-grid">
+      <div class="qs-card">
+        <div class="qs-num">{quality.score}<span class="qs-den">/100</span></div>
+        <div class="qs-label">Quality score</div>
+        <ul class="qs-components">
+          {quality.components.map((c) => (
+            <li><span class="qs-c-key">{c.key}</span><span class="qs-c-val">{Math.round(c.value)}</span><span class="qs-c-w">×{c.weight}%</span></li>
+          ))}
+        </ul>
+      </div>
+      <div class="qs-card">
+        <div class="qs-num">{signals?.signal_score ?? 0}</div>
+        <div class="qs-label">Signal score</div>
+        {signals && signals.mentions.length > 0 ? (
+          <ul class="qs-mentions">
+            {signals.mentions.slice(0, 5).map((m) => (
+              <li><code>{m.source}</code>{m.ts ? <span class="muted small"> · {m.ts}</span> : null}</li>
+            ))}
+          </ul>
+        ) : <p class="muted small">No tracked references yet.</p>}
+      </div>
+    </div>
+  </section>
+
+  <section class="panel content-panel">
     <h2>Timeline</h2>
     {events.length === 0 ? (
       <p><em>No events recorded yet.</em></p>
@@ -356,6 +386,18 @@ const freshness = freshnessForEntity(model, events);
     .benchmarks-table th, .benchmarks-table td { padding: 0.4rem 0.8rem; border-bottom: 1px solid #eef0f4; text-align: left; }
     .benchmarks-table th { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); font-weight: 700; }
     .benchmarks-table .bench-score { font-variant-numeric: tabular-nums; font-weight: 600; }
+    .qs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 0.6rem; }
+    .qs-card { border: 1px solid #eef0f4; border-radius: 12px; padding: 1rem 1.1rem; }
+    .qs-num { font-size: 2.4rem; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; color: var(--accent, #1a4cff); }
+    .qs-den { font-size: 1rem; font-weight: 600; color: var(--muted); }
+    .qs-label { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); font-weight: 700; margin-top: 0.3rem; }
+    .qs-components { list-style: none; padding: 0; margin: 0.7rem 0 0; display: flex; flex-direction: column; gap: 0.25rem; }
+    .qs-components li { display: flex; gap: 0.5rem; align-items: baseline; font-size: 0.85rem; }
+    .qs-c-key { flex: 1; color: var(--muted); text-transform: capitalize; }
+    .qs-c-val { font-variant-numeric: tabular-nums; font-weight: 700; }
+    .qs-c-w { font-size: 0.72rem; color: var(--muted); }
+    .qs-mentions { list-style: none; padding: 0; margin: 0.6rem 0 0; display: flex; flex-direction: column; gap: 0.3rem; font-size: 0.85rem; }
+    @media (max-width: 640px) { .qs-grid { grid-template-columns: 1fr; } }
     .small { font-size: 0.85rem; }
     .back { margin: 0 0 1rem; }
     .model-hero { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 1.25rem; align-items: start; padding: 1rem 0 1.5rem; }

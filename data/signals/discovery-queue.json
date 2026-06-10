@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-06-09T00:00:00.000Z",
+  "candidates": [
+    {
+      "type": "repo",
+      "url": "https://github.com/smdowl/startupbootcamp",
+      "repo_id": "github__smdowl_startupbootcamp",
+      "reference_count": 4,
+      "sources": [
+        "curated"
+      ]
+    },
+    {
+      "type": "repo",
+      "url": "https://github.com/mattdesl/budo",
+      "repo_id": "github__mattdesl_budo",
+      "reference_count": 3,
+      "sources": [
+        "curated"
+      ]
+    },
+    {
+      "type": "repo",
+      "url": "https://github.com/wdm0006/twitter-pandas",
+      "repo_id": "github__wdm0006_twitter-pandas",
+      "reference_count": 3,
+      "sources": [
+        "curated"
+      ]
+    },
+    {
+      "type": "repo",
+      "url": "https://github.com/mlepinay/tweet-startups-node",
+      "repo_id": "github__mlepinay_tweet-startups-node",
+      "reference_count": 3,
+      "sources": [
+        "curated"
+      ]
+    },
+    {
+      "type": "repo",
+      "url": "https://github.com/google/material-design-icons/releases/tag/1.0.0",
+      "repo_id": "github__google_material-design-icons",
+      "reference_count": 3,
+      "sources": [
+        "curated"
+      ]
+    },
+    {
+      "type": "repo",
+      "url": "https://github.com/LuminosoInsight/python-ftfy",
+      "repo_id": "github__luminosoinsight_python-ftfy",
+      "reference_count": 2,
+      "sources": [
+        "curated"
+      ]
+    },
+    {
+      "type": "repo",
+      "url": "https://github.com/melissaguyre/mixpanel-segmentation-google-spreadsheets",
+      "repo_id": "github__melissaguyre_mixpanel-segmentation-google-spreadsheets",
+      "reference_count": 2,
+      "sources": [
+        "curated"
+      ]
+    }
+  ]
+}

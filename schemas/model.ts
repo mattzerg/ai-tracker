@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { entityId, isoDate, url } from "./common.ts";
+import { signalsSchema } from "./signals.ts";
 
 export const modalitySchema = z.enum([
   "text",
@@ -56,6 +57,7 @@ export const modelSchema = z.object({
   tags: z.array(z.string()).default([]),
   sources: z.array(url).min(1, "every entry needs at least one source"),
   status: z.enum(["preview", "ga", "deprecated", "retired"]).default("ga"),
+  signals: signalsSchema.optional(),
 });
 
 export type Model = z.infer<typeof modelSchema>;

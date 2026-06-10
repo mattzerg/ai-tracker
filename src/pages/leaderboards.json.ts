@@ -1,5 +1,6 @@
 import type { APIRoute } from "astro";
 import { loadEvents, loadModels, loadRepos, loadTools } from "../lib/data.ts";
+import { qualityForModel, qualityForRepo } from "../lib/quality.ts";
 
 // Machine-readable leaderboards. Mirrors /leaderboards/<slug> HTML pages.
 
@@ -24,6 +25,7 @@ export const GET: APIRoute = () => {
   const tools = loadTools();
   const repos = loadRepos();
   const events = loadEvents();
+  const now = new Date();
 
   const cheapestInput = models
     .filter((m) => m.pricing?.input_per_mtok != null)
@@ -110,13 +112,57 @@ export const GET: APIRoute = () => {
       href: `/providers/${encodeURIComponent(provider)}`,
     }));
 
+  // Benchmark boards: top models by a given benchmark key. Fractions are stored
+  // 0-1 (rendered as %); arena_elo is an integer. Only models carrying the key
+  // appear, ranked desc.
+  function benchBoard(slug: string, title: string, key: string, metric: string): LeanBoard {
+    const rows = models
+      .filter((m) => m.benchmarks?.[key] != null)
+      .sort((a, b) => (b.benchmarks![key] as number) - (a.benchmarks![key] as number))
+      .slice(0, 25)
+      .map((m, i) => ({
+        rank: i + 1,
+        id: m.id,
+        name: m.name,
+        provider: m.provider,
+        value: m.benchmarks![key]!,
+        href: `/models/${m.id}`,
+      }));
+    return { slug, title, metric, rows };
+  }
+
   const boards: LeanBoard[] = [
     { slug: "cheapest-input", title: "Cheapest input pricing", metric: "usd_per_mtok_input", rows: cheapestInput },
     { slug: "longest-context", title: "Longest context window", metric: "tokens", rows: longestContext },
     { slug: "most-used-by-tools", title: "Most-used models", metric: "tool_count", rows: mostUsed },
     { slug: "most-active-repos", title: "Most-active repos", metric: "activity_score", rows: mostActiveRepos },
     { slug: "most-shipping-providers", title: "Most-shipping providers", metric: "events_last_90d", rows: mostShipping },
-  ];
+    benchBoard("top-swe-bench", "Top coding (SWE-bench Verified)", "swe_bench_verified", "fraction"),
+    benchBoard("top-gpqa", "Top reasoning (GPQA Diamond)", "gpqa_diamond", "fraction"),
+    benchBoard("top-arena-elo", "Top by Arena Elo", "arena_elo", "elo"),
+    benchBoard("top-quality-index", "Top by quality index", "quality_index", "fraction"),
+    // Composite quality/notability (benchmarks/popularity + signal + recency).
+    {
+      slug: "top-quality-models",
+      title: "Highest-quality models",
+      metric: "quality_score",
+      rows: models
+        .map((m) => ({ m, q: qualityForModel(m, now) }))
+        .sort((a, b) => b.q.score - a.q.score)
+        .slice(0, 25)
+        .map(({ m, q }, i) => ({ rank: i + 1, id: m.id, name: m.name, provider: m.provider, value: q.score, href: `/models/${m.id}` })),
+    },
+    {
+      slug: "top-quality-repos",
+      title: "Highest-quality repos",
+      metric: "quality_score",
+      rows: repos
+        .map((r) => ({ r, q: qualityForRepo(r, now) }))
+        .sort((a, b) => b.q.score - a.q.score)
+        .slice(0, 25)
+        .map(({ r, q }, i) => ({ rank: i + 1, id: r.id, name: r.full_name, provider: r.owner, value: q.score, href: `/repos/${r.id}` })),
+    },
+  ].filter((b) => b.rows.length > 0);
 
   const body = JSON.stringify({
     schema_version: 1,

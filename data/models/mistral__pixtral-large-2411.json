@@ -26,7 +26,11 @@
   ],
   "sources": [
     "https://openrouter.ai/api/v1/models",
-    "https://docs.mistral.ai/getting-started/models/models_overview/"
+    "https://docs.mistral.ai/getting-started/models/models_overview/",
+    "https://www.swfte.com/ai/leaderboard"
   ],
-  "status": "retired"
+  "status": "retired",
+  "benchmarks": {
+    "quality_index": 0.74
+  }
 }

@@ -16,6 +16,19 @@
     "output_per_mtok": 30,
     "as_of": "2026-05-09"
   },
+  "benchmarks": {
+    "swe_bench_pro": 0.586,
+    "gpqa_diamond": 0.936,
+    "terminal_bench": 0.827,
+    "hle": 0.414,
+    "osworld": 0.787,
+    "arc_agi_2": 0.85,
+    "arena_elo": 1506,
+    "mmlu": 0.904,
+    "humaneval": 0.946,
+    "math": 0.912,
+    "quality_index": 0.97
+  },
   "links": {
     "homepage": "https://openai.com",
     "docs": "https://platform.openai.com/docs/models"
@@ -30,14 +43,5 @@
     "https://openai.com/index/introducing-gpt-5-5/",
     "https://www.swfte.com/ai/leaderboard"
   ],
-  "status": "ga",
-  "benchmarks": {
-    "swe_bench_pro": 0.586,
-    "gpqa_diamond": 0.936,
-    "terminal_bench": 0.827,
-    "hle": 0.414,
-    "osworld": 0.787,
-    "arc_agi_2": 0.85,
-    "arena_elo": 1506
-  }
+  "status": "ga"
 }

@@ -15,6 +15,10 @@
     "output_per_mtok": 0.41,
     "as_of": "2026-05-10"
   },
+  "benchmarks": {
+    "aime_2025": 0.893,
+    "quality_index": 0.86
+  },
   "links": {
     "homepage": "https://deepseek.com",
     "docs": "https://api-docs.deepseek.com/quick_start/pricing"
@@ -26,10 +30,8 @@
   "sources": [
     "https://openrouter.ai/api/v1/models",
     "https://api-docs.deepseek.com/quick_start/pricing",
-    "https://huggingface.co/deepseek-ai/DeepSeek-V3.2-Exp"
+    "https://huggingface.co/deepseek-ai/DeepSeek-V3.2-Exp",
+    "https://www.swfte.com/ai/leaderboard"
   ],
-  "status": "ga",
-  "benchmarks": {
-    "aime_2025": 0.893
-  }
+  "status": "ga"
 }

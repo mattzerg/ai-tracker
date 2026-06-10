@@ -16,6 +16,10 @@
     "output_per_mtok": 5,
     "as_of": "2026-05-09"
   },
+  "benchmarks": {
+    "swe_bench_verified": 0.733,
+    "quality_index": 0.76
+  },
   "links": {
     "homepage": "https://www.anthropic.com/claude",
     "docs": "https://platform.claude.com/docs/en/docs/about-claude/models/overview",
@@ -28,10 +32,8 @@
   ],
   "sources": [
     "https://platform.claude.com/docs/en/docs/about-claude/models/overview",
-    "https://www.anthropic.com/news/claude-haiku-4-5"
+    "https://www.anthropic.com/news/claude-haiku-4-5",
+    "https://www.swfte.com/ai/leaderboard"
   ],
-  "status": "ga",
-  "benchmarks": {
-    "swe_bench_verified": 0.733
-  }
+  "status": "ga"
 }

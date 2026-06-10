@@ -12,7 +12,8 @@
   "pricing_tiers": [
     {
       "name": "Bundled with ChatGPT Plus/Pro/Team/Enterprise",
-      "monthly_usd": null
+      "monthly_usd": null,
+      "per_seat": false
     }
   ],
   "free_tier": false,
@@ -31,5 +32,44 @@
   "sources": [
     "https://openai.com/codex"
   ],
-  "status": "ga"
+  "status": "ga",
+  "signals": {
+    "signal_score": 75,
+    "counts": {
+      "newsletter": 6
+    },
+    "mentions": [
+      {
+        "source": "newsletter:the-neuron",
+        "type": "newsletter",
+        "ts": "2026-06-08"
+      },
+      {
+        "source": "newsletter:the-ai-corner",
+        "type": "newsletter",
+        "ts": "2026-06-07"
+      },
+      {
+        "source": "newsletter:the-neuron",
+        "type": "newsletter",
+        "ts": "2026-06-07"
+      },
+      {
+        "source": "newsletter:the-neuron",
+        "type": "newsletter",
+        "ts": "2026-06-03"
+      },
+      {
+        "source": "newsletter:the-neuron",
+        "type": "newsletter",
+        "ts": "2026-05-18"
+      },
+      {
+        "source": "newsletter:the-neuron",
+        "type": "newsletter",
+        "ts": "2026-05-15"
+      }
+    ],
+    "updated_at": "2026-06-09"
+  }
 }
