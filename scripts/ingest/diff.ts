@@ -31,10 +31,12 @@ const MODEL_TRACKED_FIELDS = [
   "modalities",
   "license",
   "pricing",
+  "benchmarks",
   "status",
   "links",
   "tags",
   "sources",
+  "signals",
 ] as const;
 
 const TOOL_TRACKED_FIELDS = [
@@ -51,6 +53,7 @@ const TOOL_TRACKED_FIELDS = [
   "links",
   "tags",
   "sources",
+  "signals",
 ] as const;
 
 const REPO_TRACKED_FIELDS = [
@@ -73,6 +76,7 @@ const REPO_TRACKED_FIELDS = [
   "archived",
   "tags",
   "sources",
+  "signals",
 ] as const;
 
 function eq(a: unknown, b: unknown): boolean {

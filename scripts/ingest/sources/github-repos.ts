@@ -37,28 +37,45 @@ interface GhApiRepo {
 const TOPIC_TO_CATEGORY: Record<string, Repo["category"]> = {
   "ai-agent": "agent-framework",
   "agentic-ai": "agent-framework",
+  "ai-agents": "agent-framework",
+  "autonomous-agents": "agent-framework",
+  "multi-agent": "agent-framework",
+  "llm-framework": "agent-framework",
   "mcp-server": "mcp",
   "model-context-protocol": "mcp",
+  "mcp": "mcp",
   "rag": "rag",
+  "retrieval-augmented-generation": "rag",
   "vector-database": "vector-db",
+  "vector-search": "vector-db",
+  "embeddings": "vector-db",
   "ai-evaluation": "eval",
+  "llm-evaluation": "eval",
+  "llmops": "observability",
+  "llm-observability": "observability",
   "code-interpreter": "coding-agent",
+  "coding-agent": "coding-agent",
+  "ai-coding": "coding-agent",
   "browser-automation": "browser-automation",
+  "web-agent": "browser-automation",
+  "llm-inference": "inference",
+  "inference-engine": "inference",
+  "llm-serving": "inference",
+  "local-llm": "local-models",
+  "workflow-automation": "workflow-automation",
+  "llm-workflow": "workflow-automation",
+  "fine-tuning": "data",
+  "prompt-engineering": "data",
+  "llm-ui": "ui",
+  "chatbot-ui": "ui",
 };
 
-const TOPICS = [
-  "ai-agent",
-  "agentic-ai",
-  "mcp-server",
-  "model-context-protocol",
-  "rag",
-  "vector-database",
-  "ai-evaluation",
-  "code-interpreter",
-  "browser-automation",
-];
-const MIN_STARS = 1000;
-const PER_TOPIC_LIMIT = 35;
+// Discovery topics — broadened from the original 9 to widen the candidate pool.
+// Sourced directly from the category map so every topic is categorizable (no
+// "other"-only topics) and therefore eligible for auto-promotion downstream.
+const TOPICS = Object.keys(TOPIC_TO_CATEGORY);
+const MIN_STARS = 800;
+const PER_TOPIC_LIMIT = 60;
 
 // Educational / list-style repos rank high on stars but aren't AI infrastructure —
 // awesome-lists, tutorials, interview prep, and курс-style content pollute the

@@ -26,7 +26,15 @@
   "sources": [
     "https://openrouter.ai/api/v1/models",
     "https://docs.cohere.com/docs/models",
-    "https://cohere.com/pricing"
+    "https://cohere.com/pricing",
+    "https://www.swfte.com/ai/leaderboard"
   ],
-  "status": "ga"
+  "status": "ga",
+  "benchmarks": {
+    "mmlu": 0.785,
+    "humaneval": 0.748,
+    "math": 0.582,
+    "arena_elo": 1170,
+    "quality_index": 0.68
+  }
 }

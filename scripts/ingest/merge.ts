@@ -22,6 +22,29 @@ function pricingEqualByValues(
   );
 }
 
+/**
+ * Merge benchmark maps. Benchmarks are keyed by name (mmlu, swe_bench_verified,
+ * arena_elo, …). Authoritative sources may overwrite an existing key's value;
+ * supplementary sources only fill keys the existing entry lacks — so a
+ * provider-curated score is never clobbered by an aggregator. Returns undefined
+ * when neither side has benchmarks (keeps the field absent rather than `{}`).
+ *
+ * NOTE: before this existed, mergeModel dropped proposed benchmarks entirely,
+ * making any benchmark-providing source inert.
+ */
+export function mergeBenchmarks(
+  existing: Model["benchmarks"] | undefined,
+  proposed: Model["benchmarks"] | undefined,
+  auth: boolean,
+): Model["benchmarks"] | undefined {
+  if (!existing && !proposed) return undefined;
+  const out: Record<string, number> = { ...(existing ?? {}) };
+  for (const [key, value] of Object.entries(proposed ?? {})) {
+    if (out[key] == null || auth) out[key] = value; // supplementary fills gaps; auth overwrites
+  }
+  return out;
+}
+
 /** Merge a proposed model into an existing one. Existing curated fields win for supplementary sources. */
 export function mergeModel(existing: Model, proposed: Model, opts: MergeOpts): Model {
   const auth = opts.trust === "authoritative";
@@ -53,6 +76,12 @@ export function mergeModel(existing: Model, proposed: Model, opts: MergeOpts): M
     sources: unionStrings(existing.sources, proposed.sources),
     // Status: keep existing unless authoritative.
     status: auth ? proposed.status : existing.status,
+    // Benchmarks: union by key — supplementary fills missing scores, authoritative
+    // overwrites. (Previously omitted here, so proposed benchmarks were dropped.)
+    benchmarks: mergeBenchmarks(existing.benchmarks, proposed.benchmarks, auth),
+    // Signals: latest-wins. The signals source recomputes the full summary each
+    // run, so a present proposal replaces the prior one; absent proposal keeps existing.
+    signals: proposed.signals ?? existing.signals,
     // Links: shallow merge (proposed only fills missing keys).
     links: { ...proposed.links, ...existing.links },
   };
@@ -71,6 +100,7 @@ export function mergeTool(existing: Tool, proposed: Tool, opts: MergeOpts): Tool
     tags: unionStrings(existing.tags, proposed.tags),
     sources: unionStrings(existing.sources, proposed.sources),
     status: auth ? proposed.status : existing.status,
+    signals: proposed.signals ?? existing.signals,
     links: { ...proposed.links, ...existing.links },
   };
 }
@@ -99,5 +129,6 @@ export function mergeRepo(existing: Repo, proposed: Repo, opts: MergeOpts): Repo
     archived: proposed.archived ?? existing.archived,
     tags: unionStrings(existing.tags, proposed.tags),
     sources: unionStrings(existing.sources, proposed.sources),
+    signals: proposed.signals ?? existing.signals,
   };
 }

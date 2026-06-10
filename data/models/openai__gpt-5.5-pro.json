@@ -16,6 +16,13 @@
     "output_per_mtok": 180,
     "as_of": "2026-05-09"
   },
+  "benchmarks": {
+    "arena_elo": 1510,
+    "mmlu": 0.921,
+    "humaneval": 0.968,
+    "math": 0.954,
+    "quality_index": 0.98
+  },
   "links": {
     "homepage": "https://openai.com",
     "docs": "https://platform.openai.com/docs/models"
@@ -30,8 +37,5 @@
     "https://platform.openai.com/docs/models",
     "https://www.swfte.com/ai/leaderboard"
   ],
-  "status": "ga",
-  "benchmarks": {
-    "arena_elo": 1510
-  }
+  "status": "ga"
 }

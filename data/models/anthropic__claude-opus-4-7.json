@@ -16,6 +16,18 @@
     "output_per_mtok": 25,
     "as_of": "2026-05-09"
   },
+  "benchmarks": {
+    "swe_bench_verified": 0.876,
+    "gpqa_diamond": 0.942,
+    "terminal_bench": 0.694,
+    "swe_bench_pro": 0.643,
+    "osworld": 0.78,
+    "arena_elo": 1505,
+    "mmlu": 0.899,
+    "humaneval": 0.954,
+    "math": 0.887,
+    "quality_index": 0.96
+  },
   "links": {
     "homepage": "https://www.anthropic.com/claude",
     "docs": "https://platform.claude.com/docs/en/docs/about-claude/models/overview",
@@ -33,13 +45,5 @@
     "https://llm-stats.com/blog/research/claude-opus-4-7-launch",
     "https://www.swfte.com/ai/leaderboard"
   ],
-  "status": "ga",
-  "benchmarks": {
-    "swe_bench_verified": 0.876,
-    "gpqa_diamond": 0.942,
-    "terminal_bench": 0.694,
-    "swe_bench_pro": 0.643,
-    "osworld": 0.78,
-    "arena_elo": 1505
-  }
+  "status": "ga"
 }

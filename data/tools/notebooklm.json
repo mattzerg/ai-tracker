@@ -13,11 +13,13 @@
   "pricing_tiers": [
     {
       "name": "Free",
-      "monthly_usd": 0
+      "monthly_usd": 0,
+      "per_seat": false
     },
     {
       "name": "Plus",
       "monthly_usd": 20,
+      "per_seat": false,
       "notes": "Higher caps + customization"
     }
   ],
@@ -38,5 +40,24 @@
   "sources": [
     "https://notebooklm.google.com"
   ],
-  "status": "ga"
+  "status": "ga",
+  "signals": {
+    "signal_score": 18,
+    "counts": {
+      "newsletter": 2
+    },
+    "mentions": [
+      {
+        "source": "newsletter:the-neuron",
+        "type": "newsletter",
+        "ts": "2026-06-08"
+      },
+      {
+        "source": "newsletter:the-neuron",
+        "type": "newsletter",
+        "ts": "2026-06-09"
+      }
+    ],
+    "updated_at": "2026-06-09"
+  }
 }

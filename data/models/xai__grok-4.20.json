@@ -15,6 +15,10 @@
     "output_per_mtok": 2.5,
     "as_of": "2026-05-09"
   },
+  "benchmarks": {
+    "arena_elo": 1496,
+    "quality_index": 0.93
+  },
   "links": {
     "homepage": "https://x.ai",
     "docs": "https://docs.x.ai/docs/models"
@@ -28,8 +32,5 @@
     "https://openrouter.ai/api/v1/models",
     "https://www.swfte.com/ai/leaderboard"
   ],
-  "status": "ga",
-  "benchmarks": {
-    "arena_elo": 1496
-  }
+  "status": "ga"
 }

@@ -2,6 +2,7 @@
 import Base from "../../layouts/Base.astro";
 import ProviderMark from "../../components/ProviderMark.astro";
 import { loadEvents, loadModels, loadRepos, loadTools } from "../../lib/data.ts";
+import { qualityForModel, qualityForRepo } from "../../lib/quality.ts";
 
 interface Row {
   href: string;
@@ -135,6 +136,40 @@ function buildBoards(): Board[] {
       provider,
     }));
 
+  const now = new Date();
+  const pct = (v: number) => `${(v * 100).toFixed(1)}%`;
+
+  // Benchmark board: top models by a benchmark key.
+  const benchRows = (key: string, fmt: (v: number) => string): Row[] =>
+    models
+      .filter((m) => m.benchmarks?.[key] != null)
+      .sort((a, b) => (b.benchmarks![key] as number) - (a.benchmarks![key] as number))
+      .slice(0, 25)
+      .map((m) => ({ href: `/models/${m.id}`, primary: m.name, secondary: m.provider, value: fmt(m.benchmarks![key] as number), rawValue: m.benchmarks![key] as number, provider: m.provider }));
+
+  const topQualityModels: Row[] = models
+    .map((m) => ({ m, q: qualityForModel(m, now).score }))
+    .sort((a, b) => b.q - a.q)
+    .slice(0, 25)
+    .map(({ m, q }) => ({ href: `/models/${m.id}`, primary: m.name, secondary: m.provider, value: `${q}/100`, rawValue: q, provider: m.provider }));
+
+  const topQualityRepos: Row[] = repos
+    .map((r) => ({ r, q: qualityForRepo(r, now).score }))
+    .sort((a, b) => b.q - a.q)
+    .slice(0, 25)
+    .map(({ r, q }) => ({ href: `/repos/${r.id}`, primary: r.full_name, secondary: r.owner, value: `${q}/100`, rawValue: q, provider: r.owner }));
+
+  // Most-mentioned: any entity carrying a signal_score, ranked.
+  const allWithSignals = [...models, ...tools, ...repos].filter((e) => (e.signals?.signal_score ?? 0) > 0);
+  const mostMentioned: Row[] = allWithSignals
+    .sort((a, b) => (b.signals!.signal_score) - (a.signals!.signal_score))
+    .slice(0, 25)
+    .map((e) => {
+      const kind = "provider" in e ? "models" : "full_name" in e ? "repos" : "tools";
+      const name = "full_name" in e ? (e as { full_name: string }).full_name : (e as { name: string }).name;
+      return { href: `/${kind}/${e.id}`, primary: name, value: `${e.signals!.signal_score}`, rawValue: e.signals!.signal_score };
+    });
+
   return [
     {
       slug: "cheapest-input",
@@ -171,7 +206,49 @@ function buildBoards(): Board[] {
       metric: "Events (last 90d)",
       rows: mostShippingProviders,
     },
-  ];
+    {
+      slug: "top-quality-models",
+      title: "Highest-quality models",
+      description: "Composite quality score (0-100) blending benchmark strength, reference signal, and recency. Transparent, component-weighted.",
+      metric: "Quality score",
+      rows: topQualityModels,
+    },
+    {
+      slug: "top-quality-repos",
+      title: "Highest-quality repos",
+      description: "Composite quality score (0-100) blending popularity, activity, and reference signal.",
+      metric: "Quality score",
+      rows: topQualityRepos,
+    },
+    {
+      slug: "most-mentioned",
+      title: "Most-mentioned (signal)",
+      description: "Entities ranked by reference signal — how often they're cited in AI newsletters and other tracked sources. Recency-weighted.",
+      metric: "Signal score",
+      rows: mostMentioned,
+    },
+    {
+      slug: "top-swe-bench",
+      title: "Top coding (SWE-bench Verified)",
+      description: "Models ranked by SWE-bench Verified pass rate — real-world software-engineering task completion.",
+      metric: "SWE-bench %",
+      rows: benchRows("swe_bench_verified", pct),
+    },
+    {
+      slug: "top-gpqa",
+      title: "Top reasoning (GPQA Diamond)",
+      description: "Models ranked by GPQA Diamond — graduate-level expert reasoning questions.",
+      metric: "GPQA %",
+      rows: benchRows("gpqa_diamond", pct),
+    },
+    {
+      slug: "top-arena-elo",
+      title: "Top by Arena Elo",
+      description: "Models ranked by head-to-head human-preference Arena Elo rating.",
+      metric: "Arena Elo",
+      rows: benchRows("arena_elo", (v) => String(Math.round(v))),
+    },
+  ].filter((b) => b.rows.length > 0);
 }
 
 const boards = buildBoards();
@@ -186,6 +263,12 @@ export function getStaticPaths() {
     "most-used-by-tools",
     "most-active-repos",
     "most-shipping-providers",
+    "top-quality-models",
+    "top-quality-repos",
+    "most-mentioned",
+    "top-swe-bench",
+    "top-gpqa",
+    "top-arena-elo",
   ].map((slug) => ({ params: { slug } }));
 }
 

@@ -27,7 +27,11 @@
   ],
   "sources": [
     "https://openrouter.ai/api/v1/models",
-    "https://www.llama.com/"
+    "https://www.llama.com/",
+    "https://www.swfte.com/ai/leaderboard"
   ],
-  "status": "ga"
+  "status": "ga",
+  "benchmarks": {
+    "quality_index": 0.5
+  }
 }

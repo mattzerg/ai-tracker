@@ -16,6 +16,15 @@
     "output_per_mtok": 15,
     "as_of": "2026-05-09"
   },
+  "benchmarks": {
+    "swe_bench_verified": 0.796,
+    "gpqa_diamond": 0.741,
+    "mmlu": 0.884,
+    "humaneval": 0.931,
+    "math": 0.856,
+    "arena_elo": 1467,
+    "quality_index": 0.9
+  },
   "links": {
     "homepage": "https://www.anthropic.com/claude",
     "docs": "https://platform.claude.com/docs/en/docs/about-claude/models/overview",
@@ -29,11 +38,8 @@
   "sources": [
     "https://platform.claude.com/docs/en/docs/about-claude/models/overview",
     "https://www.anthropic.com/news/claude-sonnet-4-6",
-    "https://benchlm.ai/models/claude-sonnet-4-6"
+    "https://benchlm.ai/models/claude-sonnet-4-6",
+    "https://www.swfte.com/ai/leaderboard"
   ],
-  "status": "ga",
-  "benchmarks": {
-    "swe_bench_verified": 0.796,
-    "gpqa_diamond": 0.741
-  }
+  "status": "ga"
 }

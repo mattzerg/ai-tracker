@@ -15,6 +15,10 @@
     "output_per_mtok": 2,
     "as_of": "2026-05-11"
   },
+  "benchmarks": {
+    "swe_bench_verified": 0.722,
+    "quality_index": 0.66
+  },
   "links": {
     "homepage": "https://mistral.ai",
     "docs": "https://docs.mistral.ai/getting-started/models/models_overview/"
@@ -26,10 +30,8 @@
   "sources": [
     "https://openrouter.ai/api/v1/models",
     "https://docs.mistral.ai/getting-started/models/models_overview/",
-    "https://mistral.ai/news/devstral/"
+    "https://mistral.ai/news/devstral/",
+    "https://www.swfte.com/ai/leaderboard"
   ],
-  "status": "ga",
-  "benchmarks": {
-    "swe_bench_verified": 0.722
-  }
+  "status": "ga"
 }

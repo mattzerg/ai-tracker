@@ -15,6 +15,11 @@
     "output_per_mtok": 0.32,
     "as_of": "2026-05-11"
   },
+  "benchmarks": {
+    "mmlu_pro": 0.689,
+    "gpqa_diamond": 0.505,
+    "quality_index": 0.74
+  },
   "links": {
     "homepage": "https://www.llama.com",
     "docs": "https://www.llama.com/"
@@ -26,11 +31,8 @@
   "sources": [
     "https://openrouter.ai/api/v1/models",
     "https://www.llama.com/",
-    "https://huggingface.co/meta-llama/Llama-3.3-70B-Instruct"
+    "https://huggingface.co/meta-llama/Llama-3.3-70B-Instruct",
+    "https://www.swfte.com/ai/leaderboard"
   ],
-  "status": "ga",
-  "benchmarks": {
-    "mmlu_pro": 0.689,
-    "gpqa_diamond": 0.505
-  }
+  "status": "ga"
 }

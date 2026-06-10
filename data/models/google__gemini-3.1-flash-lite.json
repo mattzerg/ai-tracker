@@ -31,7 +31,11 @@
     "https://openrouter.ai/api/v1/models",
     "https://ai.google.dev/gemini-api/docs/pricing",
     "https://ai.google.dev/gemini-api/docs/models",
-    "https://ai.google.dev/gemini-api/docs/changelog"
+    "https://ai.google.dev/gemini-api/docs/changelog",
+    "https://www.swfte.com/ai/leaderboard"
   ],
-  "status": "ga"
+  "status": "ga",
+  "benchmarks": {
+    "quality_index": 0.58
+  }
 }

@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { entityId, isoDate, url } from "./common.ts";
+import { signalsSchema } from "./signals.ts";
 
 export const repoCategorySchema = z.enum([
   "agent-framework",
@@ -40,6 +41,7 @@ export const repoSchema = z.object({
   archived: z.boolean().default(false),
   tags: z.array(z.string()).default([]),
   sources: z.array(url).min(1),
+  signals: signalsSchema.optional(),
 });
 
 export type Repo = z.infer<typeof repoSchema>;

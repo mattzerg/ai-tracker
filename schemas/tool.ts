@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { entityId, isoDate, slug, url } from "./common.ts";
+import { signalsSchema } from "./signals.ts";
 
 export const toolCategorySchema = z.enum([
   "ide",
@@ -62,6 +63,7 @@ export const toolSchema = z.object({
   tags: z.array(z.string()).default([]),
   sources: z.array(url).min(1),
   status: z.enum(["beta", "ga", "deprecated", "shut-down"]).default("ga"),
+  signals: signalsSchema.optional(),
 });
 
 export type Tool = z.infer<typeof toolSchema>;

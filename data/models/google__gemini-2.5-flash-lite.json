@@ -30,7 +30,11 @@
     "https://ai.google.dev/gemini-api/docs/pricing",
     "https://ai.google.dev/gemini-api/docs/changelog",
     "https://ai.google.dev/gemini-api/docs/models",
-    "https://ai.google.dev/gemini-api/docs/deprecations"
+    "https://ai.google.dev/gemini-api/docs/deprecations",
+    "https://www.swfte.com/ai/leaderboard"
   ],
-  "status": "deprecated"
+  "status": "deprecated",
+  "benchmarks": {
+    "quality_index": 0.8
+  }
 }

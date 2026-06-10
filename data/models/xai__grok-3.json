@@ -19,7 +19,15 @@
   "tags": [],
   "sources": [
     "https://openrouter.ai/api/v1/models",
-    "https://docs.x.ai/developers/migration/may-15-retirement"
+    "https://docs.x.ai/developers/migration/may-15-retirement",
+    "https://www.swfte.com/ai/leaderboard"
   ],
-  "status": "retired"
+  "status": "retired",
+  "benchmarks": {
+    "mmlu": 0.892,
+    "humaneval": 0.889,
+    "math": 0.847,
+    "arena_elo": 1330,
+    "quality_index": 0.87
+  }
 }

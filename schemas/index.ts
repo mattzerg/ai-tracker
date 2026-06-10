@@ -5,3 +5,4 @@ export { repoCandidateQueueSchema, type RepoCandidateQueue } from "./repo-candid
 export { eventSchema, type Event } from "./event.ts";
 export { concordSummarySchema, type ConcordSummary, type ConcordModelEntry } from "./concord.ts";
 export { influencerSchema, influencerListSchema, influencerCategorySchema, type Influencer, type InfluencerList } from "./influencer.ts";
+export { signalsSchema, signalMentionSchema, signalsIndexSchema, type Signals, type SignalMention, type SignalsIndex } from "./signals.ts";

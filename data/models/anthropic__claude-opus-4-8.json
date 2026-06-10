@@ -16,6 +16,17 @@
     "output_per_mtok": 25,
     "as_of": "2026-06-02"
   },
+  "benchmarks": {
+    "swe_bench_verified": 0.886,
+    "gpqa_diamond": 0.936,
+    "terminal_bench": 0.746,
+    "swe_bench_pro": 0.692,
+    "mmlu": 0.906,
+    "humaneval": 0.962,
+    "math": 0.904,
+    "arena_elo": 1512,
+    "quality_index": 0.99
+  },
   "links": {
     "homepage": "https://www.anthropic.com/claude",
     "docs": "https://platform.claude.com/docs/en/docs/about-claude/models/overview",
@@ -31,13 +42,22 @@
     "https://platform.claude.com/docs/en/docs/about-claude/models/overview",
     "https://platform.claude.com/docs/en/about-claude/models/whats-new-claude-4-8",
     "https://www.anthropic.com/claude/opus",
-    "https://llm-stats.com/blog/research/claude-opus-4-8-launch"
+    "https://llm-stats.com/blog/research/claude-opus-4-8-launch",
+    "https://www.swfte.com/ai/leaderboard"
   ],
   "status": "ga",
-  "benchmarks": {
-    "swe_bench_verified": 0.886,
-    "gpqa_diamond": 0.936,
-    "terminal_bench": 0.746,
-    "swe_bench_pro": 0.692
+  "signals": {
+    "signal_score": 9,
+    "counts": {
+      "newsletter": 1
+    },
+    "mentions": [
+      {
+        "source": "newsletter:the-neuron",
+        "type": "newsletter",
+        "ts": "2026-05-28"
+      }
+    ],
+    "updated_at": "2026-06-09"
   }
 }

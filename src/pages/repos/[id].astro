@@ -4,6 +4,7 @@ import JsonLd from "../../components/JsonLd.astro";
 import Votes from "../../components/Votes.astro";
 import { eventsForEntity, loadRepos, loadTools } from "../../lib/data.ts";
 import { freshnessForEntity } from "../../lib/freshness.ts";
+import { qualityForRepo } from "../../lib/quality.ts";
 import { requireSite } from "../../lib/site.ts";
 import type { Repo } from "../../../schemas/index.ts";
 
@@ -13,6 +14,8 @@ export function getStaticPaths() {
 
 interface Props { repo: Repo; }
 const { repo } = Astro.props;
+const quality = qualityForRepo(repo, new Date());
+const signals = repo.signals ?? null;
 const events = eventsForEntity(repo.id);
 const relatedTools = loadTools().filter((tool) => tool.oss_repo === repo.repo_url || tool.sources.includes(repo.repo_url));
 const site = requireSite(Astro.site);
@@ -132,6 +135,15 @@ const freshness = freshnessForEntity(repo, events);
       </ul>
     </section>
   ) : null}
+
+  <section>
+    <h2>Quality &amp; signal</h2>
+    <p style="display:flex;gap:1.5rem;flex-wrap:wrap;align-items:baseline;margin:0.4rem 0 0.6rem;">
+      <span><strong style="font-size:1.6rem;font-variant-numeric:tabular-nums;">{quality.score}</strong><span style="color:var(--muted);">/100 quality</span></span>
+      <span><strong style="font-size:1.6rem;font-variant-numeric:tabular-nums;">{signals?.signal_score ?? 0}</strong> <span style="color:var(--muted);">signal</span></span>
+    </p>
+    <p class="muted" style="font-size:0.85rem;">Quality blends {quality.components.map((c) => `${c.key} ${Math.round(c.value)}`).join(" · ")}.{signals && signals.mentions.length ? ` Cited in ${signals.mentions.map((m) => m.source).filter((v, i, a) => a.indexOf(v) === i).join(", ")}.` : ""}</p>
+  </section>
 
   <section>
     <h2>Timeline</h2>
