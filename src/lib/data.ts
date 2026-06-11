@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 import { existsSync } from "node:fs";
 import {
   concordSummarySchema,
+  signalsIndexSchema,
   eventSchema,
   influencerListSchema,
   modelSchema,
@@ -16,6 +17,7 @@ import {
   type Model,
   type RepoCandidateQueue,
   type Repo,
+  type SignalsIndex,
   type Tool,
 } from "../../schemas/index.ts";
 
@@ -72,6 +74,7 @@ export function loadTools(): Tool[] {
 
 let _concordSummary: ConcordSummary | null | undefined = undefined;
 let _influencerList: InfluencerList | null | undefined = undefined;
+let _signalsIndex: SignalsIndex | null | undefined = undefined;
 
 export function loadInfluencers(): InfluencerList | null {
   if (CACHE_DATA && _influencerList !== undefined) return _influencerList;
@@ -98,6 +101,20 @@ export function loadConcordSummary(): ConcordSummary | null {
   const r = concordSummarySchema.safeParse(raw);
   if (!r.success) throw new Error(`concord-summary.json: ${r.error.message}`);
   if (CACHE_DATA) _concordSummary = r.data;
+  return r.data;
+}
+
+export function loadSignalsIndex(): SignalsIndex | null {
+  if (CACHE_DATA && _signalsIndex !== undefined) return _signalsIndex;
+  const path = resolve(DATA_ROOT, "signals/index.json");
+  if (!existsSync(path)) {
+    if (CACHE_DATA) _signalsIndex = null;
+    return null;
+  }
+  const raw = JSON.parse(readFileSync(path, "utf8")) as unknown;
+  const r = signalsIndexSchema.safeParse(raw);
+  if (!r.success) throw new Error(`signals/index.json: ${r.error.message}`);
+  if (CACHE_DATA) _signalsIndex = r.data;
   return r.data;
 }
 
