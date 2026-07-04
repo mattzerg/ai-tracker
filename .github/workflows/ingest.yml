@@ -31,9 +31,10 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
+      # pnpm version comes from package.json's packageManager pin — specifying
+      # it here too makes action-setup@v4 hard-fail ("Multiple versions of pnpm
+      # specified"), which killed every scheduled ingest 06-30 -> 07-04.
       - uses: pnpm/action-setup@v4
-        with:
-          version: 10
 
       - uses: actions/setup-node@v4
         with:
